@@ -1,28 +1,47 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {ComponentType} from 'react';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {MuiThemeProvider} from '@material-ui/core/styles';
+import theme from '@/components/Theme/Theme';
+import RouteList from '@/routes/Main';
+import {compose} from 'recompose';
+import {withCookies} from 'react-cookie';
+import Cookies from 'universal-cookie';
+import {Dispatch} from 'redux';
+import {ReducersType} from '@/store/reducers';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+const cookieRefresher = () => {
+  const cookies        = new Cookies();
+  let checkExpireToken = cookies.get('token_expires');
+
+  if (!checkExpireToken && cookies.get('_token')) {
+    cookies.set('_token', cookies.get('_token'), {
+      maxAge: 1800,
+      path: '/',
+    });
   }
-}
 
-export default App;
+};
+
+const App: ComponentType<{}> = props => {
+  cookieRefresher();
+  return (
+    <MuiThemeProvider theme = {theme}>
+      <RouteList />
+    </MuiThemeProvider>
+  );
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {};
+};
+
+const mapStateToProps = (state: ReducersType) => {
+  return {};
+};
+
+export default compose(
+  withRouter,
+  withCookies,
+  connect(mapStateToProps, mapDispatchToProps),
+)(App);
