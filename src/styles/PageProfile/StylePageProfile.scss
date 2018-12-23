@@ -1,23 +1,56 @@
+@import '../mixins';
+
+
+%slickOpacity {
+  opacity: 0.7;
+  pointer-events: auto;
+}
+
 .slick-slider {
-  .slick-next {
-    right: 5px;
-    opacity: 0.5;
+  height: 100%;
+  .slick-next,.slick-prev {
+    @include transition(all 150ms ease-in-out);
+    font-size: 0;
+    line-height: 0;
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: 20px;
+    height: 100%;
+    padding: 0;
+    opacity: 0;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    cursor: pointer;
+    color: transparent;
+    border: none;
+    outline: none;
+    background: transparent;
     z-index: 2;
+    pointer-events: none;
   }
-  .slick-prev {
-    left: 5px;
-    z-index: 2;
-    opacity: 0.7;
+  &:hover {
+    .slick-next {
+      right: 5px;
+      @extend %slickOpacity;
+    }
+    .slick-prev {
+      left: 5px;
+      @extend %slickOpacity;
+    }
   }
-  .slick-dots{
-    bottom:0;
-    li{margin:0;}
+  .slick-dots {
+    bottom: 0;
+    li {
+      margin: 0;
+    }
   }
-  .slick-slide{
-    max-height: 245px;
+  .slick-slide {
     height: 100%;
   }
-  .slick-list{
+  .slick-list {
     width: 99.9%;
+    border-radius: 4px 0 0 4px
   }
 }

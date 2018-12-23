@@ -1,8 +1,9 @@
 import React, {FunctionComponent} from 'react';
-import {Route, Switch} from 'react-router-dom';
 import Loadable from 'react-loadable';
+import {Route, Switch, BrowserRouter} from 'react-router-dom';
+import {TransitionGroup, CSSTransition} from 'react-transition-group';
 
-const HomePage = Loadable({
+const HomePage    = Loadable({
   loader: (): Promise<any> => import('@/views/Homepage/Home'),
   loading: (): any => {
     return null;
@@ -17,10 +18,10 @@ const BookingForm = Loadable({
 });
 
 const pageProfile = Loadable({
-    loader: (): Promise<any> => import('@/views/ProfilePage/Profile'),
-    loading: () => {
-        return null;
-    },
+  loader: (): Promise<any> => import('@/views/ProfilePage/Profile'),
+  loading: () => {
+    return null;
+  },
 });
 
 const Error500 = Loadable({
@@ -30,13 +31,18 @@ const Error500 = Loadable({
   },
 });
 
+const RoomsIndex = Loadable({
+  loader: (): Promise<any> => import('@/views/Rooms/index'),
+  loading: () => null,
+});
 
 const RouteList: FunctionComponent<{}> = props => {
   return (
     <Switch>
       <Route exact path = '/' component = {HomePage} />
-        <Route path='/profile' component={pageProfile}/>
-      <Route path='/payments/book' component={BookingForm}/>
+      <Route path = '/profile' component = {pageProfile} />
+      <Route path = '/payments/book' component = {BookingForm} />
+      <Route path = '/rooms' component = {RoomsIndex} />
       <Route component = {Error500} />
     </Switch>
   );

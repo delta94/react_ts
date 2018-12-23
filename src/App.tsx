@@ -1,14 +1,21 @@
-import React, {ComponentType} from 'react';
-import {withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {MuiThemeProvider} from '@material-ui/core/styles';
 import theme from '@/components/Theme/Theme';
 import RouteList from '@/routes/Main';
-import {compose} from 'recompose';
+import {MuiThemeProvider} from '@material-ui/core/styles';
+import React, {ComponentType} from 'react';
 import {withCookies} from 'react-cookie';
+import {withRouter} from 'react-router-dom';
+import {compose} from 'recompose';
 import Cookies from 'universal-cookie';
-import {Dispatch} from 'redux';
-import {ReducersType} from '@/store/reducers';
+import withWidth from '@material-ui/core/withWidth/withWidth';
+import {LocationDescriptorObject, History} from 'history';
+import {Breakpoint} from '@material-ui/core/styles/createBreakpoints';
+import {GlobalContext} from '@/store/context/GlobalContext';
+
+interface AppProps {
+  location: LocationDescriptorObject,
+  history: History
+  width: Breakpoint
+}
 
 const cookieRefresher = () => {
   const cookies        = new Cookies();
@@ -23,25 +30,21 @@ const cookieRefresher = () => {
 
 };
 
-const App: ComponentType<{}> = props => {
+// @ts-ignore
+const App: ComponentType<{}> = (props: AppProps) => {
+  const {history, location, width} = props;
   cookieRefresher();
   return (
     <MuiThemeProvider theme = {theme}>
-      <RouteList />
+      <GlobalContext.Provider value = {{history, location, width}}>
+        <RouteList />
+      </GlobalContext.Provider>
     </MuiThemeProvider>
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {};
-};
-
-const mapStateToProps = (state: ReducersType) => {
-  return {};
-};
-
 export default compose(
   withRouter,
+  withWidth(),
   withCookies,
-  connect(mapStateToProps, mapDispatchToProps),
 )(App);

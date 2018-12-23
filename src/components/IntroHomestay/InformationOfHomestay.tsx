@@ -12,7 +12,6 @@ import imgNew            from '@/assets/new5.png';
 import imgHot            from '@/assets/tinderHot.png';
 import imgCoupon         from '@/assets/coupon.png';
 import certified         from '@/assets/certified.png';
-// @ts-ignore
 import StarRatings       from 'react-star-ratings';
 import Location          from '@material-ui/icons/LocationOnOutlined';
 import Flash          from '@material-ui/icons/FlashOnRounded';
@@ -23,7 +22,7 @@ import Fastfood          from '@material-ui/icons/FastfoodRounded';
 import Flight          from '@material-ui/icons/FlightRounded';
 import Restaurant          from '@material-ui/icons/RestaurantRounded';
 import LocalFlorist          from '@material-ui/icons/LocalFloristRounded';
-import Slider from "react-slick";
+import Slider, {Settings} from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '@/styles/PageProfile/StylePageProfile.scss';
@@ -185,7 +184,7 @@ interface IInformationOfHomestay {
 
 const InformationOfHomestay:ComponentType<IInformationOfHomestay> = (props:IInformationOfHomestay) => {
   const {classes} = props;
-  const settings = {
+  const settings: Settings = {
     speed: 100,
     dots:true,
     slidesToShow: 1,

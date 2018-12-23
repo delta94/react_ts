@@ -6,6 +6,8 @@ import moment from 'moment';
 import React, {useState, useEffect, ComponentType} from 'react';
 import {DateRangePicker, FocusedInputShape} from 'react-dates';
 import 'react-dates/initialize';
+import '@/styles/Airbnb/date-picker-homepage.scss';
+import '@/styles/date-picker.scss';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
 import {Dispatch} from 'redux';

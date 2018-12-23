@@ -1,8 +1,11 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import to from '@/components/Utils/to';
 import * as animation from '@/store/actions/animationTypes';
-import {ReducersType, ReducersList} from '@/store/reducers';
-import {AnimationState as AnimationState, AnimationAction as AnimationAction} from '@/store/reducers/Visual/global-animation';
+import {ReducersList} from '@/store/reducers';
+import {
+  AnimationState as AnimationState,
+  AnimationAction as AnimationAction,
+} from '@/store/reducers/Visual/global-animation';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -25,16 +28,21 @@ import {connect} from 'react-redux';
 import {compose} from 'recompose';
 import {Dispatch} from 'redux';
 import Cookies from 'universal-cookie';
+import Hidden from '@material-ui/core/Hidden/Hidden';
+import IconButton from '@material-ui/core/IconButton/IconButton';
+import {Menu} from '@material-ui/icons';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import {ISideDrawerProps} from '@/components/ToolBar/SideDrawer';
 
 interface IProps {
   classes: any,
-  cookies: Cookies
 }
 
 interface ILocalProps extends IProps {
   animation: AnimationState;
+  cookies: Cookies
 
-  handleLoginButton(status: boolean): void;
+  handleLoginButton(status: boolean): void
 }
 
 const styles: any = (theme: ThemeCustom) => createStyles({
@@ -60,6 +68,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       color: blue[500],
     },
   },
+  menuButton: {
+    marginLeft: -28,
+    marginRight: 20,
+  },
+  drawer: {
+    width: '60%',
+  },
 });
 
 const LoginForm = Loadable({
@@ -69,6 +84,11 @@ const LoginForm = Loadable({
   },
 });
 
+const SideDrawer = Loadable<ISideDrawerProps, any>({
+  loader: () => import('@/components/ToolBar/SideDrawer'),
+  loading: () => null,
+});
+
 // @ts-ignore
 const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
   const {
@@ -76,8 +96,10 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
           cookies,
         } = props;
 
-  const userRefButton               = useRef(null);
   const [menuStatus, setMenuStatus] = useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+
+  const userRefButton = useRef(null);
 
   const closeMenu = () => {
     setMenuStatus(false);
@@ -99,64 +121,91 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
     <Fragment>
       <AppBar position = 'static' color = 'secondary'>
         <Toolbar>
-          <Button {...to('/')}>
-            <Typography variant = 'h6' color = 'inherit'>
-              LOGO
-            </Typography>
-          </Button>
-          <div className = {classes.grow}>
-            <Button color = 'inherit' className = {classes.link}>Rooms</Button>
-            <Button color = 'inherit' className = {classes.link}>About us</Button>
-            <Button color = 'inherit' className = {classes.link}>Become a host</Button>
-          </div>
-          <Button color = 'inherit'
-                  {...to('/payments/book')}
-                  className = {classes.button}>
-            Help
-          </Button>
-          {cookies.get('_token')
-            ? <Fragment>
-              <Button
-                buttonRef = {userRefButton}
-                color = 'inherit'
-                className = {classes.button}
-                onClick = {() => setMenuStatus(!menuStatus)}
-                style = {{backgroundColor: 'transparent'}}
-              ><Avatar>HR</Avatar></Button>
-              <Popper open = {menuStatus} anchorEl = {userRefButton.current} transition>
-                {({TransitionProps, placement}) => (
-                  <Grow
-                    {...TransitionProps}
-                    style = {{
-                      transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                      minWidth: 300,
-                    }}
-                  >
-                    <Paper square elevation = {1}>
-                      <ClickAwayListener onClickAway = {closeMenu}>
-                        <MenuList>
-                          <MenuItem onClick = {closeMenu}>Edit Profile</MenuItem>
-                          <Divider />
-                          <MenuItem onClick = {closeMenu}>Account Settings</MenuItem>
-                          <Divider />
-                          <MenuItem onClick = {closeMenu}>My Guidebook</MenuItem>
-                          <Divider />
-                          <MenuItem onClick = {logoutTrigger}>Logout</MenuItem>
-                          <Divider />
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
-            </Fragment>
-            : <Fragment>
-              <Button color = 'inherit' className = {classes.button}
-                      onClick = {loginButtonClick}
-                      onMouseOver = {() => null}>Log in</Button>
-              <Button color = 'inherit' className = {classes.button}>Register</Button>
-            </Fragment>
-          }
+          <Hidden smDown>
+            <Button {...to('/')}>
+              <Typography variant = 'h6' color = 'inherit'>
+                LOGO
+              </Typography>
+            </Button>
+            <div className = {classes.grow}>
+              <Button color = 'inherit' className = {classes.link}>Rooms</Button>
+              <Button color = 'inherit' className = {classes.link}>Become a host</Button>
+            </div>
+            <Button color = 'inherit'
+                    {...to('/payments/book')}
+                    className = {classes.button}>
+              Help
+            </Button>
+            {cookies.get('_token')
+              ? <Fragment>
+                <Button
+                  buttonRef = {userRefButton}
+                  color = 'inherit'
+                  className = {classes.button}
+                  onClick = {() => setMenuStatus(!menuStatus)}
+                  style = {{backgroundColor: 'transparent'}}
+                ><Avatar>HR</Avatar></Button>
+                <Popper open = {menuStatus} anchorEl = {userRefButton.current} transition>
+                  {({TransitionProps, placement}) => (
+                    <Grow
+                      {...TransitionProps}
+                      style = {{
+                        transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                        minWidth: 300,
+                      }}
+                    >
+                      <Paper square elevation = {1}>
+                        <ClickAwayListener onClickAway = {closeMenu}>
+                          <MenuList>
+                            <MenuItem onClick = {closeMenu}>Edit Profile</MenuItem>
+                            <Divider />
+                            <MenuItem onClick = {closeMenu}>Account Settings</MenuItem>
+                            <Divider />
+                            <MenuItem onClick = {closeMenu}>My Guidebook</MenuItem>
+                            <Divider />
+                            <MenuItem onClick = {logoutTrigger}>Logout</MenuItem>
+                            <Divider />
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              </Fragment>
+              : <Fragment>
+                <Button color = 'inherit' className = {classes.button}
+                        onClick = {loginButtonClick}
+                        onMouseOver = {() => LoginForm.preload()}>Log in</Button>
+                <Button color = 'inherit' className = {classes.button}>Register</Button>
+              </Fragment>
+            }
+          </Hidden>
+          <Hidden mdUp>
+            <div className = {classes.grow}>
+              <IconButton className = {classes.menuButton}>
+                <Menu onClick = {() => setOpenDrawer(!openDrawer)} />
+                <SwipeableDrawer
+                  disableSwipeToOpen
+                  open = {openDrawer}
+                  onOpen = {() => setOpenDrawer(true)}
+                  onClose = {() => setOpenDrawer(false)}
+                  ModalProps = {{
+                    keepMounted: true, // Better open performance on mobile.
+                  }}
+                  classes = {{
+                    paper: classes.drawer,
+                  }}
+                >
+                  <SideDrawer setOpen = {setOpenDrawer} />
+                </SwipeableDrawer>
+              </IconButton>
+            </div>
+            <Button {...to('/')}>
+              <Typography variant = 'h6' color = 'inherit'>
+                LOGO
+              </Typography>
+            </Button>
+          </Hidden>
         </Toolbar>
       </AppBar>
       {props.animation.isLoginFormOpen && <LoginForm />}

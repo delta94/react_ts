@@ -38,13 +38,11 @@ const GuestSelect: FunctionComponent<IProps> = props => {
     <Grid item md = {8} xs = {12} sm = {12}>
       <Paper elevation = {4}
              className = {classes.paperSize}
-             style = {{
-               height: size,
-             }}
              square>
         <Grid container spacing = {8} justify = 'center'>
           <Grid item xs = {12}>
             <CountBar
+              divider={true}
               singular = 'Guest'
               plural = 'Guests'
               p-classes = {classes} />

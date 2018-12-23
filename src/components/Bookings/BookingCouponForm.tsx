@@ -1,8 +1,9 @@
 import {IProps as BookingInfoProps} from '@/components/Bookings/BookingInfoDetail';
 import {FormikProps} from '@/types/Interface/Formik';
+import {OK} from '@/types/Requests/Code';
 import {CouponDiscountCalculateReq} from '@/types/Requests/Coupons/CouponRequests';
 import {CouponDiscountCalculateRes} from '@/types/Requests/Coupons/CouponResponses';
-import {BaseResponse, ErrorValidate} from '@/types/Requests/ResponseTemplate';
+import {BaseResponse, AxiosValidateError} from '@/types/Requests/ResponseTemplate';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {axios} from '@/utils/axiosInstance';
 import {DEFAULT_DATE_FORMAT} from '@/utils/store/global';
@@ -49,16 +50,13 @@ const BookingCouponForm: ComponentType<IProps> = props => {
           dispatch,
         } = props;
 
-
-
   return (
     <Formik
       initialValues = {formikInit}
       validationSchema = {() => FormValidationSchema}
       validateOnChange = {false}
       onSubmit = {(values: IFormikValues, actions: FormikActions<IFormikValues>) => {
-        const roomAll: RoomIndexRes = room.all;
-        console.log(room);
+        const roomAll: RoomIndexRes            = room.all;
         const data: CouponDiscountCalculateReq = {
           coupon: values.coupon,
           price_original: room.price_original,
@@ -77,16 +75,21 @@ const BookingCouponForm: ComponentType<IProps> = props => {
         axios.post('coupons/calculate-discount', data)
           .then((res: AxiosResponse<BaseResponse<CouponDiscountCalculateRes>>) => {
             const body = res.data.data;
-            props.openHandle(false);
-            dispatch({
-              type: 'setCoupon',
-              coupon: values.coupon,
-              discount: body.price_discount,
-            });
+            const code = body.code;
+            if (code === OK) {
+              props.openHandle(false);
+              dispatch({
+                type: 'setCoupon',
+                coupon: values.coupon,
+                discount: body.price_discount,
+              });
+            } else {
+              actions.setFieldError('coupon', body.message);
+            }
             actions.setSubmitting(false);
           })
           .catch((e: AxiosError) => {
-            const response: AxiosResponse<BaseResponse<ErrorValidate<CouponDiscountCalculateReq, any>>> = e.response!;
+            const response: AxiosValidateError<CouponDiscountCalculateReq> = e.response!;
 
             const errors = response.data.data.errors;
             const error  = response.data.data.error;

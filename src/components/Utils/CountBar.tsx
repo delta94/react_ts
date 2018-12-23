@@ -14,6 +14,7 @@ interface IProps {
   'p-classes': any;
   singular: string;
   plural: string;
+  divider?: boolean;
 }
 
 interface IPropsLocal extends IProps {
@@ -24,6 +25,7 @@ interface IPropsLocal extends IProps {
 // @ts-ignore
 const CountBar: ComponentType<IProps> = (props: IPropsLocal) => {
   const classes             = props['p-classes'];
+  const dividerStatus       = props.divider;
   let pluralLowerCase       = props.plural.toLowerCase() + 'Count';
   const [status, setStatus] = useState(true);
 
@@ -63,9 +65,12 @@ const CountBar: ComponentType<IProps> = (props: IPropsLocal) => {
           <Add />
         </Button>
       </Grid>
-      <Grid item xs = {12}>
-        <Divider />
-      </Grid>
+      {dividerStatus
+        ? <Grid item xs = {12}>
+          <Divider />
+        </Grid>
+        : ''}
+
     </Grid>
   );
 };
