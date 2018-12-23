@@ -107,7 +107,6 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
   const [isRequest, toggleRequest] = useState<boolean>(false);
   const guestNameRef               = useRef<any>(null);
 
-  // console.log(props);
   useEffect(() => {
     if (values.isSomeOneElse) {
       scrollDefault('guest-name');

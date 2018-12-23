@@ -1,9 +1,5 @@
 import moment, {Moment} from 'moment';
 
-// const timezoneOffSet = () => {
-//   return new Date().getTimezoneOffset();
-// }
-
 /**
  * Format money to user friendly
  * @param amount Money amount

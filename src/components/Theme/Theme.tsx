@@ -2,6 +2,7 @@ import {ThemeOptions} from '@material-ui/core/es/styles/createMuiTheme';
 import {createMuiTheme} from '@material-ui/core/styles';
 import {PaletteOptions} from '@material-ui/core/styles/createPalette';
 import {FontStyleOptions, TypographyOptions} from "@material-ui/core/styles/createTypography";
+import Blue from '@material-ui/core/colors/blue'
 
 interface PaletteExtra extends PaletteOptions {
     button: any;
@@ -18,7 +19,7 @@ const options: ThemeCustom = {
     },
     palette: {
         primary: {
-            main: '#2196F3',
+            main: Blue[500],
         },
         secondary: {
             main: '#fff',

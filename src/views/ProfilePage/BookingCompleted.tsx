@@ -12,7 +12,6 @@ import fb                from '@/assets/facebook.png';
 import gg                from '@/assets/google.png';
 import twt               from '@/assets/twitter.png';
 import Location          from '@material-ui/icons/LocationOnOutlined';
-// @ts-ignore
 import StarRatings       from 'react-star-ratings';
 import {ThemeCustom} from "@/components/Theme/Theme";
 
@@ -26,7 +25,7 @@ const styles:any = (theme:ThemeCustom) => createStyles ({
     width: '100%',
   },
   txtAddress: {
-    color: '#488BF8',
+    color: '#008489',
     fontSize: 14,
   },
   iconLocation: {

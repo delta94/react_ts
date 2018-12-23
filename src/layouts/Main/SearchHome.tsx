@@ -4,9 +4,7 @@ import {ReducersType} from '@/store/reducers';
 import {SearchFilterState} from '@/store/reducers/searchFilter';
 import appC from '@/styles/App.module.scss';
 import {FormikProps} from '@/types/Interface/Formik';
-import {AxiosRes} from '@/types/Requests/ResponseTemplate';
-import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
-import {axios} from '@/utils/axiosInstance';
+import {AddExtraType} from '@/types/Requests/ResponseTemplate';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import Gray from '@material-ui/core/colors/grey';
@@ -19,20 +17,24 @@ import People from '@material-ui/icons/People';
 import SearchIcon from '@material-ui/icons/Search';
 import classNames from 'classnames';
 import {Formik, FormikActions} from 'formik';
+import {LocationDescriptorObject} from 'history';
 import qs from 'query-string';
 import React, {FunctionComponent, useState} from 'react';
 import Loadable from 'react-loadable';
 import {connect} from 'react-redux';
+import {RouterProps} from 'react-router';
+import {withRouter, RouteProps} from 'react-router-dom';
 import {compose} from 'recompose';
 import {Dispatch} from 'redux';
 import * as Yup from 'yup';
+import {RoomIndexGetParams} from '@/types/Requests/Rooms/RoomRequests';
 
 const DatePicker = Loadable({
   loader: (): Promise<any> => import('@/components/Utils/DateRange'),
   loading: () => null,
 });
 
-interface IProps {
+interface IProps extends RouteProps, RouterProps {
   classes?: any;
   filter: SearchFilterState
 }
@@ -96,7 +98,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 });
 
 const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
-  const {classes, filter}             = props;
+  const {
+          classes,
+          filter,
+          history,
+        }
+                                      = props;
   const [type, setType]               = useState<number>(2);
   const [modalStatus, setModalStatus] = useState<boolean>(false);
 
@@ -114,8 +121,8 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
         validateOnChange = {false}
         // validateOnBlur = {false}
         onSubmit = {(values: FormikValues, actions: FormikActions<FormikValues>) => {
-          const query = {
-            include: 'details,media,city,district,comforts:limit(5)',
+          const query: Partial<AddExtraType<RoomIndexGetParams, string[]>> = {
+            include: 'details,media,city,district,comforts',
             name: values.name,
             rent_type: type,
             check_in: filter.startDate,
@@ -125,16 +132,23 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
             most_popular: null,
           };
 
-          const stringQuery = `rooms?${qs.stringify(query)}`;
-          axios.get(stringQuery)
-            .then((res: AxiosRes<RoomIndexRes>) => {
-              const data = res.data;
-              console.log(data);
-              actions.setSubmitting(false);
-            })
-            .catch(err => {
-              actions.setSubmitting(false);
-            });
+          const pushQuery = {
+            name: values.name,
+            number_of_rooms: filter.roomsCount,
+            check_in: filter.startDate,
+            check_out: filter.endDate,
+            number_of_guests: filter.guestsCount,
+            most_popular: null,
+            rent_type: type,
+          };
+
+          console.log(pushQuery);
+
+          const location: LocationDescriptorObject = {
+            pathname: 'rooms',
+            search: `?${qs.stringify(pushQuery)}`,
+          };
+          history.push(location);
         }}
       >
         {({
@@ -236,6 +250,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 };
 
 export default compose(
+  withRouter,
   connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles),
 )(SearchHome);

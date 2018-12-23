@@ -28,7 +28,7 @@ export type IBookingFormReducer = {
 }
 
 export interface IAction {
-  type: string;
+  type: 'setRoom' | 'setCoupon' | 'removeCoupon';
   value?: any;
   discount?: number;
   coupon?: string;
@@ -59,10 +59,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
  * @returns {Promise<any>}
  */
 const priceCalculator = async (params: IParams, state: IBookingFormReducer): Promise<any> => {
-  let additional_fee: number = 0;
-  let discount: number       = 0;
-  let CI: string             = '',
-      CO: string             = '';
+  let additional_fee = 0;
+  let discount= 0;
+  let CI = '';
+  let CO = '';
   try {
     CI = formatTime(params.checkin, params.checkin_hour, params.checkin_minute);
     CO = formatTime(params.checkout, params.checkout_hour, params.checkout_minute);
@@ -115,7 +115,6 @@ const Form: FunctionComponent<IProps> = props => {
   const {
           classes,
           location,
-          history,
         } = props;
 
   const initState: IBookingFormReducer = {

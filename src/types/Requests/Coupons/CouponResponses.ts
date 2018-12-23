@@ -1,4 +1,5 @@
 export interface CouponDiscountCalculateRes {
+  code: number;
   message: string;
   price_discount: number;
   price_remain: number;
@@ -16,18 +17,18 @@ export interface CouponIndexRes {
   all_day: number | null;
   all_day_txt: string;
   settings: {
-    bind: Array<string>;
-    rooms: Array<number>;
-    cities: Array<number>;
-    districts: Array<number>;
-    days: Array<string>;
+    bind: string[];
+    rooms: number[];
+    cities: number[];
+    districts: number[];
+    days: string[];
     booking_type: number;
     booking_create: [];
-    booking_stay: Array<string>;
-    merchants: Array<number>;
-    users: Array<number>
-    days_of_week: Array<number>;
-    room_type: Array<number>;
+    booking_stay: string[];
+    merchants: number[];
+    users: number[]
+    days_of_week: number[];
+    room_type: number[];
     min_price: number
   };
   promotion_id: number

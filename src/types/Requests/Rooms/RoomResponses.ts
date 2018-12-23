@@ -1,4 +1,7 @@
-export interface RoomIndexRes {
+import {TransformerInclude} from '@/types/Requests/ResponseTemplate';
+import {ComfortIndexResponses} from '@/components/Comforts/ComfortResponses';
+
+export interface RoomIndexRes<T = any> {
   id: number;
   merchant_id: number;
   room_type: number;
@@ -35,5 +38,11 @@ export interface RoomIndexRes {
   avg_rating: number | null,
   total_review: number | null,
   total_recommend: number | null
-  details?: any;
+  details: TransformerInclude<RoomDetails[]>;
+  comforts: TransformerInclude<ComfortIndexResponses[]>;
+}
+
+interface RoomDetails {
+  name: string,
+  address: string,
 }
