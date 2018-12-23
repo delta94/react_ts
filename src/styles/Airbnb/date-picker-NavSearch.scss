@@ -1,0 +1,22 @@
+.DateRangePicker {
+  width: 100%;
+  .ateRangePickerInput{
+    width: 100%;
+  }
+  .DateRangePickerInput_calendarIcon {
+    color: #BDBDBD;
+    margin: 0;
+  }
+  .DateInput{
+    padding: 0 0 0 10px;
+    .DateInput_input {
+      padding: 0;
+      font-size: 16px;
+      line-height: 45px;
+      cursor: pointer;
+    }
+  }
+  .DateInput_input__focused {
+    border: none;
+  }
+}

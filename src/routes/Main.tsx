@@ -24,6 +24,13 @@ const pageProfile = Loadable({
   },
 });
 
+const pageDetails = Loadable({
+    loader: (): Promise<any> => import('@/views/DetailsPage/DetailsPage'),
+    loading: () => {
+        return null;
+    },
+});
+
 const Error500 = Loadable({
   loader: (): Promise<any> => import('@/layouts/Errors/500'),
   loading: (): any => {
@@ -43,6 +50,7 @@ const RouteList: FunctionComponent<{}> = props => {
       <Route path = '/profile' component = {pageProfile} />
       <Route path = '/payments/book' component = {BookingForm} />
       <Route path = '/rooms' component = {RoomsIndex} />
+        <Route path='/roomDetails' component={pageDetails}/>
       <Route component = {Error500} />
     </Switch>
   );

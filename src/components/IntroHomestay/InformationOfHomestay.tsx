@@ -1,5 +1,4 @@
 import React, {ComponentType, Fragment} from 'react';
-import PropTypes         from 'prop-types';
 import {createStyles, withStyles} from '@material-ui/core/styles';
 import {compose}         from 'recompose';
 import Paper             from '@material-ui/core/Paper';
@@ -28,6 +27,8 @@ import "slick-carousel/slick/slick-theme.css";
 import '@/styles/PageProfile/StylePageProfile.scss';
 import FavoriteAnimation from "@/components/IntroHomestay/FavoriteAnimation";
 import {ThemeCustom} from "@/components/Theme/Theme";
+// @ts-ignore
+import StarRatings       from 'react-star-ratings';
 
 const styles:any = (theme:ThemeCustom) => createStyles ({
   root: {

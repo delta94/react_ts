@@ -25,7 +25,7 @@ const styles:any = (theme:ThemeCustom) => createStyles ({
     width: '100%',
   },
   txtAddress: {
-    color: '#488BF8',
+    color: '#008489',
     fontSize: 14,
   },
   iconLocation: {

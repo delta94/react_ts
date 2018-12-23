@@ -159,7 +159,6 @@ const HomeSweetHome:ComponentType<IHomeSweetHome> = (props:IHomeSweetHome) => {
 
   const handleToggle = (e:ChangeEvent<HTMLInputElement>) => {
     let value  = parseInt(e.target.value);
-    console.log(value);
     let status = e.target.checked;
     let checkList = checked;
 
@@ -167,7 +166,6 @@ const HomeSweetHome:ComponentType<IHomeSweetHome> = (props:IHomeSweetHome) => {
       return status && e.id === value;
     });
 
-    console.log(item);
     if (status && item) { // TypeOf item !== undefined
         checkList.push(item);
     }
@@ -176,7 +174,6 @@ const HomeSweetHome:ComponentType<IHomeSweetHome> = (props:IHomeSweetHome) => {
       return (value !== el.id || status);
     });
     setChecked(filtered);
-    console.log(filtered);
   };
 
   return (
