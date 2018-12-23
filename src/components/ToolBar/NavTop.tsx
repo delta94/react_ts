@@ -3,8 +3,8 @@ import to from '@/components/Utils/to';
 import * as animation from '@/store/actions/animationTypes';
 import {ReducersList} from '@/store/reducers';
 import {
-  AnimationState as AnimationState,
-  AnimationAction as AnimationAction,
+  AnimationState,
+  AnimationAction,
 } from '@/store/reducers/Visual/global-animation';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';

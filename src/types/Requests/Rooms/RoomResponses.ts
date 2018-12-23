@@ -1,5 +1,5 @@
 import {TransformerInclude} from '@/types/Requests/ResponseTemplate';
-import {ComfortIndexResponses} from '@/components/Comforts/ComfortResponses';
+import {ComfortIndexResponses} from '@/types/Requests/Comforts/ComfortResponses';
 
 export interface RoomIndexRes<T = any> {
   id: number;
