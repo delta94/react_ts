@@ -7,7 +7,7 @@ import BottomNavigation from '@material-ui/core/BottomNavigation/BottomNavigatio
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction/BottomNavigationAction';
 import List from '@material-ui/icons/List';
 import Map from '@material-ui/icons/Map';
-import {RoomIndexContext, IRoomIndexContext} from '@/views/Rooms/Context/RoomIndexContext';
+import {RoomIndexContext, IRoomIndexContext} from '@/store/context/Room/RoomIndexContext';
 import {animateScroll as scroll} from 'react-scroll';
 import {Filter} from 'mdi-material-ui';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
@@ -28,6 +28,8 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
 });
 
+export const [FILTER, TAB_LIST, MAP] = [0, 1, 2];
+
 const Transition = (props: any) => (
   <Slide direction = 'up' {...props} />
 );
@@ -35,7 +37,6 @@ const Transition = (props: any) => (
 // @ts-ignore
 const BottomNav: ComponentType<IProps> = (props: IProps) => {
   const {classes}                     = props;
-  const [FILTER, TAB_LIST, MAP]       = [0, 1, 2];
   const [index, setIndex]             = useState<number>(TAB_LIST);
   const [endOfScroll, setEndOfScroll] = useState<boolean>(false);
   const [bodyHeight, setBodyHeight]   = useState<number>(document.body.offsetHeight);
@@ -78,7 +79,7 @@ const BottomNav: ComponentType<IProps> = (props: IProps) => {
         open = {index === FILTER}
         onClose = {() => setIndex(TAB_LIST)}
       >
-        <FilterDrawerM setIndex ={setIndex} />
+        <FilterDrawerM setIndex = {setIndex} />
       </Dialog>
     </Fragment>
   );

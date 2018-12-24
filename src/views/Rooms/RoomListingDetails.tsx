@@ -5,7 +5,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import React, {ComponentType, Fragment, useContext, useEffect, useState} from 'react';
 import {compose} from 'recompose';
 import RoomCard from '@/components/Rooms/RoomCard';
-import {RoomIndexContext, IRoomIndexContext, getRooms} from '@/views/Rooms/Context/RoomIndexContext';
+import {RoomIndexContext, IRoomIndexContext, getRooms} from '@/store/context/Room/RoomIndexContext';
 import _ from 'lodash';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';

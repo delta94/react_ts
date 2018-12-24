@@ -8,7 +8,7 @@ import Tab from '@material-ui/core/Tab/Tab';
 import Paper from '@material-ui/core/Paper/Paper';
 import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import qs from 'query-string';
-import {IRoomIndexContext, RoomIndexContext, newRoomLocation} from '@/views/Rooms/Context/RoomIndexContext';
+import {IRoomIndexContext, RoomIndexContext, newRoomLocation} from '@/store/context/Room/RoomIndexContext';
 import {updateObject} from '@/store/utility';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 

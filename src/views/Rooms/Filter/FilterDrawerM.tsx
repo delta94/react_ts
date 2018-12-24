@@ -15,7 +15,7 @@ import {
   RoomIndexContext,
   IRoomIndexContext,
   STEP_PRICE,
-} from '@/views/Rooms/Context/RoomIndexContext';
+} from '@/store/context/Room/RoomIndexContext';
 import {usePriceEffect, priceFilterChange} from '@/components/Rooms/PriceRange';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent/DialogContent';

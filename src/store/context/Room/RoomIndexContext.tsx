@@ -1,4 +1,4 @@
-import React, {createContext} from 'react';
+import {createContext} from 'react';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {LocationDescriptorObject} from 'history';
 import {Dispatch} from 'redux';
@@ -10,8 +10,8 @@ import {updateObject} from '@/store/utility';
 import {RoomIndexGetParams, RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import {Range} from 'react-input-range';
 
-export const MIN_PRICE = 0;
-export const MAX_PRICE = 10000000;
+export const MIN_PRICE  = 0;
+export const MAX_PRICE  = 10000000;
 export const STEP_PRICE = 10000;
 
 export const RoomIndexContext = createContext<IRoomIndexContext | any>(null);
@@ -21,17 +21,15 @@ export interface IRoomIndexContext {
   dispatch: Dispatch<RoomIndexAction>,
 }
 
+export type RoomIndexAction = { type: 'setRooms', rooms: RoomIndexRes[] | null }
+  | { type: 'setPrices', price: Range }
+
 export type RoomIndexState = {
   readonly rooms: RoomIndexRes[] | null
   readonly sorts: any
   readonly price: Range,
   readonly ratingLists: number[]
   readonly amenities: number[]
-}
-
-export interface RoomIndexAction extends Partial<RoomIndexState> {
-  type: 'setRooms' | 'setPrices',
-  value?: any,
 }
 
 export const RoomIndexStateInit: RoomIndexState = {

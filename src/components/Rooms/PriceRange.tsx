@@ -20,7 +20,7 @@ import {
   STEP_PRICE,
   RoomIndexState,
   RoomIndexAction,
-} from '@/views/Rooms/Context/RoomIndexContext';
+} from '@/store/context/Room/RoomIndexContext';
 import qs from 'query-string';
 import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import {updateObject} from '@/store/utility';

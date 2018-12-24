@@ -1,7 +1,7 @@
 import * as _ from '@/store/actions/actionTypes';
 import {updateObject} from '@/store/utility';
 
-export type LoginInfoState =  {
+export type LoginInfoState = {
   readonly email: string;
   readonly isRemember: boolean;
 }
@@ -13,7 +13,7 @@ export interface LoginInfoAction {
 
 const init: LoginInfoState = {
   email: '',
-  isRemember: false
+  isRemember: false,
 };
 
 /**
@@ -24,7 +24,7 @@ const init: LoginInfoState = {
 const saveDraftedInfo = (state: LoginInfoState, action: LoginInfoAction) => {
   let obj: any = action.value;
   return updateObject<LoginInfoState>(state, obj);
-}
+};
 
 const reducer = (state: LoginInfoState = init, action: LoginInfoAction) => {
   switch (action.type) {

@@ -13,7 +13,7 @@ import {
   RoomIndexAction,
   RoomIndexReducer,
   RoomIndexStateInit,
-} from '@/views/Rooms/Context/RoomIndexContext';
+} from '@/store/context/Room/RoomIndexContext';
 import {RouteProps, RouterProps} from 'react-router';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import Loadable from 'react-loadable';

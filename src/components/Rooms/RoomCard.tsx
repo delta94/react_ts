@@ -24,7 +24,7 @@ import Blue from '@material-ui/core/colors/blue';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import Button from '@material-ui/core/Button/Button';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
-import {RoomIndexContext, IRoomIndexContext} from '@/views/Rooms/Context/RoomIndexContext';
+import {RoomIndexContext, IRoomIndexContext} from '@/store/context/Room/RoomIndexContext';
 import {ThemeStyle} from '@material-ui/core/styles/createTypography';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';

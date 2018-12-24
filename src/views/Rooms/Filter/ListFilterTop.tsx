@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper/Paper';
 import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import qs from 'query-string';
 import {updateObject} from '@/store/utility';
-import {newRoomLocation, IRoomIndexContext, RoomIndexContext} from '@/views/Rooms/Context/RoomIndexContext';
+import {newRoomLocation, IRoomIndexContext, RoomIndexContext} from '@/store/context/Room/RoomIndexContext';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 
 interface IProps {
@@ -18,22 +18,23 @@ interface IProps {
 
 const styles: any = (theme: ThemeCustom) => createStyles({});
 
+const [MOST_POPULAR, LOWEST_PRICE, MOST_REVIEW, DEAL_HOT] = [0, 1, 2, 3];
+
 // @ts-ignore
 const ListFilterTop: ComponentType<IProps> = (props: IProps) => {
   const {classes}               = props;
   const [tabFocus, setTabFocus] = useState<number>(0);
-
-  const {history, location} = useContext<IGlobalContext>(GlobalContext);
-  const {dispatch} = useContext<IRoomIndexContext>(RoomIndexContext);
+  const {history, location}     = useContext<IGlobalContext>(GlobalContext);
+  const {dispatch}              = useContext<IRoomIndexContext>(RoomIndexContext);
 
   const tabFocusChange = (value: number) => {
     if (value !== tabFocus) {
       const params: RoomUrlParams  = qs.parse(location.search!);
       const instant: RoomUrlParams = {
-        most_popular: (value === 0) ? null : undefined,
-        lowest_price: (value === 1) ? null : undefined,
-        most_review: (value === 2) ? null : undefined,
-        deal_hot: (value === 3) ? null : undefined,
+        most_popular: (value === MOST_POPULAR) ? null : undefined,
+        lowest_price: (value === LOWEST_PRICE) ? null : undefined,
+        most_review: (value === MOST_REVIEW) ? null : undefined,
+        deal_hot: (value === DEAL_HOT) ? null : undefined,
       };
 
       const newParams  = updateObject(params, instant);
