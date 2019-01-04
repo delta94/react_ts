@@ -5,7 +5,7 @@ import React, {ComponentType, Fragment, useContext, useState} from 'react';
 import {compose,withProps} from 'recompose';
 import MarkerMap from '@/views/DetailsPage/MarkerMap';
 // @ts-ignore
-import GoogleMapReact from 'google-map-react';
+import GoogleMapReact, {Coords} from 'google-map-react';
 import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 
 interface IProps {
