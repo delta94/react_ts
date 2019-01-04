@@ -10,9 +10,9 @@ import withWidth from '@material-ui/core/withWidth/withWidth';
 import {LocationDescriptorObject, History} from 'history';
 import {Breakpoint} from '@material-ui/core/styles/createBreakpoints';
 import {GlobalContext} from '@/store/context/GlobalContext';
+import {RouteChildrenProps, RouterProps} from 'react-router';
 
-interface AppProps {
-  location: LocationDescriptorObject,
+interface AppProps extends RouterProps, RouteChildrenProps {
   history: History
   width: Breakpoint
 }
@@ -32,11 +32,11 @@ const cookieRefresher = () => {
 
 // @ts-ignore
 const App: ComponentType<{}> = (props: AppProps) => {
-  const {history, location, width} = props;
+  const {history, location, width, match} = props;
   cookieRefresher();
   return (
     <MuiThemeProvider theme = {theme}>
-      <GlobalContext.Provider value = {{history, location, width}}>
+      <GlobalContext.Provider value = {{history, location, width, match}}>
         <RouteList />
       </GlobalContext.Provider>
     </MuiThemeProvider>

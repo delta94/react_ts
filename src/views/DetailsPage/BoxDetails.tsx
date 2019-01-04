@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useState, Fragment, useContext, useEffect} from 'react';
+import React, {ComponentType, useState, Fragment, useContext} from 'react';
 import {compose} from 'recompose';
 import classNames from 'classnames';
 import Grid from '@material-ui/core/Grid';
@@ -18,7 +18,6 @@ import People from '@material-ui/icons/PeopleRounded';
 import Home from '@material-ui/icons/HomeRounded';
 import Wifi from '@material-ui/icons/WifiRounded';
 import Fastfood from '@material-ui/icons/FastfoodRounded';
-import avatarDemo from '@/assets/avatar_demo.jpg';
 import chat from '@/assets/chat.png';
 import verified from '@/assets/verified.png';
 import medalCertified from '@/assets/medalCertified.svg';
@@ -26,10 +25,8 @@ import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 // @ts-ignore
 import StarRatings from 'react-star-ratings';
 import {
-  getData,
   IRoomDetailsContext, RoomDetailsContext,
 } from '@/store/context/Room/RoomDetailsContext';
-import {AxiosError} from 'axios';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 
 interface IProps {
@@ -197,7 +194,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 
 const BoxDetails: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
-  const [arrowRef, setArrowRef] = useState<any>(null);
+  const [arrowRef] = useState<any>(null);
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
   const {rooms} = state;

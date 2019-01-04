@@ -198,6 +198,11 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
     swipe: !xsMode,
   };
 
+  const cardEvent = () => {
+    let win = window.open(`/room/${room.id}`, '_blank');
+    win!.focus();
+  };
+
   const cardHover = (status: boolean) => {
     mapDispatch({
       type: 'setRoomId',
@@ -312,6 +317,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                           {!xsMode ? (
                             <Grid container item xs = {3} justify = 'flex-end'>
                               <Button
+                                onClick = {cardEvent}
                                 className = {classes.buttonTrans}
                                 variant = {hoverStatus ? 'contained' : 'outlined'}
                                 color = 'primary'
