@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useState, Fragment, ChangeEvent} from 'react';
+import React, {ComponentType, useState, Fragment, ChangeEvent, useContext, useEffect} from 'react';
 import {compose} from 'recompose';
 import Paper from '@material-ui/core/Paper/Paper';
 import Grid from '@material-ui/core/Grid/Grid';
@@ -18,7 +18,11 @@ import MenuItem from '@material-ui/core/MenuItem/MenuItem';
 import FormControl from '@material-ui/core/FormControl/FormControl';
 import Button from '@material-ui/core/Button/Button';
 import HelpOutline from '@material-ui/icons/HelpOutline';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import {getData, IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
+import {AxiosError} from 'axios';
+import SimpleLoader from '@/components/Loading/SimpleLoader';
+import Menu from '@material-ui/core/Menu/Menu';
 
 interface IProps {
   classes?: any,
@@ -53,8 +57,11 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     fontSize: 13,
   },
   pricePerHour:{
-    textAlign:'right',
-    borderLeft:'1px solid #e0e0e0',
+    textAlign:'center',
+  },
+  pricePerDay:{
+    textAlign:'center',
+    borderRight:'1px solid #e0e0e0',
   },
   formControl:{
     height:50,
@@ -77,15 +84,36 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     fontSize: 'initial',
     paddingLeft: 5,
   },
+  menuSelect:{
+    maxHeight: 'calc(100% - 60%)'
+  },
 });
 
 const BoxBooking: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
   const [ckbox, setCkbox]       = useState<boolean>(false);
-  const [time,setTime] = useState<string>("");
+  const [guest,setGuest] = useState<number>(1);
+  const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+
+  const {rooms} = state;
+  if (rooms == null){return <SimpleLoader/>}
 
   const handleChangeSelect = (event:ChangeEvent<HTMLSelectElement>) => {
-    setTime(event.target.value);
+    setGuest(parseInt(event.target.value));
+  };
+
+  const formatNumber= (x:number) =>{
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const arrMenuItem = (x:number) =>{
+    let i=1;
+    let arr = [];
+    while (i <= x){
+       arr.push(<MenuItem key={i} value={i}>{i} guest</MenuItem>);
+      i++;
+    }
+    return arr;
   };
 
   return (
@@ -94,16 +122,22 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
        <div className={classes.boxPadding}>
          <Grid container className={classes.rowMargin}>
            <Grid item xs={6}>
-             <div>
-               <span className = {classes.price}>10.700.000 <sup>&#8363;</sup></span>
+             <div className={classes.pricePerDay}>
+               <span className = {classes.price}>{formatNumber(rooms!.price_day)} <sup>&#8363;</sup></span>
                <sub className={classes.perTime}>/day</sub>
              </div>
            </Grid>
            <Grid item xs={6}>
-             <div className={classes.pricePerHour}>
-               <span className = {classes.price}>10.700.000 <sup>&#8363;</sup></span>
-               <sub className={classes.perTime}>/4h</sub>
-             </div>
+               {rooms!.price_hour == 0 ? (
+                 <div className={classes.pricePerHour}>
+                    <span className = {classes.price}>No rental hourly</span>
+                 </div>
+               ) : (
+                 <div className={classes.pricePerHour}>
+                   <span className = {classes.price}>{formatNumber(rooms!.price_hour)} <sup>&#8363;</sup></span>
+                   <sub className={classes.perTime}>/4h</sub>
+                 </div>
+               )}
            </Grid>
          </Grid>
          <Divider/>
@@ -116,11 +150,12 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                      name=""
                      checked={ckbox}
                      onChange={()=>setCkbox(!ckbox)}
-                     value="stay for hours"
+                     value="setHour"
                      color='primary'
+                     disabled={rooms!.price_hour == 0}
                    />
                  }
-                 label="Stay for hours"
+                 label="Set by the hour"
                />
              </FormGroup>
            </Grid>
@@ -141,8 +176,11 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
              <Paper square elevation={0} className={classes.PaperDatePick}>
                <FormControl variant="outlined" className={classes.formControl}>
                  <Select
+                   MenuProps={{
+                     classes:{paper:classes.menuSelect}
+                   }}
                    displayEmpty
-                   value={time}
+                   value={guest}
                    onChange={handleChangeSelect}
                    input={
                      <OutlinedInput
@@ -154,11 +192,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                      />
                    }
                  >
-                   <MenuItem value={''}>
-                     <Typography variant='body1' color='textSecondary'>1 guest</Typography>
-                   </MenuItem>
-                   <MenuItem value={1}>2 guest</MenuItem>
-                   <MenuItem value={2}>3 guest</MenuItem>
+                   {arrMenuItem(rooms!.max_guest)}
                  </Select>
                </FormControl>
              </Paper>

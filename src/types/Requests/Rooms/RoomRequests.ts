@@ -50,3 +50,4 @@ export interface RoomUrlParams {
   rating?: string | null
   view?: 'map' | 'list'
 }
+

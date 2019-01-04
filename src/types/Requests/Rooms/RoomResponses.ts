@@ -37,15 +37,22 @@ export interface RoomIndexRes<T = any> {
   quality: number | null,
   service: number | null,
   valuable: number | null,
-  avg_rating: number | null,
+  avg_rating: number,
   total_review: number,
-  total_recommend: number | null
+  total_recommend: number | null,
+  avg_rating_txt:string,
   details: TransformerInclude<RoomDetails[]>;
+  user: TransformerInclude<User>;
   comforts: TransformerInclude<ComfortIndexResponses[]>;
   media: TransformerInclude<MediaIndexRes[]>
 }
 
-interface RoomDetails {
+export interface RoomDetails<T=any> {
   name: string,
   address: string,
+}
+export interface User<T=any> {
+  name: string,
+  avatar_url: string,
+  vip_txt:string,
 }

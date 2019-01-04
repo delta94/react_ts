@@ -31,7 +31,7 @@ const MarkerMap: ComponentType<IProps> = (props: IProps) => {
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '100%',
-        transform: 'translate(-50%, -50%)'
+        transform: 'translate(-50%, -100%)'
       }}>
         <img src = {mapMarker} alt = 'marker' width={'100%'}/>
       </div>
