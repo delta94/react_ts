@@ -86,7 +86,7 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
 
   const {rooms, meta} = state;
   const {isMapOpen}   = mapState;
-  const xsMode        = width === 'xs';
+  const xsMode = width === 'xs';
 
   const settings: Settings = {
     speed: 300,

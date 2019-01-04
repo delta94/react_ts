@@ -49,7 +49,7 @@ const RouteList: FunctionComponent<{}> = props => {
       <Route path = '/profile' component = {pageProfile} />
       <Route path = '/payments/book' component = {BookingForm} />
       <Route path = '/rooms' component = {RoomsIndex} />
-      <Route path = '/roomDetails' component = {pageDetails} />
+      <Route path = '/room/:id' component = {pageDetails} />
       <Route component = {Error500} />
     </Switch>
   );

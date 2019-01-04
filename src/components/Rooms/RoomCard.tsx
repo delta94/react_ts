@@ -158,11 +158,11 @@ interface IProps {
 
 // @ts-ignore
 const RoomCard: ComponentType<IProps> = (props: IProps) => {
-  const {classes, room}             = props;
+  const {classes, room} = props;
   const [paperHover, setPaperHover] = useState<boolean>(false);
-  const {width}                     = useContext<IGlobalContext>(GlobalContext);
-  const typoVariant: ThemeStyle     = (width === 'sm' || width === 'xs') ? 'subtitle2' : 'h6';
-  const totalComfort                = (room.comforts.data.length - 3);
+  const {width, history} = useContext<IGlobalContext>(GlobalContext);
+  const typoVariant: ThemeStyle = (width === 'sm' || width === 'xs') ? 'subtitle2' : 'h6';
+  const totalComfort = (room.comforts.data.length - 3);
 
   const settings: Settings = {
     speed: 300,
@@ -170,6 +170,11 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
     slidesToShow: 1,
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
+  };
+
+  const cardEvent = () => {
+    let win = window.open(`/room/${room.id}`, '_blank');
+    win!.focus();
   };
 
   return (
@@ -184,14 +189,15 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
             <LazyLoad>
               <Slider {...settings}>
                 {room.media.data.length > 0 ? _.map(room.media.data, o => (
-                  <img key={o.image} src = {`http://westay.org/storage/rooms/${o.image}`} className = {classes.imgSize} />
+                  <img key = {o.image} src = {`http://westay.org/storage/rooms/${o.image}`}
+                       className = {classes.imgSize} />
                 )) : (
                   <img src = {fakeIMG} className = {classes.imgSize} />
                 )}
               </Slider>
             </LazyLoad>
           </Grid>
-          <Grid item lg = {9} sm = {8} xs = {12}>
+          <Grid item lg = {9} sm = {8} xs = {12} onClick = {cardEvent}>
             <Grid container className = {classes.maxHeight}>
               <Grid item lg = {9} sm = {9}>
                 <Grid container spacing = {0} className = {classNames(
@@ -299,7 +305,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                             <ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />
                           </Tooltip>
                         </Grid>
-                      ): ''}
+                      ) : ''}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -308,7 +314,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                 <Grid item lg = {3} sm = {3} className = {classes.borderSection}>
                   <Grid container className = {classes.maxHeight}>
                     <Grid item lg = {12} sm = {12} className = {classes.contentHeight}>
-                      <Grid container spacing = {8} alignItems = 'center' justify='center' direction = 'row-reverse'>
+                      <Grid container spacing = {8} alignItems = 'center' justify = 'center' direction = 'row-reverse'>
                         {room.total_review > 0 ? (
                           <Fragment>
                             <Grid item>
