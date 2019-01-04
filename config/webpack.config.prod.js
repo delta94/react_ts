@@ -21,6 +21,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -426,6 +427,11 @@ module.exports = {
     ],
   },
   plugins: [
+    // MY PLUGIN
+    new CompressionPlugin({
+      algorithm: 'gzip',
+      test: /\.js$|\.tsx$|\.ts$|\.css$|\.html$|\.eot?.+$|\.ttf?.+$|\.woff?.+$|\.svg?.+$/,
+    }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,

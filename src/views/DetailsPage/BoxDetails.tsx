@@ -3,9 +3,9 @@ import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import React, {ComponentType, useState, Fragment} from 'react';
 import {compose} from 'recompose';
-import classNames from "classnames";
-import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
+import classNames from 'classnames';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 import Location from '@material-ui/icons/LocationOnOutlined';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -20,7 +20,7 @@ import avatarDemo from '@/assets/avatar_demo.jpg';
 import chat from '@/assets/chat.png';
 import verified from '@/assets/verified.png';
 import medalCertified from '@/assets/medalCertified.svg';
-import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 // @ts-ignore
 import StarRatings from 'react-star-ratings';
 

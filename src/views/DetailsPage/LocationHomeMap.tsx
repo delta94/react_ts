@@ -1,19 +1,15 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, Fragment, useState} from 'react';
-import {compose,withProps} from 'recompose';
+import React, {ComponentType, Fragment} from 'react';
+import {compose} from 'recompose';
 import MarkerMap from '@/views/DetailsPage/MarkerMap';
-
 // @ts-ignore
-import GoogleMapReact from 'google-map-react';
+import GoogleMapReact, {Coords} from 'google-map-react';
 
 interface IProps {
   classes?: any,
-  center?: {
-    lat:number,
-    lng:number,
-  },
+  center?: Coords
   zoom?: number,
 }
 
@@ -28,7 +24,7 @@ const LocationHomeMap: ComponentType<IProps> = (props: IProps) => {
     <Fragment>
       <GoogleMapReact
         bootstrapURLKeys={{
-          key: process.env.REACT_APP_GOOGLE_MAP_KEY,
+          key: process.env.REACT_APP_GOOGLE_MAP_KEY || '',
         }}
         defaultCenter={props.center}
         defaultZoom={props.zoom}

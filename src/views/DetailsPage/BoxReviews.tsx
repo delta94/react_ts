@@ -1,23 +1,17 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import LocationHomeMap from "@/views/DetailsPage/LocationHomeMap";
-import React, {ComponentType, Fragment, useState} from 'react';
-import {compose,withProps} from 'recompose';
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography/Typography";
-import Avatar from "@material-ui/core/Avatar";
+import LocationHomeMap from '@/views/DetailsPage/LocationHomeMap';
+import React, {ComponentType, Fragment} from 'react';
+import {compose} from 'recompose';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography/Typography';
+import Avatar from '@material-ui/core/Avatar';
 import avatarDemo from '@/assets/avatar_demo.jpg';
-
-// @ts-ignore
 import StarRatings from 'react-star-ratings';
-// @ts-ignore
 import Pagination from 'rc-pagination';
-// @ts-ignore
 import localeInfo from 'rc-pagination/lib/locale/en_US';
 import 'rc-pagination/assets/index.css';
-// @ts-ignore
-import GoogleMapReact from 'google-map-react';
 
 interface IProps {
   classes?: any,

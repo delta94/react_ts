@@ -1,9 +1,12 @@
 import axiosBase, {AxiosInstance} from 'axios';
 import Cookies from 'universal-cookie';
+import {Headers} from 'request';
 
 const cookies = new Cookies();
 const headers = {
+  Accept: 'application/json',
   Authorization: 'Bearer ' + cookies.get('_token'),
+  // 'Accept-Encoding': 'gzip, deflate, br',
 };
 
 const instance: AxiosInstance = axiosBase.create({

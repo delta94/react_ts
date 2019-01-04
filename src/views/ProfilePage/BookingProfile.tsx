@@ -5,7 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper/Paper';
 import BookingCompleted from '@/views/ProfilePage/BookingCompleted';
-import {ThemeCustom} from "@/components/Theme/Theme";
+import {ThemeCustom} from '@/components/Theme/Theme';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
     boxBookingProfile: {

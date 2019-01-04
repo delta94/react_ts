@@ -1,5 +1,6 @@
 import {TransformerInclude} from '@/types/Requests/ResponseTemplate';
 import {ComfortIndexResponses} from '@/types/Requests/Comforts/ComfortResponses';
+import {MediaIndexRes} from '@/types/Requests/Media/MediaIndexResponse';
 
 export interface RoomIndexRes<T = any> {
   id: number;
@@ -21,6 +22,7 @@ export interface RoomIndexRes<T = any> {
   cleaning_fee: number;
   standard_point: number;
   is_manager: number;
+  manager: number;
   manager_txt: string;
   hot: number;
   new: number;
@@ -36,10 +38,11 @@ export interface RoomIndexRes<T = any> {
   service: number | null,
   valuable: number | null,
   avg_rating: number | null,
-  total_review: number | null,
+  total_review: number,
   total_recommend: number | null
   details: TransformerInclude<RoomDetails[]>;
   comforts: TransformerInclude<ComfortIndexResponses[]>;
+  media: TransformerInclude<MediaIndexRes[]>
 }
 
 interface RoomDetails {

@@ -27,7 +27,7 @@ import {withRouter, RouteProps} from 'react-router-dom';
 import {compose} from 'recompose';
 import {Dispatch} from 'redux';
 import * as Yup from 'yup';
-import {RoomIndexGetParams} from '@/types/Requests/Rooms/RoomRequests';
+import {RoomIndexGetParams, RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 
 const DatePicker = Loadable({
   loader: (): Promise<any> => import('@/components/Utils/DateRange'),
@@ -104,7 +104,7 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
           history,
         }
                                       = props;
-  const [type, setType]               = useState<number>(2);
+  const [type, setType]               = useState<number>(3);
   const [modalStatus, setModalStatus] = useState<boolean>(false);
 
   return (
@@ -121,28 +121,16 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
         validateOnChange = {false}
         // validateOnBlur = {false}
         onSubmit = {(values: FormikValues, actions: FormikActions<FormikValues>) => {
-          const query: Partial<AddExtraType<RoomIndexGetParams, string[]>> = {
-            include: 'details,media,city,district,comforts',
-            name: values.name,
-            rent_type: type,
-            check_in: filter.startDate,
-            check_out: filter.endDate,
-            rooms: filter.roomsCount,
-            number_guest: filter.guestsCount,
-            most_popular: null,
-          };
 
-          const pushQuery = {
+          const pushQuery: RoomUrlParams = {
             name: values.name,
             number_of_rooms: filter.roomsCount,
             check_in: filter.startDate,
             check_out: filter.endDate,
             number_of_guests: filter.guestsCount,
             most_popular: null,
-            rent_type: type,
+            // rent_type: type,
           };
-
-          console.log(pushQuery);
 
           const location: LocationDescriptorObject = {
             pathname: 'rooms',

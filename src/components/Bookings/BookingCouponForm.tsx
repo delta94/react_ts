@@ -17,9 +17,10 @@ import Paper from '@material-ui/core/Paper/Paper';
 import {AxiosResponse, AxiosError} from 'axios';
 import {Formik, FormikActions} from 'formik';
 import moment from 'moment';
-import React, {ComponentType} from 'react';
+import React, {ComponentType, useContext} from 'react';
 import Loadable from 'react-loadable';
 import * as Yup from 'yup';
+import {IBookingFormContext, BookingFormContext} from '@/store/context/Booking/BookingFormContext';
 
 interface IProps extends BookingInfoProps {
   openHandle(status: false): void;
@@ -46,9 +47,11 @@ const formikInit: IFormikValues = {
 const BookingCouponForm: ComponentType<IProps> = props => {
   const {
           classes,
-          room,
-          dispatch,
         } = props;
+
+  const {state, dispatch} = useContext<IBookingFormContext>(BookingFormContext);
+
+  const {room} = state;
 
   return (
     <Formik

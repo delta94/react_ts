@@ -1,7 +1,6 @@
 import React, {FunctionComponent} from 'react';
 import Loadable from 'react-loadable';
-import {Route, Switch, BrowserRouter} from 'react-router-dom';
-import {TransitionGroup, CSSTransition} from 'react-transition-group';
+import {Route, Switch} from 'react-router-dom';
 
 const HomePage    = Loadable({
   loader: (): Promise<any> => import('@/views/Homepage/Home'),
@@ -25,10 +24,10 @@ const pageProfile = Loadable({
 });
 
 const pageDetails = Loadable({
-    loader: (): Promise<any> => import('@/views/DetailsPage/DetailsPage'),
-    loading: () => {
-        return null;
-    },
+  loader: (): Promise<any> => import('@/views/DetailsPage/DetailsPage'),
+  loading: () => {
+    return null;
+  },
 });
 
 const Error500 = Loadable({
@@ -50,7 +49,7 @@ const RouteList: FunctionComponent<{}> = props => {
       <Route path = '/profile' component = {pageProfile} />
       <Route path = '/payments/book' component = {BookingForm} />
       <Route path = '/rooms' component = {RoomsIndex} />
-        <Route path='/roomDetails' component={pageDetails}/>
+      <Route path = '/roomDetails' component = {pageDetails} />
       <Route component = {Error500} />
     </Switch>
   );

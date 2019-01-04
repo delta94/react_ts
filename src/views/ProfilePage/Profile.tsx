@@ -1,10 +1,9 @@
 import React, {ComponentType} from 'react';
-import PropTypes    from 'prop-types';
-import MenuProfile  from '@/views/ProfilePage/MenuProfile';
-import NavTop       from '@/components/ToolBar/NavTop';
-import {compose}    from 'recompose';
+import MenuProfile from '@/views/ProfilePage/MenuProfile';
+import NavTop from '@/components/ToolBar/NavTop';
+import {compose} from 'recompose';
 import {createStyles, withStyles} from '@material-ui/core';
-import {ThemeCustom} from "@/components/Theme/Theme";
+import {ThemeCustom} from '@/components/Theme/Theme';
 
 interface IProps {
     classes: any

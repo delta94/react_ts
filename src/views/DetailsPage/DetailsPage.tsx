@@ -7,7 +7,7 @@ import BoxReviews from '@/views/DetailsPage/BoxReviews';
 import BoxBooking from '@/views/DetailsPage/BoxBooking';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, Fragment, useEffect, useState} from 'react';
+import React, {ComponentType, useEffect, useState} from 'react';
 import {compose} from 'recompose';
 import Button from '@material-ui/core/Button/Button';
 import GridContainer from '@/layouts/Grid/Container';

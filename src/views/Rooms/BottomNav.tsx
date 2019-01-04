@@ -1,19 +1,17 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useState, useEffect, useContext} from 'react';
+import React, {ComponentType, Fragment, useState, useContext, useEffect} from 'react';
 import {compose} from 'recompose';
 import BottomNavigation from '@material-ui/core/BottomNavigation/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction/BottomNavigationAction';
 import List from '@material-ui/icons/List';
 import Map from '@material-ui/icons/Map';
-import {RoomIndexContext, IRoomIndexContext} from '@/store/context/Room/RoomIndexContext';
-import {animateScroll as scroll} from 'react-scroll';
 import {Filter} from 'mdi-material-ui';
-import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import FilterDrawerM from '@/views/Rooms/Filter/FilterDrawerM';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Slide from '@material-ui/core/Slide/Slide';
+import {IRoomMapContext, RoomMapContext} from '@/store/context/Room/RoomMapContext';
 
 interface IProps {
   classes?: any
@@ -28,42 +26,42 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
 });
 
-export const [FILTER, TAB_LIST, MAP] = [0, 1, 2];
+export const FILTER   = 0;
+export const TAB_LIST = 1;
+export const MAP      = 2;
 
-const Transition = (props: any) => (
+export const TransitionCustom = (props: any) => (
   <Slide direction = 'up' {...props} />
 );
 
 // @ts-ignore
 const BottomNav: ComponentType<IProps> = (props: IProps) => {
-  const {classes}                     = props;
-  const [index, setIndex]             = useState<number>(TAB_LIST);
-  const [endOfScroll, setEndOfScroll] = useState<boolean>(false);
-  const [bodyHeight, setBodyHeight]   = useState<number>(document.body.offsetHeight);
-  const {width}                       = useContext<IGlobalContext>(GlobalContext);
-  const {state}                       = useContext<IRoomIndexContext>(RoomIndexContext);
+  const {classes}                                = props;
+  const [index, setIndex]                        = useState<number>(TAB_LIST);
+  const {dispatch: mapDispatch, state: mapState} = useContext<IRoomMapContext>(RoomMapContext);
+
+  const {isMapOpen} = mapState;
 
   useEffect(() => {
-    setBodyHeight(document.body.offsetHeight);
-  }, [state, width]);
+    if (index === MAP) {
+      mapDispatch({
+        type: 'setMapOpen',
+        status: true,
+      });
+    }
+  }, [index]);
 
   useEffect(() => {
-    window.onscroll = () => {
-      let currentScroll = window.innerHeight + window.pageYOffset;
-      if ((currentScroll >= bodyHeight) && !endOfScroll) {
-        setEndOfScroll(true);
-        scroll.scrollToBottom();
-      } else if ((currentScroll < bodyHeight) && endOfScroll) {
-        setEndOfScroll(false);
-      }
-    };
-  });
+    if (!isMapOpen) {
+      setIndex(TAB_LIST);
+    }
+  }, [isMapOpen]);
 
   return (
     <Fragment>
       <BottomNavigation
         value = {index}
-        style = {{position: endOfScroll ? 'relative' : 'fixed'}}
+        style = {{position: 'fixed'}}
         onChange = {(e, value) => setIndex(value)}
         showLabels
         className = {classes.root}
@@ -74,7 +72,7 @@ const BottomNav: ComponentType<IProps> = (props: IProps) => {
       </BottomNavigation>
       <Dialog
         fullScreen
-        TransitionComponent = {Transition}
+        TransitionComponent = {TransitionCustom}
         scroll = 'paper'
         open = {index === FILTER}
         onClose = {() => setIndex(TAB_LIST)}

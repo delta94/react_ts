@@ -1,20 +1,19 @@
 import React, {ComponentType, Fragment} from 'react';
-import {compose}         from 'recompose';
+import {compose} from 'recompose';
 import {createStyles, withStyles} from '@material-ui/core/styles';
-import Typography        from '@material-ui/core/Typography';
-import GridContainer     from '../../layouts/Grid/Container';
-import Paper             from '@material-ui/core/Paper';
-import Grid              from '@material-ui/core/Grid';
-import Button            from '@material-ui/core/Button';
-import Divider           from '@material-ui/core/Divider';
-import imgRoomDemo       from '@/assets/room_demo.jpeg';
-import fb                from '@/assets/facebook.png';
-import gg                from '@/assets/google.png';
-import twt               from '@/assets/twitter.png';
-import Location          from '@material-ui/icons/LocationOnOutlined';
-import StarRatings       from 'react-star-ratings';
-import {ThemeCustom} from "@/components/Theme/Theme";
-
+import Typography from '@material-ui/core/Typography';
+import GridContainer from '../../layouts/Grid/Container';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import imgRoomDemo from '@/assets/room_demo.jpeg';
+import fb from '@/assets/facebook.png';
+import gg from '@/assets/google.png';
+import twt from '@/assets/twitter.png';
+import Location from '@material-ui/icons/LocationOnOutlined';
+import StarRatings from 'react-star-ratings';
+import {ThemeCustom} from '@/components/Theme/Theme';
 
 const styles:any = (theme:ThemeCustom) => createStyles ({
   bookingCompleted: {

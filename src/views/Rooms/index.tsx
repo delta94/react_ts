@@ -17,6 +17,13 @@ import {
 import {RouteProps, RouterProps} from 'react-router';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import Loadable from 'react-loadable';
+import {
+  RoomMapState,
+  RoomMapAction,
+  RoomMapReducer,
+  RoomMapStateInit,
+  RoomMapContext,
+} from '@/store/context/Room/RoomMapContext';
 
 interface IProps extends RouteProps, RouterProps {
   classes: any;
@@ -31,9 +38,14 @@ const styles: any = (theme: ThemeCustom) => createStyles({});
 
 const RoomIndex: FunctionComponent<IProps> = props => {
   const [state, dispatch] = useReducer<RoomIndexState, RoomIndexAction>(RoomIndexReducer, RoomIndexStateInit);
+  const [mapState, mapDispatch] = useReducer<RoomMapState, RoomMapAction>(RoomMapReducer, RoomMapStateInit);
 
   return (
     <RoomIndexContext.Provider value = {{state, dispatch}}>
+      <RoomMapContext.Provider value = {{
+        state: mapState,
+        dispatch: mapDispatch,
+      }}>
       <NavTop />
       <GridContainer lg = {10} xs = {11} sm = {11}>
         <Hidden smDown>
@@ -44,6 +56,7 @@ const RoomIndex: FunctionComponent<IProps> = props => {
       <Hidden mdUp>
         <BottomNav />
       </Hidden>
+      </RoomMapContext.Provider>
     </RoomIndexContext.Provider>
   );
 };

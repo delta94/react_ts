@@ -29,6 +29,7 @@ export const BOOKING_CANCEL: number   = 5;
 export const BOOKING_TYPE_HOUR: number = 1; // Hour
 export const BOOKING_TYPE_DAY: number  = 2; // Day
 
+
 //
 export const OFFLINE: number = 1;
 export const ONLINE: number  = 2;

@@ -22,7 +22,7 @@ import OneWorldBanner from '@/assets/OneWorldBanner.jpg';
 import worldRouned from '@/assets/worldRouned.jpg';
 import carTravel from '@/assets/car_travel.png';
 import aroundTheWorld from '@/assets/around_the_world.jpg';
-import {ThemeStyle} from "@material-ui/core/styles/createTypography";
+import {ThemeStyle} from '@material-ui/core/styles/createTypography';
 
 const styles: any = (theme: ThemeStyle) => createStyles({
     borderSilver: {

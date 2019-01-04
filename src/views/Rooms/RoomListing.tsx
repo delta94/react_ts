@@ -4,12 +4,23 @@ import Grid from '@material-ui/core/Grid/Grid';
 import Paper from '@material-ui/core/Paper/Paper';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment} from 'react';
+import React, {ComponentType, Fragment, useReducer, useContext} from 'react';
 import {compose} from 'recompose';
 import FilterLeftBar from '@/components/Rooms/FilterLeftBar';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import TabFilter from '@/views/Rooms/Filter/TabFilter';
 import ListFilterTop from '@/views/Rooms/Filter/ListFilterTop';
+import MapVector from '@/assets/map-vector.svg';
+import classNames from 'classnames';
+import Button from '@material-ui/core/Button/Button';
+import Maps from '@/components/Maps/Maps';
+import {
+  RoomMapState,
+  RoomMapAction,
+  RoomMapReducer,
+  RoomMapStateInit,
+  RoomMapContext, IRoomMapContext,
+} from '@/store/context/Room/RoomMapContext';
 
 interface IProps {
   classes?: any
@@ -18,6 +29,9 @@ interface IProps {
 const styles: any = (theme: ThemeCustom) => createStyles({
   root: {
     marginTop: 30,
+    [theme!.breakpoints!.between!('xs', 'sm')]: {
+      marginTop: 5,
+    },
   },
   margin15: {
     marginTop: 15,
@@ -34,14 +48,27 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   checkboxRoot: {
     padding: 5,
   },
+  mapPaper: {
+    cursor: 'pointer',
+  },
 });
 
 // @ts-ignore
 const RoomListing: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
 
+  const {dispatch: mapDispatch} = useContext<IRoomMapContext>(RoomMapContext);
+
+  const mapClick = () => {
+    mapDispatch({
+      type: 'setMapOpen',
+      status: true
+    })
+  };
+
   return (
     <Fragment>
+      <Maps />
       <Hidden smDown>
         <Grid container spacing = {0} className = {classes.root}>
           <Grid item sm = {6}>
@@ -52,19 +79,30 @@ const RoomListing: ComponentType<IProps> = (props: IProps) => {
       <Grid container spacing = {16} className = {classes.root}>
         <Hidden smDown>
           <Grid item sm = {3}>
-            <Paper elevation = {1} className = {classes.filterLeft}>
+            <Paper elevation = {1} onClick = {mapClick} classes = {{
+              root: classes.mapPaper,
+            }}>
+              <img src = {MapVector} alt = 'map-vector' />
+              <Button
+                variant = 'text'
+                fullWidth
+              >View map</Button>
+            </Paper>
+            <Paper elevation = {1} className = {classNames(
+              classes.margin15,  classes.filterLeft,
+            )}>
               <FilterLeftBar />
             </Paper>
           </Grid>
         </Hidden>
-        <Grid item lg = {9} md = {9} sm = {12}>
+        <Grid item lg = {9} md = {9} sm = {12} xs = {12}>
           <Grid container>
             <Hidden smDown>
               <Grid item sm = {12}>
                 <ListFilterTop />
               </Grid>
             </Hidden>
-            <Grid item sm = {12} className = {classes.margin15}>
+            <Grid item sm = {12} xs = {12} className = {classes.margin15}>
               <RoomListingDetails />
             </Grid>
           </Grid>

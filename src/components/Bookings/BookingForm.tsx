@@ -4,7 +4,6 @@ import {BookingCreateReq} from '@/types/Requests/Booking/BookingRequests';
 import {axios} from '@/utils/axiosInstance';
 import {scrollDefault} from '@/utils/elementInteraction';
 import {AVAILABLE, DEFAULT_DATE_FORMAT, INTERNET_BANKING, PENDING, WEBSITE_SRC, ONLINE} from '@/utils/store/global';
-import {IBookingFormReducer} from '@/views/Bookings/Form';
 import {withStyles, createStyles} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -30,6 +29,7 @@ import Loadable from 'react-loadable';
 import {compose} from 'recompose';
 import * as Yup from 'yup';
 import {StringSchema} from 'yup';
+import {BookingFormState} from '@/store/context/Booking/BookingFormContext';
 
 interface IFormikValues {
   firstName: string;
@@ -45,13 +45,39 @@ interface IFormikValues {
 
 interface IProps {
   classes?: any;
-  room: any;
-  state: IBookingFormReducer;
+  state: BookingFormState;
 }
 
 interface ILocalProps extends IProps, FormikProps<IFormikValues> {
 
 }
+
+const FormValidationSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .required('Please fill your name')
+    .min(3, 'Must be longer than 3 characters')
+    .max(50, 'No longer than 50 characters'),
+  lastName: Yup.string()
+    .required('Please fill your name')
+    .min(3, 'Must be longer than 3 characters')
+    .max(50, 'No longer than 50 characters'),
+  email: Yup.string()
+    .required('Please fill your email')
+    .email('Email address not valid'),
+  phone: Yup.string()
+    .required('Please fill your phone number'),
+  country: Yup.number()
+    .required('Please select a country')
+    .min(1, 'Please select a country'),
+  isSomeOneElse: Yup.boolean(),
+  guestName: Yup.string().when('isSomeOneElse', (status: boolean, schema: StringSchema) => {
+    return status
+      ? schema.required('Please fill the field name')
+        .min(4, 'Must be longer than 4 characters')
+        .max(50, 'No longer than 50 characters')
+      : schema;
+  }),
+});
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   paperCustom: {
@@ -98,12 +124,13 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
           handleChange,
           handleBlur,
           handleSubmit,
-          room,
           isSubmitting,
           isValidating,
           setValues,
+          state,
         } = props;
 
+  const {room}                     = state;
   const [isRequest, toggleRequest] = useState<boolean>(false);
   const guestNameRef               = useRef<any>(null);
 
@@ -133,9 +160,9 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
 
   const setAdditionalServices = (e: ChangeEvent<HTMLInputElement>) => {
     e.persist();
-    let value: number           = parseInt(e.target.value);
-    let status: boolean         = e.target.checked;
-    let services: Array<number> = values.additionalServices;
+    let value: number      = parseInt(e.target.value);
+    let status: boolean    = e.target.checked;
+    let services: number[] = values.additionalServices;
 
     // If checkbox ticked then pushed a value to services
     if (status) {
@@ -146,7 +173,7 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
     let filtered: Array<number> = services.filter((val, i, arr) => {
       return (value !== val && status);
     });
-    console.log(filtered);
+
     setValues({
       ...values,
       additionalServices: filtered,
@@ -350,33 +377,6 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
   );
 };
 
-const FormValidationSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .required('Please fill your name')
-    .min(3, 'Must be longer than 3 characters')
-    .max(50, 'No longer than 50 characters'),
-  lastName: Yup.string()
-    .required('Please fill your name')
-    .min(3, 'Must be longer than 3 characters')
-    .max(50, 'No longer than 50 characters'),
-  email: Yup.string()
-    .required('Please fill your email')
-    .email('Email address not valid'),
-  phone: Yup.string()
-    .required('Please fill your phone number'),
-  country: Yup.number()
-    .required('Please select a country')
-    .min(1, 'Please select a country'),
-  isSomeOneElse: Yup.boolean(),
-  guestName: Yup.string().when('isSomeOneElse', (status: boolean, schema: StringSchema) => {
-    return status
-      ? schema.required('Please fill the field name')
-        .min(4, 'Must be longer than 4 characters')
-        .max(50, 'No longer than 50 characters')
-      : schema;
-  }),
-});
-
 const FormMilk = withFormik({
   mapPropsToValues: (props): IFormikValues => {
     return {
@@ -393,7 +393,9 @@ const FormMilk = withFormik({
   },
 
   handleSubmit: (values: IFormikValues, bags: FormikBag<IProps, IFormikValues>) => {
-    const {room, state} = bags.props;
+    const {state} = bags.props;
+
+    const {room} = state;
 
     const data: BookingCreateReq = {
       name: `${values.lastName} ${values.firstName}`,

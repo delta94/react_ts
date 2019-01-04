@@ -1,23 +1,22 @@
-import VN_vi             from '@/assets/vietnam84.png';
-import Button            from '@material-ui/core/Button';
-import FormControl       from '@material-ui/core/FormControl';
-import FormHelperText    from '@material-ui/core/FormHelperText';
-import Grid              from '@material-ui/core/Grid';
-import Input             from '@material-ui/core/Input';
-import InputAdornment    from '@material-ui/core/InputAdornment';
-import InputLabel        from '@material-ui/core/InputLabel';
-import MenuItem          from '@material-ui/core/MenuItem';
-import Paper             from '@material-ui/core/Paper';
-import Select            from '@material-ui/core/Select';
+import VN_vi from '@/assets/vietnam84.png';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Grid from '@material-ui/core/Grid';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
 import {createStyles, withStyles} from '@material-ui/core/styles';
-import TextField         from '@material-ui/core/TextField';
-import Typography        from '@material-ui/core/Typography';
-import Lock              from '@material-ui/icons/LockOutlined';
-import PropTypes         from 'prop-types';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Lock from '@material-ui/icons/LockOutlined';
 import React, {ChangeEvent, ComponentType, useState} from 'react';
-import {compose}         from 'recompose';
-import Tooltip           from '@material-ui/core/Tooltip/Tooltip';
-import {ThemeCustom} from "@/components/Theme/Theme";
+import {compose} from 'recompose';
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import {ThemeCustom} from '@/components/Theme/Theme';
 
 const styles:any = (theme:ThemeCustom) => createStyles ({
   boxEditProfile: {
