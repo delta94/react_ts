@@ -38,6 +38,6 @@ export const RoomDetailsReducer = (state: RoomDetailsState, action: RoomDetailsA
 };
 
 export const getData = async (idRoom: number) => {
-  const res: AxiosRes<RoomIndexRes> = await axios.get(`rooms/${idRoom}?include=details,user`);
+  const res: AxiosRes<RoomIndexRes> = await axios.get(`rooms/${idRoom}?include=details,user,comforts,media`);
   return res.data.data;
 };

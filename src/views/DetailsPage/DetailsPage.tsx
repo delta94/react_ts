@@ -72,7 +72,6 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [state, dispatch] = useReducer<RoomDetailsState, RoomDetailsAction>(RoomDetailsReducer, RoomDetailsStateInit);
   const {history} = useContext<IGlobalContext>(GlobalContext);
-  console.log(props);
 
   useEffect(() => {
     let id = parseInt(match.params.id);
@@ -80,7 +79,6 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
     if (isNaN(id)) history.push('/');
 
     getData(id).then((data) => {
-      console.log(data);
       dispatch({
         type: 'setDetails',
         action: data,
@@ -91,7 +89,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
   }, []); // phu thuoc
 
   return (
-    <RoomDetailsContext.Provider value={{state,dispatch}}>
+    <RoomDetailsContext.Provider value = {{state, dispatch}}>
       <div className = {classes.root}>
         <NavTop />
         <NavSearch />
