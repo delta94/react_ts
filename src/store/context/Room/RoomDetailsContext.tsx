@@ -1,6 +1,6 @@
 import {createContext} from 'react';
 import {Dispatch} from 'redux';
-import {RoomDetails, RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
+import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {updateObject} from '@/store/utility';
 import {AxiosRes} from '@/types/Requests/ResponseTemplate';
 import {axios} from '@/utils/axiosInstance';
@@ -37,7 +37,7 @@ export const RoomDetailsReducer = (state: RoomDetailsState, action: RoomDetailsA
   }
 };
 
-export const getData = async () => {
-  const res: AxiosRes<RoomIndexRes> = await axios.get('rooms/3143?include=details,user');
+export const getData = async (idRoom: number) => {
+  const res: AxiosRes<RoomIndexRes> = await axios.get(`rooms/${idRoom}?include=details,user`);
   return res.data.data;
 };
