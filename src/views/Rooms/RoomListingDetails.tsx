@@ -40,6 +40,10 @@ const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
     setIsEmpty((rooms !== null && (rooms.length === 0)));
   }, [rooms]);
 
+  useEffect(()=>{
+    console.log(location);
+  })
+
   return (
     <Fragment>
       <Grid container spacing = {16} justify = 'center'>

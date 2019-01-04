@@ -45,3 +45,4 @@ export interface RoomUrlParams {
   most_review?: string | number | null
   deal_hot?: string | number | null
 }
+

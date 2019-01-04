@@ -21,8 +21,7 @@ export interface IRoomIndexContext {
   dispatch: Dispatch<RoomIndexAction>,
 }
 
-export type RoomIndexAction = { type: 'setRooms', rooms: RoomIndexRes[] | null }
-  | { type: 'setPrices', price: Range }
+export type RoomIndexAction = { type: 'setRooms', rooms: RoomIndexRes[] | null } | { type: 'setPrices', price: Range }
 
 export type RoomIndexState = {
   readonly rooms: RoomIndexRes[] | null

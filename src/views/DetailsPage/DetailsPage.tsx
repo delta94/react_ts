@@ -7,21 +7,23 @@ import BoxReviews from '@/views/DetailsPage/BoxReviews';
 import BoxBooking from '@/views/DetailsPage/BoxBooking';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, Fragment, useEffect, useState} from 'react';
+import React, {ComponentType, useEffect, useReducer, useState} from 'react';
 import {compose} from 'recompose';
 import Button from '@material-ui/core/Button/Button';
 import GridContainer from '@/layouts/Grid/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper/Paper';
-import {AxiosRes} from '@/types/Requests/ResponseTemplate';
-import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
-import {axios} from '@/utils/axiosInstance';
+import {
+  getData, RoomDetailsAction,
+  RoomDetailsContext,
+  RoomDetailsReducer,
+  RoomDetailsState, RoomDetailsStateInit,
+} from '@/store/context/Room/RoomDetailsContext';
 import {AxiosError} from 'axios';
 
 interface IProps {
   classes?: any,
 }
-
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   root: {},
@@ -46,41 +48,38 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       MsTransform: 'scale(1.1)', /* IE 9 */
       WebkitTransform: 'scale(1.1)', /* Safari 3-8 */
       transform: 'scale(1.1)',
+      backgroundColor: 'rgba(192,192,192,0.5)',
     },
   },
   boxDetails: {
     width: '100%',
-    marginTop: 40,
+    marginTop: 30,
   },
   boxPadding: {
     padding: 16,
   },
 });
 
-const Details: ComponentType<IProps> = (props: IProps) => {
+const DetailsPage: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [price, setPrice] = useState<number>(0);
+  const [state, dispatch] = useReducer<RoomDetailsState, RoomDetailsAction>(RoomDetailsReducer, RoomDetailsStateInit);
 
   useEffect(() => {
     getData().then((data) => {
-      setPrice(data.price_day);
+      console.log(data);
+      dispatch({
+        type: 'setDetails',
+        action: data,
+      });
     }).catch((err: AxiosError) => {
       console.log(err.response);
     });
-  },[isOpen]); // phu thuoc
-
-  useEffect(() => {
-    console.log(price);
-  });
-
-  const getData = async () => {
-    const res: AxiosRes<RoomIndexRes> = await axios.get('rooms/3143?include=details');
-    return res.data.data;
-  };
+  }, []); // phu thuoc
 
   return (
-    <div className = {classes.root}>
+    <RoomDetailsContext.Provider value={{state,dispatch}}>
+      <div className = {classes.root}>
       <NavTop />
       <NavSearch />
       <div className = {classes.boxGridImage}>
@@ -108,9 +107,10 @@ const Details: ComponentType<IProps> = (props: IProps) => {
         </GridContainer>
       </div>
     </div>
+    </RoomDetailsContext.Provider>
   );
 };
 
 export default compose<IProps, any>(
   withStyles(styles),
-)(Details);
+)(DetailsPage);
