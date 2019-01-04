@@ -1,11 +1,11 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useState, Fragment} from 'react';
+import React, {ComponentType, useState, Fragment, useContext, useEffect} from 'react';
 import {compose} from 'recompose';
-import classNames from "classnames";
-import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
+import classNames from 'classnames';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 import Location from '@material-ui/icons/LocationOnOutlined';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -14,26 +14,33 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MeetingRoom from '@material-ui/icons/MeetingRoomRounded';
 import LocalHotel from '@material-ui/icons/LocalHotelRounded';
+import People from '@material-ui/icons/PeopleRounded';
+import Home from '@material-ui/icons/HomeRounded';
 import Wifi from '@material-ui/icons/WifiRounded';
 import Fastfood from '@material-ui/icons/FastfoodRounded';
 import avatarDemo from '@/assets/avatar_demo.jpg';
 import chat from '@/assets/chat.png';
 import verified from '@/assets/verified.png';
 import medalCertified from '@/assets/medalCertified.svg';
-import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 // @ts-ignore
 import StarRatings from 'react-star-ratings';
+import {
+  getData,
+  IRoomDetailsContext, RoomDetailsContext,
+} from '@/store/context/Room/RoomDetailsContext';
+import {AxiosError} from 'axios';
+import SimpleLoader from '@/components/Loading/SimpleLoader';
 
 interface IProps {
   classes?: any,
 }
 
-
 const styles: any = (theme: ThemeCustom) => createStyles({
   rowMargin: {
     marginBottom: 10,
   },
-  rowMargin20:{
+  rowMargin20: {
     margin: '20px 0',
   },
   spanViews: {
@@ -50,12 +57,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     fontSize: 20,
   },
   boxPadding: {
-    padding: 16
+    padding: 16,
   },
   roomAmenitiesTitle: {
     color: '#46afcc',
     margin: '0 5px',
-    fontSize: 11,
+    fontSize: 13,
   },
   collectionAmenities: {
     paddingLeft: 0,
@@ -88,7 +95,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     border: '1px solid #e0e0e0',
     color: theme.palette!.text!.primary,
     fontSize: 11,
-    backgroundColor:'transparent',
+    backgroundColor: 'transparent',
   },
   arrowPopper: {
     '&[x-placement*="bottom"] $arrowArrow': {
@@ -126,7 +133,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
     '&[x-placement*="left"] $arrowArrow': {
       right: 0,
-      top:'20%',
+      top: '20%',
       marginRight: '-0.9em',
       height: '3em',
       width: '1em',
@@ -154,218 +161,227 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     textAlign: 'center',
     padding: 4,
   },
-  boxHighlight:{
+  boxHighlight: {
     border: '1px solid #EBEBEB',
     borderRadius: 4,
     boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.1)',
-    padding: 24 ,
-    width:'100%',
+    padding: 24,
+    width: '100%',
   },
-  titleHighlight:{
+  titleHighlight: {
     fontSize: 17,
     fontWeight: 600,
     lineHeight: '1.375em',
     color: '#484848',
   },
-  contentHighlight:{
+  contentHighlight: {
     fontSize: 16,
     fontWeight: 400,
     lineHeight: '1.375em',
     color: '#484848',
   },
-  expansionPanel:{
+  expansionPanel: {
     boxShadow: 'none',
-    borderTop:'1px solid #e0e0e0',
-    width:'100%',
+    borderTop: '1px solid #e0e0e0',
+    width: '100%',
   },
-  expansionPanelDetails:{
-    display:'block'
+  expansionPanelDetails: {
+    display: 'block',
   },
-  headingPanel:{
+  headingPanel: {
     flexBasis: '33.33%',
     flexShrink: 0,
     fontSize: 16,
-  }
+  },
 });
 
 const BoxDetails: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
   const [arrowRef, setArrowRef] = useState<any>(null);
+  const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+
+  const {rooms} = state;
+
+  if (rooms == null) {return <SimpleLoader/>}
 
   return (
     <Fragment>
       <Grid container>
         <Grid item xs = {9}>
-            <Grid container direction = 'column'
-                  justify = 'center'
-                  alignItems = 'flex-start'>
-              <Grid item>
-                <Typography variant = 'h5'>Room Name Demo - Luxury</Typography>
-              </Grid>
-              <Grid item className = {classes.rowMargin}>
-                <StarRatings
-                  rating = {4.5} //index rating
-                  starDimension = '20px'
-                  starSpacing = '1px'
-                  starRatedColor = '#46afcc'
-                />
-                <span className = {classes.spanViews}>1123 views</span>
-              </Grid>
-              <Grid item className = {classes.rowMargin}>
-                            <span className = {classes.txtAddress}>
-                              <Location className = {classes.iconLocation} />
-                              Ngo 298, 123 Doi Can, Ba Dinh, Ha Noi
-                            </span>
-              </Grid>
+          <Grid container direction = 'column'
+                justify = 'center'
+                alignItems = 'flex-start'>
+            <Grid item>
+              <Typography variant = 'h5'>{rooms!.details.data[0].name}</Typography>
             </Grid>
+            <Grid item className = {classes.rowMargin}>
+              <StarRatings
+                rating = {rooms !== null ? rooms.avg_rating : 0} //index rating
+                starDimension = '20px'
+                starSpacing = '1px'
+                starRatedColor = '#46afcc'
+              />
+              <span className = {classes.spanViews}>{rooms!.total_review} views</span>
+            </Grid>
+            <Grid item className = {classes.rowMargin}>
+              <span className = {classes.txtAddress}>
+                <Location className = {classes.iconLocation} />
+                {rooms.details.data[0].address}
+              </span>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs = {3}>
-            <Grid container direction = 'column' justify = 'flex-end' alignItems = 'flex-end'>
-              <Grid item xs = {12}>
-                <Tooltip
-                  interactive
-                  placement = 'left'
-                  title = {
-                    <Fragment>
-                      <div>
-                        <Typography variant = {'subtitle2'} align={"center"}>Nguyen Khuong</Typography>
-                        <Grid container>
-                          <Grid item xs = {4}>
-                            <div className = {classes.info}>
-                              <div>
-                                <img src = {medalCertified} width = {15} height = {15} />
-                              </div>
-                              <Typography variant = {"caption"}>Super!</Typography>
+          <Grid container direction = 'column' justify = 'flex-end' alignItems = 'flex-end'>
+            <Grid item xs = {12}>
+              <Tooltip
+                interactive
+                placement = 'left'
+                title = {
+                  <Fragment>
+                    <div>
+                      <Typography variant = {'subtitle2'} align = {'center'}>{rooms!.user.data.name}</Typography>
+                      <Grid container>
+                        <Grid item xs = {4}>
+                          <div className = {classes.info}>
+                            <div>
+                              <img src = {medalCertified} width = {15} height = {15} />
                             </div>
-                          </Grid>
-                          <Grid item xs = {4}>
-                            <div className = {classes.info}>
-                              <div>
-                                <img src = {chat} width = {15} height = {15} />
-                              </div>
-                              <Typography variant = {"caption"} style = {{color: '#F8952F'}}>987</Typography>
-                            </div>
-                          </Grid>
-                          <Grid item xs = {4}>
-                            <div className = {classes.info}>
-                              <div>
-                                <img alt='verified' src = {verified} width = {15} height = {15}/>
-                              </div>
-                              <Typography variant = {"caption"} style = {{color: '#00c853'}}>verified</Typography>
-                            </div>
-                          </Grid>
+                            <Typography variant = {'caption'}>Super!</Typography>
+                          </div>
                         </Grid>
-                      </div>
-                      <span className = {classes.arrowArrow} />
-                    </Fragment>
-                  }
-                  classes = {{
-                    popper: classes.arrowPopper,
-                    tooltip: classes.lightTooltip,
-                  }}
-                  PopperProps = {{
-                    popperOptions: {
-                      modifiers: {
-                        arrow: {
-                          enabled: Boolean(arrowRef),
-                          element: arrowRef,
-                        },
+                        <Grid item xs = {4}>
+                          <div className = {classes.info}>
+                            <div>
+                              <img src = {chat} width = {15} height = {15} />
+                            </div>
+                            <Typography variant = {'caption'} style = {{color: '#F8952F'}}>987</Typography>
+                          </div>
+                        </Grid>
+                        <Grid item xs = {4}>
+                          <div className = {classes.info}>
+                            <div>
+                              <img alt = 'verified' src = {verified} width = {15} height = {15} />
+                            </div>
+                            <Typography variant = {'caption'} style = {{color: '#00c853'}}>verified</Typography>
+                          </div>
+                        </Grid>
+                      </Grid>
+                    </div>
+                    <span className = {classes.arrowArrow} />
+                  </Fragment>
+                }
+                classes = {{
+                  popper: classes.arrowPopper,
+                  tooltip: classes.lightTooltip,
+                }}
+                PopperProps = {{
+                  popperOptions: {
+                    modifiers: {
+                      arrow: {
+                        enabled: Boolean(arrowRef),
+                        element: arrowRef,
                       },
                     },
-                  }}
-                >
-                  <div className = {classes.avatar}>
-                    <img alt = 'Avatar' src = {avatarDemo} className = {classes.imgAvatar} />
-                    <div className = {classes.infoHost}>
-                      <img src = {medalCertified} width = {32} height = {32} />
-                    </div>
+                  },
+                }}
+              >
+                <div className = {classes.avatar}>
+                  <img alt = 'Avatar' src = {rooms!.user.data.avatar_url} className = {classes.imgAvatar} />
+                  <div className = {classes.infoHost}>
+                    <img src = {medalCertified} width = {32} height = {32} />
                   </div>
-                </Tooltip>
-              </Grid>
+                </div>
+              </Tooltip>
             </Grid>
+          </Grid>
         </Grid>
       </Grid>
-      <Divider/>
+      <Divider />
       <Grid container className = {classes.rowMargin20}>
         <Grid item xs = {6} sm = {3}>
           <div className = {classes.collectionAmenities}>
+            <Home className = {classes.roomAmenitiesIcon} />
+            <div className = {classes.roomAmenitiesTitle}><span>{rooms!.room_type_txt}</span></div>
+          </div>
+        </Grid>
+        <Grid item xs = {6} sm = {3}>
+          <div className = {classes.collectionAmenities}>
+            <People className = {classes.roomAmenitiesIcon} />
+            <div className = {classes.roomAmenitiesTitle}><span>{rooms!.max_guest} guests</span></div>
+          </div>
+        </Grid>
+        <Grid item xs = {6} sm = {3}>
+          <div className = {classes.collectionAmenities}>
             <MeetingRoom className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>2 Bedroom(s)</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{rooms!.number_room} rooms</span></div>
           </div>
         </Grid>
         <Grid item xs = {6} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <LocalHotel className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>2 beds</span></div>
-          </div>
-        </Grid>
-        <Grid item xs = {6} sm = {3}>
-          <div className = {classes.collectionAmenities}>
-            <Wifi className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>Free Wifi</span></div>
-          </div>
-        </Grid>
-        <Grid item xs = {6} sm = {3}>
-          <div className = {classes.collectionAmenities}>
-            <Fastfood className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>Free Breakfast</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{rooms!.number_bed} beds</span></div>
           </div>
         </Grid>
       </Grid>
-      <Grid container className={classes.rowMargin20}>
-        <div className={classes.boxHighlight}>
-          <Typography variant={"button"} color={"textSecondary"}>Home Highlights</Typography>
-          <div className={classes.rowMargin20}>
-            <span className={classes.titleHighlight}>Is a Superhost: </span>
-            <span className={classes.contentHighlight}>Superhosts are experienced, highly rated hosts who are committed to providing great stays for guests.</span>
+      <Grid container className = {classes.rowMargin20}>
+        <div className = {classes.boxHighlight}>
+          <Typography variant = {'button'} color = {'textSecondary'}>Home Highlights</Typography>
+          <div className = {classes.rowMargin20}>
+            <span className = {classes.titleHighlight}>Is a Superhost: </span>
+            <span className = {classes.contentHighlight}>Superhosts are experienced, highly rated hosts who are committed to providing great stays for guests.</span>
           </div>
-          <div className={classes.rowMargin20}>
-            <span className={classes.titleHighlight}>Great location: </span>
-            <span className={classes.contentHighlight}>95% of recent guests gave this home’s location a 5-star rating.</span>
+          <div className = {classes.rowMargin20}>
+            <span className = {classes.titleHighlight}>Great location: </span>
+            <span
+              className = {classes.contentHighlight}>95% of recent guests gave this home’s location a 5-star rating.</span>
           </div>
-          <div className={classes.rowMargin20}>
-            <span className={classes.titleHighlight}>Sparkling clean: </span>
-            <span className={classes.contentHighlight}>11 recent guests have said that this home was sparkling clean.</span>
+          <div className = {classes.rowMargin20}>
+            <span className = {classes.titleHighlight}>Sparkling clean: </span>
+            <span
+              className = {classes.contentHighlight}>11 recent guests have said that this home was sparkling clean.</span>
           </div>
         </div>
       </Grid>
-      <Grid container className={classes.rowMargin20}>
-        <ExpansionPanel classes={{root:classes.expansionPanel}}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classNames(classes.titleHighlight,classes.headingPanel)}>
-             About homestay
+      <Grid container className = {classes.rowMargin20}>
+        <ExpansionPanel classes = {{root: classes.expansionPanel}}>
+          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />}>
+            <Typography className = {classNames(classes.titleHighlight, classes.headingPanel)}>
+              About homestay
             </Typography>
-            <Typography variant={"body2"}>
-              Stunning views over the hinterland. Luxurious villa sleeping 10 persons in a loft style room. Property spreads over 10 acres. Horses and dogs are welcome.
+            <Typography variant = {'body2'}>
+              Stunning views over the hinterland. Luxurious villa sleeping 10 persons in a loft style room. Property
+              spreads over 10 acres. Horses and dogs are welcome.
             </Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails classes={{root:classes.expansionPanelDetails}}>
-            <Grid container className={classes.rowMargin}>
-              <Grid item xs={4}>
-                <Typography variant={'subtitle2'}>The space: </Typography>
+          <ExpansionPanelDetails classes = {{root: classes.expansionPanelDetails}}>
+            <Grid container className = {classes.rowMargin}>
+              <Grid item xs = {4}>
+                <Typography variant = {'subtitle2'}>The space: </Typography>
               </Grid>
-              <Grid item xs={8}>
-                <Typography variant={'body2'}>- 25 min from Surfers Paradise</Typography>
-                <Typography variant={'body2'}>- Soothing hot outdoor spa</Typography>
-                <Typography variant={'body2'}>- Heating & Air Conditioning</Typography>
-                <Typography variant={'body2'}>- Property is on 10 acres of beautiful land</Typography>
+              <Grid item xs = {8}>
+                <Typography variant = {'body2'}>- 25 min from Surfers Paradise</Typography>
+                <Typography variant = {'body2'}>- Soothing hot outdoor spa</Typography>
+                <Typography variant = {'body2'}>- Heating & Air Conditioning</Typography>
+                <Typography variant = {'body2'}>- Property is on 10 acres of beautiful land</Typography>
               </Grid>
             </Grid>
-            <Grid container className={classes.rowMargin}>
-              <Grid item xs={4}>
-                <Typography variant={'subtitle2'}>Guest access: </Typography>
+            <Grid container className = {classes.rowMargin}>
+              <Grid item xs = {4}>
+                <Typography variant = {'subtitle2'}>Guest access: </Typography>
               </Grid>
-              <Grid item xs={8}>
-                <Typography variant={'body2'}>- Guests have access to the entire property with the exception of the main house that the owner occupies.</Typography>
+              <Grid item xs = {8}>
+                <Typography variant = {'body2'}>- Guests have access to the entire property with the exception of the
+                                                main house that the owner occupies.</Typography>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </Grid>
-      <Grid container className={classes.rowMargin20}>
-        <ExpansionPanel classes={{root:classes.expansionPanel}}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classNames(classes.titleHighlight,classes.headingPanel)}>
+      <Grid container className = {classes.rowMargin20}>
+        <ExpansionPanel classes = {{root: classes.expansionPanel}}>
+          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />}>
+            <Typography className = {classNames(classes.titleHighlight, classes.headingPanel)}>
               Amenities
             </Typography>
             <Grid container>
@@ -395,35 +411,35 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
               </Grid>
             </Grid>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails classes={{root:classes.expansionPanelDetails}}>
-            <Grid container className={classes.rowMargin}>
-              <Grid item xs={4}>
-                <Typography variant={'subtitle2'}>&#9679; Wifi: </Typography>
+          <ExpansionPanelDetails classes = {{root: classes.expansionPanelDetails}}>
+            <Grid container className = {classes.rowMargin}>
+              <Grid item xs = {4}>
+                <Typography variant = {'subtitle2'}>&#9679; Wifi: </Typography>
               </Grid>
-              <Grid item xs={8}>
-                <Typography variant={'body2'}>- Continuous access in the listing</Typography>
-              </Grid>
-            </Grid>
-            <Grid container className={classes.rowMargin}>
-              <Grid item xs={4}>
-                <Typography variant={'subtitle2'}>&#9679; Dryer: </Typography>
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant={'body2'}>- In the building, free or for a fee</Typography>
+              <Grid item xs = {8}>
+                <Typography variant = {'body2'}>- Continuous access in the listing</Typography>
               </Grid>
             </Grid>
-            <Grid container className={classes.rowMargin}>
-              <Grid item xs={4}>
-                <Typography variant={'subtitle2'}>&#9679; TV: </Typography>
+            <Grid container className = {classes.rowMargin}>
+              <Grid item xs = {4}>
+                <Typography variant = {'subtitle2'}>&#9679; Dryer: </Typography>
               </Grid>
-              <Grid item xs={8}></Grid>
+              <Grid item xs = {8}>
+                <Typography variant = {'body2'}>- In the building, free or for a fee</Typography>
+              </Grid>
             </Grid>
-            <Grid container className={classes.rowMargin}>
-              <Grid item xs={4}>
-                <Typography variant={'subtitle2'}>&#9679; Air conditioning: </Typography>
+            <Grid container className = {classes.rowMargin}>
+              <Grid item xs = {4}>
+                <Typography variant = {'subtitle2'}>&#9679; TV: </Typography>
               </Grid>
-              <Grid item xs={8}>
-                <Typography variant={'body2'}>- Yes</Typography>
+              <Grid item xs = {8}></Grid>
+            </Grid>
+            <Grid container className = {classes.rowMargin}>
+              <Grid item xs = {4}>
+                <Typography variant = {'subtitle2'}>&#9679; Air conditioning: </Typography>
+              </Grid>
+              <Grid item xs = {8}>
+                <Typography variant = {'body2'}>- Yes</Typography>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>

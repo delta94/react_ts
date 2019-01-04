@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import TextField from '@material-ui/core/TextField/TextField';
 import Button from '@material-ui/core/Button/Button';
-import StarRatings from 'react-star-ratings';
 import InputRange, {Range} from 'react-input-range';
 import {
   MIN_PRICE,
@@ -23,6 +22,7 @@ import DialogActions from '@material-ui/core/DialogActions/DialogActions';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import IconButton from '@material-ui/core/IconButton/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import {TAB_LIST} from '@/views/Rooms/BottomNav';
 
 interface IProps {
   classes?: any
@@ -44,6 +44,11 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     top: 0,
     right: 0,
   },
+  dialog: {
+    [theme!.breakpoints!.only!('xs')]: {
+      padding: '0 12px'
+    }
+  }
 });
 
 // @ts-ignore
@@ -58,7 +63,7 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
   });
 
   const applyFilter = () => {
-    setIndex(1);
+    setIndex(TAB_LIST);
     priceFilterChange(price, location, history, dispatch);
   };
 
@@ -70,11 +75,11 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
         <Typography variant = 'h6' className = {classes.center}>Filter</Typography>
         <IconButton
           className = {classes.closeButton}
-          onClick = {() => setIndex(1)}>
+          onClick = {() => setIndex(TAB_LIST)}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent className={classes.dialog}>
         <Grid item xs = {12} container className = {classes.sortMargin} spacing = {0}>
           <Grid item xs = {12} container spacing = {8}>
             <Grid item sm = {10} xs = {9}>
@@ -95,16 +100,16 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
                 }}>Search</Button>
             </Grid>
           </Grid>
-          <Grid item xs = {12} className = {classes.sortMargin}>
-            <Typography variant = 'subtitle2'>Star rating</Typography><br />
-            <StarRatings
-              numberOfStars = {5}
-              rating = {3}
-              starDimension = {'2rem'}
-              starRatedColor = '#FFC412'
-            />
-            <span>&nbsp;and up</span>
-          </Grid>
+          {/*TODO: Star Rating Mobile Version*/}
+          {/*<Grid item xs = {12} className = {classes.sortMargin}>*/}
+            {/*<Typography variant = 'subtitle2'>Star rating</Typography><br />*/}
+            {/*<StarRatings*/}
+              {/*numberOfStars = {5}*/}
+              {/*rating = {3}*/}
+              {/*starDimension = {'2rem'}*/}
+              {/*starRatedColor = '#FFC412'*/}
+            {/*/>*/}
+          {/*</Grid>*/}
           <Grid item xs = {12} className = {classes.sortMargin}>
             <Typography variant = 'subtitle2'>Price per night</Typography><br />
             <InputRange

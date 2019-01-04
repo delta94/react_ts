@@ -1,16 +1,15 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ChangeEvent, ComponentType, Dispatch, Fragment, MouseEvent, SetStateAction, useState} from 'react';
+import React, {ComponentType, Dispatch, Fragment, MouseEvent, SetStateAction, useState} from 'react';
 import {compose} from 'recompose';
-import imgRoomDemo       from '@/assets/room_demo.jpeg';
-import imgRoomDemo2      from '@/assets/room_demo2.jpeg';
-import imgRoomDemo4      from '@/assets/room_demo4.jpeg';
-import imgRoomDemo5      from '@/assets/room_demo5.jpeg';
-import imgRoomDemo6      from '@/assets/room_demo6.jpeg';
+import imgRoomDemo from '@/assets/room_demo.jpeg';
+import imgRoomDemo2 from '@/assets/room_demo2.jpeg';
+import imgRoomDemo4 from '@/assets/room_demo4.jpeg';
+import imgRoomDemo5 from '@/assets/room_demo5.jpeg';
+import imgRoomDemo6 from '@/assets/room_demo6.jpeg';
 // @ts-ignore
 import Lightbox from 'react-images';
-
 
 interface IProps {
     classes?: any,
@@ -65,9 +64,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
         transition: 'all 0.5s',
         cursor:'pointer',
         '&:hover':{
-            MsTransform: 'scale(1.1)', /* IE 9 */
-            WebkitTransform: 'scale(1.1)', /* Safari 3-8 */
-            transform: 'scale(1.1)',
+            MsTransform: 'scale(1.2)', /* IE 9 */
+            WebkitTransform: 'scale(1.2)', /* Safari 3-8 */
+            transform: 'scale(1.2)',
         },
     },
 

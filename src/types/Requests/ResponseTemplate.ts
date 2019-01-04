@@ -29,7 +29,7 @@ export interface ErrorValidate<E = any, T = Array<any>> {
 /**
  * Pagination from response
  */
-interface Pagination {
+export interface Pagination {
   pagination: {
     total: number;
     count: number;
@@ -39,7 +39,7 @@ interface Pagination {
     links: {
       next: string;
       previous: string;
-    } | Array<any>
+    } | any
   }
 }
 

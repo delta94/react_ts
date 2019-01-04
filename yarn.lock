@@ -1031,6 +1031,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/google-map-react@^0.23.10":
+  version "0.23.10"
+  resolved "https://registry.yarnpkg.com/@types/google-map-react/-/google-map-react-0.23.10.tgz#3c6c50c47856eccb069a4514df3b14b358819304"
+  integrity sha512-YMWDnd+xy6CQ5UKOqdxrg1tKnJEjkW7oll6EPaxupKkVjy9neHui2/c0lcJszj519sSRYzqg8GReUCRepljBPg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/history@*":
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.2.tgz#0e670ea254d559241b6eeb3894f8754991e73220"
@@ -1130,6 +1137,13 @@
     "@types/react" "*"
     "@types/theming" "*"
     csstype "^2.0.0"
+
+"@types/react-lazyload@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@types/react-lazyload/-/react-lazyload-2.3.1.tgz#6a1814432f668081ff693abfa8e09bff09aa3649"
+  integrity sha512-A6JP3TWmWP7I7V1yIme0yIZGHj+6Lhf9kos3A6eRw9ADy1eK3poP3XC0o6KBWvBHZbHJXoZAAni+mX6GE4dMKg==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-loadable@^5.4.2":
   version "5.4.2"
@@ -2465,7 +2479,7 @@ cacache@^10.0.4:
     unique-filename "^1.1.0"
     y18n "^4.0.0"
 
-cacache@^11.0.2:
+cacache@^11.0.2, cacache@^11.2.0:
   version "11.3.2"
   resolved "https://registry.yarnpkg.com/cacache/-/cacache-11.3.2.tgz#2d81e308e3d258ca38125b676b98b2ac9ce69bfa"
   integrity sha512-E0zP4EPGDOaT2chM08Als91eYnf8Z+eH1awwwVsngUmgppfM5jjJ8l3z5vO5p5w/I3LsiXawb1sW0VY65pQABg==
@@ -2923,6 +2937,18 @@ compressible@~2.0.14:
   integrity sha512-4aE67DL33dSW9gw4CI2H/yTxqHLNcxp0yS6jB+4h+wr3e43+1z7vm0HU9qXOH8j+qjKuL8+UtkOxYQSMq60Ylw==
   dependencies:
     mime-db ">= 1.36.0 < 2"
+
+compression-webpack-plugin@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/compression-webpack-plugin/-/compression-webpack-plugin-2.0.0.tgz#46476350c1eb27f783dccc79ac2f709baa2cffbc"
+  integrity sha512-bDgd7oTUZC8EkRx8j0sjyCfeiO+e5sFcfgaFcjVhfQf5lLya7oY2BczxcJ7IUuVjz5m6fy8IECFmVFew3xLk8Q==
+  dependencies:
+    cacache "^11.2.0"
+    find-cache-dir "^2.0.0"
+    neo-async "^2.5.0"
+    schema-utils "^1.0.0"
+    serialize-javascript "^1.4.0"
+    webpack-sources "^1.0.1"
 
 compression@^1.5.2:
   version "1.7.3"
@@ -9359,6 +9385,13 @@ react-images@^0.5.16, react-images@^0.5.19:
     react-scrolllock "^2.0.1"
     react-transition-group "2"
 
+react-infinite-scroller@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroller/-/react-infinite-scroller-1.2.4.tgz#f67eaec4940a4ce6417bebdd6e3433bfc38826e9"
+  integrity sha512-/oOa0QhZjXPqaD6sictN2edFMsd3kkMiE19Vcz5JDgHpzEJVqYcmq+V3mkwO88087kvKGe1URNksHEOt839Ubw==
+  dependencies:
+    prop-types "^15.5.8"
+
 react-input-range@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/react-input-range/-/react-input-range-1.3.0.tgz#f96d001631ab817417f1e26d8f9f9684b4827f59"
@@ -9382,6 +9415,11 @@ react-jss@^8.6.1:
     jss-preset-default "^4.3.0"
     prop-types "^15.6.0"
     theming "^1.3.0"
+
+react-lazyload@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-lazyload/-/react-lazyload-2.3.0.tgz#ccb134223012447074a96543954f44b055dc6185"
+  integrity sha512-0z3qmL+qtSERdfKFpn0yKXm+1Gg1ZLZBXnCzHhSGiu1L8iDARuCkbOypxEx9+ETxZvMnXj98xvWCs5jyXTuM2w==
 
 react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -11678,7 +11716,7 @@ webpack-manifest-plugin@2.0.4:
     lodash ">=3.5 <5"
     tapable "^1.0.0"
 
-webpack-sources@^1.1.0, webpack-sources@^1.2.0:
+webpack-sources@^1.0.1, webpack-sources@^1.1.0, webpack-sources@^1.2.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.3.0.tgz#2a28dcb9f1f45fe960d8f1493252b5ee6530fa85"
   integrity sha512-OiVgSrbGu7NEnEvQJJgdSFPl2qWKkWq5lHMhgiToIiN9w34EBnjYzSYs+VbL5KoYiLNtFFa7BZIKxRED3I32pA==

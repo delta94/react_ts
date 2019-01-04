@@ -39,7 +39,7 @@ const SearchProperty: ComponentType<IProps> = (props: IProps) => {
       </Grid>
     </Grid>
   )
-}
+};
 
 export default compose<IProps, any>(
   withStyles(styles)

@@ -3,7 +3,6 @@ import CouponForm from '@/components/Bookings/BookingCouponForm';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {formatMoney} from '@/utils/mixins';
-import {IAction, IBookingFormReducer} from '@/views/Bookings/Form';
 import {withStyles, createStyles} from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Divider from '@material-ui/core/Divider';
@@ -16,15 +15,13 @@ import Arrow from '@material-ui/icons/ArrowForward';
 import Calendar from '@material-ui/icons/CalendarToday';
 import People from '@material-ui/icons/People';
 import moment from 'moment';
-import React, {Fragment, useRef, useState, Dispatch, ComponentType, MouseEvent} from 'react';
+import React, {Fragment, useRef, useState, Dispatch, ComponentType, MouseEvent, useContext} from 'react';
 import Loadable from 'react-loadable';
 import {compose} from 'recompose';
+import {BookingFormContext, IBookingFormContext} from '@/store/context/Booking/BookingFormContext';
 
 export interface IProps {
   classes?: any;
-  dispatch(value: IAction): Dispatch<IAction>
-  room: any;
-  state: IBookingFormReducer;
 }
 
 const SimpleLoading = Loadable({
@@ -69,10 +66,11 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 const BookingInfoDetail: ComponentType<IProps> = props => {
   const {
           classes,
-          room,
-          dispatch,
-          state,
         } = props;
+
+  const {state, dispatch} = useContext<IBookingFormContext>(BookingFormContext);
+
+  const {room} = state;
 
   const [isCouponPanelOpen, setCouponPanelStatus] = useState<boolean>(false);
   const couponRef                                 = useRef(null);
@@ -86,8 +84,8 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
   const removeCoupon = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     dispatch({
-      type: 'removeCoupon',
-    });
+      type: 'removeCoupon'
+    })
   };
 
   return (

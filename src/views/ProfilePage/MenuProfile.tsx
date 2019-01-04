@@ -18,15 +18,10 @@ import Favorite from '@material-ui/icons/FavoriteBorder';
 import Person from '@material-ui/icons/PersonOutlined';
 import Weekend from '@material-ui/icons/WeekendOutlined';
 import PhotoCamera from '@material-ui/icons/PhotoCameraOutlined';
-import React, {
-    ChangeEvent,
-    ComponentType,
-    Fragment,
-    useState,
-} from 'react';
+import React, {ChangeEvent, ComponentType, Fragment, useState} from 'react';
 import {compose} from 'recompose';
 import Grow from '@material-ui/core/Grow';
-import {ThemeCustom} from "@/components/Theme/Theme";
+import {ThemeCustom} from '@/components/Theme/Theme';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
     bg_menu: {

@@ -44,6 +44,11 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     position: 'absolute',
     right: '5%',
   },
+  text: {
+    [theme!.breakpoints!.only!('xs')]: {
+      fontSize: '0.8rem'
+    }
+  }
 });
 
 // @ts-ignore
@@ -74,13 +79,17 @@ const SideDrawer: ComponentType<ISideDrawerProps> = (props: ILocalProps) => {
         </ListItem>
         <ListItem button {...to('/')} onClick = {() => setOpen(false)}>
           <ListItemIcon><Home /></ListItemIcon>
-          <ListItemText primary = 'Book a room' />
+          <ListItemText primary = 'Book a room' classes={{
+            primary: classes.text
+          }} />
         </ListItem>
         {isLogin ? (
           <Fragment>
             <ListItem button>
               <ListItemIcon><AccountCircle /></ListItemIcon>
-              <ListItemText primary = 'My profile' />
+              <ListItemText primary = 'My profile' classes={{
+                primary: classes.text
+              }}/>
             </ListItem>
           </Fragment>
         ) : (
@@ -89,13 +98,17 @@ const SideDrawer: ComponentType<ISideDrawerProps> = (props: ILocalProps) => {
             handleLoginButton(true);
           }}>
             <ListItemIcon><AccountCircle /></ListItemIcon>
-            <ListItemText primary = 'Sign in/Create account' />
+            <ListItemText primary = 'Sign in/Create account' classes={{
+              primary: classes.text
+            }}/>
           </ListItem>
         )}
         <Divider />
         <ListItem button>
           <ListItemIcon><AccountQuestion /></ListItemIcon>
-          <ListItemText primary = 'Customer service' />
+          <ListItemText primary = 'Customer service' classes={{
+            primary: classes.text
+          }}/>
         </ListItem>
       </List>
     </Fragment>

@@ -15,10 +15,10 @@ const GridContainer: ComponentType<IProps> = props => {
       <Grid container alignItems = 'center' justify = 'center' alignContent = 'center'>
         <Grid item
               xs = {props.xs}
-              sm={props.sm || props.xs}
-              md={props.md || props.xs}
-              lg={props.lg || props.xs}
-              xl={props.xl || props.xs}>
+              sm = {props.sm || props.xs}
+              md = {props.md || props.xs}
+              lg = {props.lg || props.xs}
+              xl = {props.xl || props.xs}>
           {props.children}
         </Grid>
       </Grid>

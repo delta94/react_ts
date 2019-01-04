@@ -5,31 +5,53 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import React, {ComponentType, Fragment, useContext, useEffect, useState} from 'react';
 import {compose} from 'recompose';
 import RoomCard from '@/components/Rooms/RoomCard';
-import {RoomIndexContext, IRoomIndexContext, getRooms} from '@/store/context/Room/RoomIndexContext';
+import {
+  RoomIndexContext,
+  IRoomIndexContext,
+  getRooms,
+  fetchRoom,
+  loadMoreRooms,
+} from '@/store/context/Room/RoomIndexContext';
 import _ from 'lodash';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
+import InfiniteScroll from 'react-infinite-scroller';
+import classNames from 'classnames';
 
 interface IProps {
   classes?: any
 }
 
-const styles: any = (theme: ThemeCustom) => createStyles({});
+const styles: any = (theme: ThemeCustom) => createStyles({
+  root: {
+    [theme!.breakpoints!.between!('xs', 'sm')]: {
+      marginBottom: '10vh',
+    },
+  },
+});
 
 // @ts-ignore
 const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
-  const {classes}             = props;
-  const [isEmpty, setIsEmpty] = useState<boolean>(false);
-  const {location}            = useContext<IGlobalContext>(GlobalContext);
-  const {state, dispatch}     = useContext<IRoomIndexContext>(RoomIndexContext);
+  const {classes}               = props;
+  const [isEmpty, setIsEmpty]   = useState<boolean>(false);
+  const {location}              = useContext<IGlobalContext>(GlobalContext);
+  const {state, dispatch}       = useContext<IRoomIndexContext>(RoomIndexContext);
 
-  const {rooms} = state;
+  const {rooms, meta, isLoadMore} = state;
+
+  const lazyLoadRooms = () => {
+    if (isLoadMore) loadMoreRooms(state, dispatch)
+  };
 
   useEffect(() => {
-    getRooms(location).then(data => {
+    getRooms(location).then((data) => {
+      const roomData   = data.data;
+      const pagination = data.meta;
+
       dispatch({
         type: 'setRooms',
-        rooms: data,
+        rooms: roomData,
+        meta: pagination,
       });
     }).catch(err => {
       console.error(err);
@@ -37,19 +59,43 @@ const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
   }, [location]);
 
   useEffect(() => {
-    setIsEmpty((rooms !== null && (rooms.length === 0)));
+    setIsEmpty((meta !== null) && (rooms.length === 0));
   }, [rooms]);
+
+  useEffect(() => {
+    if (rooms && meta) {
+      dispatch({
+        type: 'setLoadMore',
+        isLoadMore: true
+      })
+    } else {
+      dispatch({
+        type: 'setLoadMore',
+        isLoadMore: false
+      })
+    }
+  }, [!!meta]);
 
   return (
     <Fragment>
-      <Grid container spacing = {16} justify = 'center'>
-        {rooms ? _.map(rooms, (room) => (
-          <Grid key = {room.id} item lg = {12}>
-            <RoomCard room = {room} />
-          </Grid>
-        )) : <SimpleLoader height = {200} width = {300} />}
-        {isEmpty ? 'No match result found' : ''}
-      </Grid>
+      <InfiniteScroll
+        loadMore = {lazyLoadRooms}
+        hasMore = {isLoadMore}
+        loader = {<SimpleLoader key = {1} height = {200} width = {300} />}
+      >
+        <Grid container spacing = {16} justify = 'center' className = {classNames({
+          [classes.root]: !isLoadMore,
+        })}>
+          {rooms.length !== 0 ? _.map(rooms, (room) => (
+            <Grid key = {room.id} item lg = {12}>
+              <RoomCard room = {room} />
+            </Grid>
+          )) : (!isEmpty ? (
+            <SimpleLoader height = {200} width = {300} />
+          ) : '')}
+          {isEmpty ? 'No match result found' : ''}
+        </Grid>
+      </InfiniteScroll>
     </Fragment>
   );
 };

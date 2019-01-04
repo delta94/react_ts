@@ -2,10 +2,7 @@ import {ThemeCustom} from '@/components/Theme/Theme';
 import to from '@/components/Utils/to';
 import * as animation from '@/store/actions/animationTypes';
 import {ReducersList} from '@/store/reducers';
-import {
-  AnimationState,
-  AnimationAction,
-} from '@/store/reducers/Visual/global-animation';
+import {AnimationState, AnimationAction} from '@/store/reducers/Visual/global-animation';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -73,6 +70,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     marginRight: 20,
   },
   drawer: {
+    [theme!.breakpoints!.only!('xs')]: {
+      width: '80%',
+    },
     width: '60%',
   },
 });

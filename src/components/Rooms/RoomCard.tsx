@@ -24,21 +24,15 @@ import Blue from '@material-ui/core/colors/blue';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import Button from '@material-ui/core/Button/Button';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
-import {RoomIndexContext, IRoomIndexContext} from '@/store/context/Room/RoomIndexContext';
 import {ThemeStyle} from '@material-ui/core/styles/createTypography';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
-
-interface IProps {
-  classes?: any,
-  room: RoomIndexRes
-}
+import LazyLoad from 'react-lazyload';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   imgSize: {
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-    borderRadius: '4px 0 0 4px',
     objectFit: 'cover',
     maxWidth: 300,
     minWidth: 50,
@@ -49,6 +43,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
     [theme!.breakpoints!.only!('sm')]: {
       height: 240,
+    },
+    [theme!.breakpoints!.only!('xs')]: {
+      maxWidth: 'calc(93vw - 4px)',
+      height: '30vh',
     },
   },
   bodyContainer: {
@@ -146,21 +144,29 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       easing: 'ease-in-out',
     }),
   },
+  price: {
+    [theme!.breakpoints!.only!('xs')]: {
+      marginTop: '2vh',
+    },
+  },
 });
+
+interface IProps {
+  classes?: any
+  room: RoomIndexRes
+}
 
 // @ts-ignore
 const RoomCard: ComponentType<IProps> = (props: IProps) => {
   const {classes, room}             = props;
   const [paperHover, setPaperHover] = useState<boolean>(false);
   const {width}                     = useContext<IGlobalContext>(GlobalContext);
-
-  const typoVariant: ThemeStyle = (width === 'sm') ? 'subtitle2' : 'h6';
-  const totalComfort            = (room.comforts.data.length < 25) ? room.comforts.data.length : 20;
+  const typoVariant: ThemeStyle     = (width === 'sm' || width === 'xs') ? 'subtitle2' : 'h6';
+  const totalComfort                = (room.comforts.data.length - 3);
 
   const settings: Settings = {
     speed: 300,
-    dots: false,
-    adaptiveHeight: true,
+    dots: (width === 'sm' || width === 'xs'),
     slidesToShow: 1,
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
@@ -174,15 +180,18 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
              className = {classes.paper}
       >
         <Grid container spacing = {0}>
-          <Grid item lg = {3} sm = {4}>
-            <div className = {classes.imgSize}>
+          <Grid item lg = {3} sm = {4} xs = {12} className = {classes.imgSize}>
+            <LazyLoad>
               <Slider {...settings}>
-                <img src = {fakeIMG} className = {classes.imgSize} />
-                <img src = {fakeIMG2} className = {classes.imgSize} />
+                {room.media.data.length > 0 ? _.map(room.media.data, o => (
+                  <img key={o.image} src = {`http://westay.org/storage/rooms/${o.image}`} className = {classes.imgSize} />
+                )) : (
+                  <img src = {fakeIMG} className = {classes.imgSize} />
+                )}
               </Slider>
-            </div>
+            </LazyLoad>
           </Grid>
-          <Grid item lg = {9} sm = {8}>
+          <Grid item lg = {9} sm = {8} xs = {12}>
             <Grid container className = {classes.maxHeight}>
               <Grid item lg = {9} sm = {9}>
                 <Grid container spacing = {0} className = {classNames(
@@ -194,10 +203,10 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                     )}>
                       <Grid item lg = {12} sm = {12}>
                         <Grid container>
-                          <Grid item lg = {12} sm = {12}>
+                          <Grid item lg = {12} sm = {12} xs = {12}>
                             <Typography variant = 'subtitle2'>{room.details.data[0].name}</Typography>
                           </Grid>
-                          <Grid item lg = {12} sm = {12}>
+                          <Grid item lg = {12} sm = {12} xs = {12}>
                           <span className = {classes.verticalMid}>
                           <StarRatings
                             numberOfStars = {4}
@@ -213,29 +222,32 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                               <a className = {classes.address}>{room.details.data[0].address}</a>
                           </span>
                           </Grid>
-                          <Grid item lg = {12} sm = {12} style = {{marginTop: 6}}>
-                            <ul className = {classes.ul}>
-                              {_.map([1, 2, 3], (val) => (
-                                <li key = {val} className = {classes.list}><SvgCustom /></li>
-                              ))}
-                              {(totalComfort > 0) ? (
-                                <Tooltip
-                                  enterTouchDelay = {300}
-                                  classes = {{
-                                    tooltip: classes.tooltip,
-                                  }}
-                                  title = {`${totalComfort} additional room amenities and facilities available`}
-                                  placement = 'top'>
-                                  <li><SvgCustom borderClass = {classes.borderBlue} text = {`+${totalComfort}`} /></li>
-                                </Tooltip>
-                              ) : ''}
-                            </ul>
-                          </Grid>
+                          <Hidden xsDown>
+                            <Grid item lg = {12} sm = {12} style = {{marginTop: 6}}>
+                              <ul className = {classes.ul}>
+                                {_.map([1, 2, 3], (val) => (
+                                  <li key = {val} className = {classes.list}><SvgCustom /></li>
+                                ))}
+                                {(totalComfort > 0) ? (
+                                  <Tooltip
+                                    enterTouchDelay = {300}
+                                    classes = {{
+                                      tooltip: classes.tooltip,
+                                    }}
+                                    title = {`${totalComfort} additional room amenities and facilities available`}
+                                    placement = 'top'>
+                                    <li><SvgCustom borderClass = {classes.borderBlue} text = {`+${totalComfort}`} />
+                                    </li>
+                                  </Tooltip>
+                                ) : ''}
+                              </ul>
+                            </Grid>
+                          </Hidden>
                         </Grid>
                       </Grid>
                       {/*Price section*/}
                       <Grid container item lg = {12} sm = {12} alignItems = 'flex-end'>
-                        <Grid container spacing = {24}>
+                        <Grid container spacing = {24} className = {classes.price}>
                           <Grid item>
                             <Typography variant = {typoVariant}>
                               {(room.price_day > 0) ? (
@@ -245,6 +257,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                                 </Fragment>
                               ) : ''}
                             </Typography>
+                            {/*TODO: Discount Section*/}
                             {/*<Typography variant = {typoVariant} className = {classNames({*/}
                             {/*[classes.striker]: true,*/}
                             {/*})}>*/}
@@ -257,7 +270,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                               {room.price_hour > 0 ? (
                                 <Fragment>
                                   {`${formatMoney(room.price_hour, 0)}`}
-                                  <sub className = {classes.subEl}>/4 hours</sub>
+                                  <sub className = {classes.subEl}>/4h</sub>
                                 </Fragment>
                               ) : ''}
                             </Typography>
@@ -266,62 +279,75 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item lg = {3} sm = {3}>
+                  <Grid item lg = {3} sm = {3} xs = {12}>
                     <Grid container
                           className = {classes.maxHeight}
                           spacing = {8}
                           alignItems = 'flex-end'
-                          justify = 'flex-end'>
+                          justify = 'flex-end'
+                    >
                       <Grid item lg = {12} sm = {12}>
                         {/*Discount*/}
                       </Grid>
-                      <Grid item lg = {12} sm = {12} className = {align.textRight}>
-                        <Tooltip
-                          classes = {{tooltip: classes.tooltip}}
-                          enterTouchDelay = {300}
-                          title = 'Book this property without waiting for host confirmation'
-                          placement = 'top'>
-                          <ClockFast fontSize = 'large' />
-                        </Tooltip>
-                      </Grid>
+                      {room.manager ? (
+                        <Grid item lg = {12} sm = {12} xs = {12} className = {align.textRight}>
+                          <Tooltip
+                            classes = {{tooltip: classes.tooltip}}
+                            enterTouchDelay = {300}
+                            title = 'Book this property without waiting for host confirmation'
+                            placement = 'top'>
+                            <ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />
+                          </Tooltip>
+                        </Grid>
+                      ): ''}
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item lg = {3} sm = {3} className = {classes.borderSection}>
-                <Grid container className = {classes.maxHeight}>
-                  <Grid item lg = {12} sm = {12} className = {classes.contentHeight}>
-                    <Grid container spacing = {8} alignItems = 'center' direction = 'row-reverse'>
-                      <Grid item>
-                        <Paper className = {classes.reviewScore} elevation = {0}>
-                          <Typography variant = {typoVariant} color = 'secondary'>6.9</Typography>
-                        </Paper>
-                      </Grid>
-                      <Hidden xsDown>
-                        <Grid item className = {classes.reviewCount}>
+              <Hidden xsDown>
+                <Grid item lg = {3} sm = {3} className = {classes.borderSection}>
+                  <Grid container className = {classes.maxHeight}>
+                    <Grid item lg = {12} sm = {12} className = {classes.contentHeight}>
+                      <Grid container spacing = {8} alignItems = 'center' justify='center' direction = 'row-reverse'>
+                        {room.total_review > 0 ? (
+                          <Fragment>
+                            <Grid item>
+                              <Paper className = {classes.reviewScore} elevation = {0}>
+                                <Typography variant = {typoVariant} color = 'secondary'>6.9</Typography>
+                              </Paper>
+                            </Grid>
+                            <Hidden xsDown>
+                              <Grid item className = {classes.reviewCount}>
+                                <Typography
+                                  variant = 'subtitle2'
+                                  className = {classes.reviewSizeSM}
+                                >Excellent</Typography>
+                                <Typography
+                                  variant = 'body2'
+                                  className = {classes.reviewSizeSM}
+                                >9 reviews</Typography>
+                              </Grid>
+                            </Hidden>
+                          </Fragment>
+                        ) : (
                           <Typography
                             variant = 'subtitle2'
-                            className = {classes.reviewSizeSM}
-                          >Excellent</Typography>
-                          <Typography
-                            variant = 'body2'
-                            className = {classes.reviewSizeSM}
-                          >96 reviews</Typography>
-                        </Grid>
-                      </Hidden>
+                          >Awaiting review</Typography>
+                        )}
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container item lg = {12} sm = {12} justify = 'center' alignItems = 'flex-end'>
-                    <Grid item lg = {12} sm = {12} className = {align.textCenter}>
-                      <Button
-                        color = 'primary'
-                        variant = 'contained'
-                        size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
-                      >Book now</Button>
+                    <Grid container item lg = {12} sm = {12} justify = 'center' alignItems = 'flex-end'>
+                      <Grid item lg = {12} sm = {12} className = {align.textCenter}>
+                        <Button
+                          color = 'primary'
+                          variant = 'contained'
+                          size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
+                        >Book now</Button>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Hidden>
             </Grid>
           </Grid>
         </Grid>

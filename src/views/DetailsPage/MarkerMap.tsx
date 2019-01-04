@@ -1,12 +1,11 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, Fragment, useState} from 'react';
-import {compose,withProps} from 'recompose';
-import mapMarker         from '@/assets/map-marker.png';
+import React, {ComponentType, Fragment} from 'react';
+import {compose} from 'recompose';
+import mapMarker from '@/assets/map-marker.png';
 
 // @ts-ignore
-import GoogleMapReact from 'google-map-react';
 
 interface IProps {
   classes?: any,
@@ -32,7 +31,7 @@ const MarkerMap: ComponentType<IProps> = (props: IProps) => {
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '100%',
-        transform: 'translate(-50%, -50%)'
+        transform: 'translate(-50%, -100%)'
       }}>
         <img src = {mapMarker} alt = 'marker' width={'100%'}/>
       </div>

@@ -55,8 +55,8 @@ export const priceFilterChange = (
   if (typeof value !== 'number') {
     const params: RoomUrlParams = qs.parse(location.search!);
     let prices: RoomUrlParams   = {
-      price_day_from: value.min,
-      price_day_to: value.max,
+      price_day_from: value.min.toString(),
+      price_day_to: value.max.toString(),
     };
 
     const newParams  = updateObject(params, prices);
@@ -69,7 +69,7 @@ export const priceFilterChange = (
 
     dispatch({
       type: 'setRooms',
-      rooms: null,
+      rooms: [],
     });
 
     history.push(locationTo);
@@ -128,6 +128,22 @@ const PriceRange: ComponentType<IProps> = (props: IProps) => {
   };
 
   usePriceEffect(price, setPrice, state);
+
+  useEffect(() => {
+    const params: RoomUrlParams = qs.parse(location.search!);
+
+    let min = params.price_day_to ? parseInt(params.price_day_to) : MIN_PRICE;
+    let max = params.price_day_from ? parseInt(params.price_day_from) : MAX_PRICE;
+
+    if (min >= max) return;
+
+    let prices: Range = {min, max};
+
+    dispatch({
+      type: 'setPrices',
+      price: prices,
+    });
+  }, []);
 
   return (
     <Grid container spacing = {16}>

@@ -10,11 +10,14 @@
   height: 100%;
   .slick-next,.slick-prev {
     @include transition(all 150ms ease-in-out);
+    @include xs {
+      right: 0;
+    }
     font-size: 0;
     line-height: 0;
     position: absolute;
     top: 50%;
-    display: block;
+    display: none;
     width: 20px;
     height: 100%;
     padding: 0;
@@ -29,8 +32,10 @@
     background: transparent;
     z-index: 2;
     pointer-events: none;
+
   }
   &:hover {
+    display: block;
     .slick-next {
       right: 5px;
       @extend %slickOpacity;
@@ -51,6 +56,10 @@
   }
   .slick-list {
     width: 99.9%;
-    border-radius: 4px 0 0 4px
+    border-radius: 4px 0 0 4px;
+
+    @include xs {
+      border-radius: 4px 4px 0 0;
+    }
   }
 }

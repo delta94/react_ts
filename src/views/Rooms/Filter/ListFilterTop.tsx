@@ -42,7 +42,7 @@ const ListFilterTop: ComponentType<IProps> = (props: IProps) => {
 
       dispatch({
         type: 'setRooms',
-        rooms: null,
+        rooms: [],
       });
 
       setTabFocus(value);
