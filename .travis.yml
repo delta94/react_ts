@@ -1,8 +1,6 @@
 language: node_js
 node_js:
-- stable
-before_install:
-before_script:
+- "stable"
 cache:
   directories:
   - node_modules
@@ -15,12 +13,8 @@ before_deploy:
 - ssh-add /tmp/deploy_rsa
 deploy:
   provider: script
-  skip_cleanup: true
-  script: rsync -r --delete-after --quiet build ssh root@128.199.212.96:/var/www/westay-react
-    on:
-      branch: master
-after_success:
-branches:
-  only:
-  - master
-  - dev
+  script: rsync -r --delete-after --quiet /build ssh root@128.199.212.96:/var/www/westay-react/
+  on:
+    branch: dev
+addons:
+  ssh_known_hosts: 128.199.212.96
