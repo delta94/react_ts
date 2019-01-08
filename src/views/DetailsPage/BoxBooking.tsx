@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useState, Fragment, ChangeEvent, useContext, useEffect} from 'react';
+import React, {ComponentType, useState, Fragment, ChangeEvent, useContext} from 'react';
 import {compose} from 'recompose';
 import Paper from '@material-ui/core/Paper/Paper';
 import Grid from '@material-ui/core/Grid/Grid';
@@ -19,13 +19,22 @@ import FormControl from '@material-ui/core/FormControl/FormControl';
 import Button from '@material-ui/core/Button/Button';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
-import {getData, IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
-import {AxiosError} from 'axios';
+import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
-import Menu from '@material-ui/core/Menu/Menu';
+import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
+import {connect} from 'react-redux';
+import {ReducersType} from '@/store/reducers';
+import {Dispatch} from 'redux';
+import {DateRange, BookingAction, BookingState} from '@/store/reducers/booking';
+import * as act from '@/store/actions/actionTypes';
+import moment from 'moment';
+import qs from 'query-string';
+import {BookingPayment} from '@/types/Requests/Booking/BookingRequests';
+import {LocationDescriptorObject} from 'history';
 
 interface IProps {
   classes?: any,
+  book?: BookingState
 }
 
 const DatePicker = Loadable({
@@ -90,16 +99,43 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 });
 
 const BoxBooking: ComponentType<IProps> = (props: IProps) => {
-  const {classes} = props;
+  const {classes,book} = props;
   const [ckbox, setCkbox]       = useState<boolean>(false);
   const [guest,setGuest] = useState<number>(1);
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  const {history} = useContext<IGlobalContext>(GlobalContext);
 
   const {rooms} = state;
   if (rooms == null){return <SimpleLoader/>}
 
+  let bookType = 2;
+  if (ckbox) {
+    bookType=1;
+  }
+
+  const handleBooking =()=>{
+    const queryString: BookingPayment ={
+      checkin: moment(book!.startDate).format('YYYY-MM-DD'),
+      checkout: moment(book!.endDate).format('YYYY-MM-DD'),
+      hosting_id: rooms!.id,
+      checkin_hour: moment(book!.startDate).format('h'),
+      checkout_hour: moment(book!.endDate).format('h'),
+      checkout_minute: moment(book!.endDate).format('mm'),
+      number_guests:guest,
+      booking_type:bookType,
+    };
+
+    const location: LocationDescriptorObject = {
+      pathname: '/payments/book',
+      search: `?${qs.stringify(queryString)}`,
+    };
+    history.push(location);
+  };
+
+
+
   const handleChangeSelect = (event:ChangeEvent<HTMLSelectElement>) => {
-    setGuest(parseInt(event.target.value));
+    setGuest(parseInt(event.target.value)); // event tra ve string
   };
 
   const formatNumber= (x:number) =>{
@@ -198,7 +234,9 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
              </Paper>
            </Grid>
            <Grid item xs={12} className={classes.rowMargin}>
-             <Button variant={"contained"} color={"primary"} fullWidth  className={classes.btSearch} size={'large'}>
+             <Button variant={"contained"} color={"primary"}
+                     fullWidth  className={classes.btSearch} size={'large'}
+                     onClick={handleBooking}>
                Request to Book
              </Button>
            </Grid>
@@ -220,6 +258,22 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
   );
 };
 
+const mapStateToProps = (state: ReducersType) => {
+  return {
+    book: state.bookingReq,
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<BookingAction>) => {
+  return {
+    updateDate: (date: DateRange) => dispatch({
+      type: act.CHANGE_DATE,
+      date: date,
+    }),
+  };
+};
+
 export default compose<IProps, any>(
   withStyles(styles),
-)(BoxBooking);
+  connect(mapStateToProps,mapDispatchToProps),
+  )(BoxBooking);

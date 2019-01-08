@@ -30,7 +30,7 @@ const init: SearchFilterState = {
   guestsCount: 1,
   roomsCount: 1,
   bookingType: 1,
-  startDate: '2018-01-03',
+  startDate: undefined,
   endDate: undefined,
 };
 

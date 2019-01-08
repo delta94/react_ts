@@ -5,6 +5,7 @@ import GridImage from '@/views/DetailsPage/GridImage';
 import BoxDetails from '@/views/DetailsPage/BoxDetails';
 import BoxReviews from '@/views/DetailsPage/BoxReviews';
 import BoxBooking from '@/views/DetailsPage/BoxBooking';
+import SliderSuggest from '@/views/DetailsPage/SliderSuggest';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import React, {ComponentType, useContext, useEffect, useReducer, useState} from 'react';
@@ -13,8 +14,9 @@ import Button from '@material-ui/core/Button/Button';
 import GridContainer from '@/layouts/Grid/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper/Paper';
+import Divider from '@material-ui/core/Divider';
 import {
-  getData, IRoomDetailsContext, RoomDetailsAction,
+  getData, RoomDetailsAction,
   RoomDetailsContext,
   RoomDetailsReducer,
   RoomDetailsState, RoomDetailsStateInit,
@@ -22,6 +24,7 @@ import {
 import {AxiosError} from 'axios';
 import {match, RouteChildrenProps} from 'react-router';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
+import Typography from '@material-ui/core/Typography/Typography';
 
 interface IProps extends RouteChildrenProps {
   classes?: any,
@@ -61,9 +64,19 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   boxPadding: {
     padding: 16,
   },
-  boxTEST: {
-    height: 1000,
-    backgroundColor: 'red',
+  boxSuggest:{
+    margin: '10px 0',
+    padding: '16px 0',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 600,
+    lineHeight: '1.375em',
+    color: '#484848',
+    padding:'16px 0',
+  },
+  divider:{
+    margin: '8px 0',
   },
 });
 
@@ -115,15 +128,19 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
                 <BoxBooking />
               </Grid>
             </Grid>
-            {/*<Grid container spacing={32}>*/}
-            {/*<Grid item xs={12}>*/}
-            {/*<Paper>*/}
-            {/*<div className = {classes.boxTEST}>*/}
-            {/*concac*/}
-            {/*</div>*/}
-            {/*</Paper>*/}
-            {/*</Grid>*/}
-            {/*</Grid>*/}
+            <Grid container spacing = {32}>
+              <Grid item xs = {12}>
+                <div className={classes.boxSuggest}>
+                  <div>
+                    <Typography className = {classes.title}>
+                      Phòng tương tự
+                    </Typography>
+                  </div>
+                  <Divider className={classes.divider}/>
+                  <SliderSuggest />
+                </div>
+              </Grid>
+            </Grid>
           </GridContainer>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import * as act from '@/store/actions/actionTypes';
 import {ReducersType} from '@/store/reducers';
-import {SearchFilterState, SearchFilterAction, DateRange} from '@/store/reducers/searchFilter';
-import Event from '@material-ui/icons/Event';
+import {BookingState, BookingAction, DateRange} from '@/store/reducers/booking';
 import moment from 'moment';
 import React, {useState, useEffect, ComponentType} from 'react';
 import {DateRangePicker, FocusedInputShape} from 'react-dates';
@@ -11,23 +10,24 @@ import {compose} from 'recompose';
 import {Dispatch} from 'redux';
 
 interface IProps {
-  filter: SearchFilterState
+  book: BookingState
 
   updateDate(date: DateRange): any
 }
 
 const DateRangeSingle: ComponentType<IProps> = (props: IProps) => {
-  const {filter, updateDate} = props;
+  const {book, updateDate} = props;
 
   useEffect(() => {
-    let checkFilter = !filter.startDate && !filter.endDate;
-    let oldDate     = moment(filter.startDate) < moment();
+    let checkbook = !book.startDate && !book.endDate;
+    let oldDate     = moment(book.startDate) < moment();
 
-    if (checkFilter || oldDate) {
+    if (checkbook || oldDate) {
       updateDate({
         startDate: moment(),
         endDate: moment().add(7, 'days'),
       });
+
     }
 
   }, []);
@@ -38,8 +38,8 @@ const DateRangeSingle: ComponentType<IProps> = (props: IProps) => {
       numberOfMonths={1}
       startDateId = 'startDate'
       endDateId = 'endDate'
-      startDate = {filter.startDate ? moment(filter.startDate) : null}
-      endDate = {filter.endDate ? moment(filter.endDate) : null}
+      startDate = {book.startDate ? moment(book.startDate) : null}
+      endDate = {book.endDate ? moment(book.endDate) : null}
       onDatesChange = {({startDate, endDate}) => {
         updateDate({startDate, endDate});
       }}
@@ -57,11 +57,11 @@ const DateRangeSingle: ComponentType<IProps> = (props: IProps) => {
 
 const mapStateToProps = (state: ReducersType) => {
   return {
-    filter: state.searchFilter,
+    book: state.bookingReq,
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<SearchFilterAction>) => {
+const mapDispatchToProps = (dispatch: Dispatch<BookingAction>) => {
   return {
     updateDate: (date: DateRange) => dispatch({
       type: act.CHANGE_DATE,
