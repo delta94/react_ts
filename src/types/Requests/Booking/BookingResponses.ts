@@ -1,3 +1,6 @@
+import {TransformerInclude} from '@/types/Requests/ResponseTemplate';
+import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
+
 export interface BookingIndexRes {
   id: number
   uuid: string
@@ -12,8 +15,8 @@ export interface BookingIndexRes {
   name_received: string
   phone_received: string;
   room_id: number
-  checkin: string
-  checkout: string
+  checkin: number
+  checkout: number
   number_of_guests: number
   price_original: number
   price_discount: number
@@ -32,8 +35,12 @@ export interface BookingIndexRes {
   status_txt: string
   exchange_rate: number
   total_refund: number
+  email_reminder: number
+  email_reviews: number
+  price_range: number
   created_at: string
   updated_at: string
+  room: TransformerInclude<RoomIndexRes>
 }
 
 export interface BookingPriceCalculatorRes {

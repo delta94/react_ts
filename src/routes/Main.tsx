@@ -42,12 +42,20 @@ const RoomsIndex = Loadable({
   loading: () => null,
 });
 
+const BookingPayment = Loadable({
+  loader: (): Promise<any> => import('@/views/Bookings/Payment'),
+  loading: () => null,
+});
+
 const RouteList: FunctionComponent<{}> = props => {
   return (
     <Switch>
       <Route exact path = '/' component = {HomePage} />
       <Route path = '/profile' component = {pageProfile} />
+      {/*Booking Router*/}
       <Route path = '/payments/book' component = {BookingForm} />
+      <Route path = '/payment/invoice/:uuid' component = {BookingPayment} />
+      {/*Room Router*/}
       <Route path = '/rooms' component = {RoomsIndex} />
       <Route path = '/room/:id' component = {pageDetails} />
       <Route component = {Error500} />

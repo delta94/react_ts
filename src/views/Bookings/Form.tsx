@@ -13,7 +13,7 @@ import {formatTime} from '@/utils/mixins';
 import {createStyles, withStyles} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid/Grid';
 import qs from 'query-string';
-import React, {Fragment, FunctionComponent, useEffect, useReducer} from 'react';
+import React, {Fragment, FunctionComponent, useEffect, useReducer, useContext} from 'react';
 import {RouteProps, RouterProps} from 'react-router';
 import {compose} from 'recompose';
 import {
@@ -22,6 +22,7 @@ import {
   BookingFormAction,
   BookingFormReducer, BookingFormStateInit, priceCalculator, IBookingFormParams,
 } from '@/store/context/Booking/BookingFormContext';
+import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 
 interface IProps extends RouteProps, RouterProps {
   classes: any;
@@ -42,16 +43,16 @@ const Form: FunctionComponent<IProps> = props => {
 
   const params: IBookingFormParams | any = qs.parse(location!.search);
   const [state, dispatch]     = useReducer<BookingFormState, BookingFormAction>(BookingFormReducer, BookingFormStateInit);
+  const {history} = useContext<IGlobalContext>(GlobalContext);
 
   useEffect(() => {
     priceCalculator(params, state).then(res => {
-      console.log(res);
       dispatch({
         type: 'setRoom',
         value: res,
       });
     }).catch(err => {
-      // history.push('/error');
+      history.push('/error');
     });
 
   }, [location]);

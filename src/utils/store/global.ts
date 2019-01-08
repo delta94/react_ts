@@ -25,7 +25,7 @@ export const BOOKING_USING: number    = 3;
 export const BOOKING_COMPLETE: number = 4;
 export const BOOKING_CANCEL: number   = 5;
 
-// Type booking
+// Type lists
 export const BOOKING_TYPE_HOUR: number = 1; // Hour
 export const BOOKING_TYPE_DAY: number  = 2; // Day
 
@@ -38,7 +38,7 @@ export const ONLINE: number  = 2;
 export const UNCONFIRMED: number = 0; // Chưa được xác nhận thanh toán
 export const CONFIRM: number     = 1; // Xác nhận thanh toán
 
-// Nguồn đặt booking
+// Nguồn đặt lists
 export const FANPAGE: number = 1;
 export const HOTLINE: number = 2;
 export const CHATBOT: number = 3;

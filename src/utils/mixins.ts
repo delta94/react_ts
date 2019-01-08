@@ -8,7 +8,7 @@ import moment, {Moment} from 'moment';
  * @param thousands Thousand separator
  * @returns {string}
  */
-export const formatMoney = (amount: any, decimalCount: number = 2, decimal: string = '.', thousands: string = ','): string | void => {
+export const formatMoney = (amount: any, decimalCount: number = 0, decimal: string = '.', thousands: string = ','): string | void => {
   try {
     decimalCount = Math.abs(decimalCount);
     decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
