@@ -3,6 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Toolbar from '@material-ui/core/Toolbar';
+import Hidden from '@material-ui/core/Hidden';
 import React, {ChangeEvent, ComponentType, Fragment, useState} from 'react';
 import {compose} from 'recompose';
 import SearchIcon from '@material-ui/icons/Search';
@@ -40,9 +41,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     height: '30px',
     width: '85%',
     border: 'none',
-    fontSize: '1.2em',
+    fontSize: '1.5vw',
     fontWeight: 300,
     outline: 'none',
+    backgroundColor: 'transparent',
   },
   paperSize: {
     height: 50,
@@ -60,6 +62,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   btSearch: {
     height: '100%',
+    minWidth: '100%',
+  },
+  dayHour: {
+    fontSize: '1.5vw',
+  },
+  searchIcon: {
+    fontSize: '28px',
+    width: '28px',
+    height: '28px',
   }
 });
 
@@ -74,21 +85,21 @@ const NavSearch: ComponentType<IProps> = (props: IProps) => {
     <Fragment>
       <AppBar position = 'sticky' elevation = {0} classes = {{root: classes.barSearch}}>
         <Toolbar>
-          <GridContainer xs = {12} sm = {10} md = {10} lg = {10}>
+          <GridContainer xs = {12} sm = {12} md = {11} lg = {10}>
             <Grid container spacing = {16}>
-              <Grid item xs = {4}>
+              <Grid item xs = {3} sm = {4} md = {4}>
                 <Paper elevation = {4} className = {classes.paperSize} square>
-                  <SearchIcon fontSize = 'large' color = 'disabled' className = {appC['ml-10']} />
+                  <SearchIcon color = 'disabled' className = {classNames(classes.searchIcon, appC['ml-10'])} />
                   <input type = 'text'
                          name = 'name'
                          defaultValue = ''
                          className = {
-                           classNames(classes.inputSearch, appC['ml-20'])
+                           classNames(classes.inputSearch, appC['ml-10'])
                          }
                          placeholder = 'Enter a destination or property' />
                 </Paper>
               </Grid>
-              <Grid item xs = {2}>
+              <Grid item xs = {1} sm = {2} md = {2}>
                 <FormControl variant = 'outlined' className = {classes.formControl}>
                   <Select
                     displayEmpty
@@ -105,24 +116,28 @@ const NavSearch: ComponentType<IProps> = (props: IProps) => {
                     }
                   >
                     <MenuItem value = '' disabled>
-                      <Typography variant = 'body1' color = 'textSecondary'>Day/Hour</Typography>
+                      <Typography className = {classes.dayHour} color = 'textSecondary'>Day/Hour</Typography>
                     </MenuItem>
                     <MenuItem value = {"Day"}>Day</MenuItem>
                     <MenuItem value = {"Hour"}>Hours</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs = {4}>
+              <Grid item xs = {5} sm = {5} md = {4}>
                 <Paper elevation = {4}
                        className = {classes.paperSize}
                        square>
                   <DatePicker />
                 </Paper>
               </Grid>
-              <Grid item xs = {2}>
-                <Button variant = {"contained"} color = {"primary"} fullWidth className = {classes.btSearch}
-                        size = {'large'}>
-                  Search
+              <Grid item xs = {1} sm = {1} md = {2}>
+                <Button variant = {'contained'} color = {'primary'} fullWidth className = {classes.btSearch}>
+                  <Hidden mdUp>
+                    <SearchIcon className = {classes.searchIcon} />
+                  </Hidden>
+                  <Hidden smDown>
+                    Search
+                  </Hidden>
                 </Button>
               </Grid>
             </Grid>

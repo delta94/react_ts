@@ -1,6 +1,6 @@
 .DateRangePicker {
   width: 100%;
-  .ateRangePickerInput{
+  .DateRangePickerInput {
     width: 100%;
   }
   .DateRangePickerInput_calendarIcon {
@@ -8,7 +8,8 @@
     margin: 0;
   }
   .DateInput{
-    padding: 0 0 0 10px;
+    padding: 0 5px;
+    width: 37%;
     .DateInput_input {
       padding: 0;
       font-size: 16px;
@@ -21,3 +22,45 @@
     border: none;
   }
 }
+
+//man hinh lg tro len
+@media (min-width: 1200px) and (max-width: 1440px) {
+
+}
+
+//md
+@media (min-width: 992px) and (max-width: 1199px) {
+  .DateRangePickerInput_calendarIcon {
+    padding: 2px;
+  }
+  .DateRangePicker .DateInput {
+    padding: 0 5px;
+    width: 38%;
+  }
+  .DateRangePicker .DateInput .DateInput_input {
+    font-size: 15px;
+  }
+  .DateRangePickerInput_arrow_svg {
+    height: 18px;
+    width: 18px;
+  }
+}
+
+//sm
+@media (min-width: 768px) and (max-width: 991px) {
+  .DateRangePicker .DateInput .DateInput_input {
+    font-size: 14px;
+  }
+  .DateRangePicker .DateInput {
+    padding: 0 5px;
+    width: 37%;
+  }
+  .DateRangePickerInput_arrow_svg {
+    height: 18px;
+    width: 18px;
+  }
+  .DateRangePickerInput_calendarIcon {
+    padding: 5px;
+  }
+}
+

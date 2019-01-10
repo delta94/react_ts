@@ -13,6 +13,7 @@ import {compose} from 'recompose';
 import Button from '@material-ui/core/Button/Button';
 import GridContainer from '@/layouts/Grid/Container';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import Paper from '@material-ui/core/Paper/Paper';
 import Divider from '@material-ui/core/Divider';
 import {
@@ -36,7 +37,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   boxGridImage: {
     width: '100%',
     height: 'auto',
-    maxHeight: 449,
+    maxHeight: 440,
     overflow: 'hidden',
     position: 'relative',
   },
@@ -69,11 +70,11 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     padding: '16px 0',
   },
   title: {
-    fontSize: 20,
-    fontWeight: 600,
-    lineHeight: '1.375em',
+    fontSize: 24,
+    fontWeight: 800,
+    lineHeight: '1.25em',
     color: '#484848',
-    padding:'16px 0',
+    padding: '8px 0',
   },
   divider:{
     margin: '8px 0',
@@ -114,9 +115,9 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
           </div>
         </div>
         <div className = {classes.boxDetails}>
-          <GridContainer xs = {12} sm = {10} md = {10} lg = {10}>
-            <Grid container spacing = {32}>
-              <Grid item sm = {8}>
+          <GridContainer xs = {12} sm = {12} md = {10} lg = {10}>
+            <Grid container spacing = {32} justify = 'center'>
+              <Grid item sm = {12} md = {11} lg = {8}>
                 <Paper square elevation = {1}>
                   <div className = {classes.boxPadding}>
                     <BoxDetails />
@@ -124,9 +125,11 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
                   </div>
                 </Paper>
               </Grid>
-              <Grid item sm = {4}>
-                <BoxBooking />
-              </Grid>
+              <Hidden mdDown>
+                <Grid item sm = {12} md = {12} lg = {4}>
+                  <BoxBooking />
+                </Grid>
+              </Hidden>
             </Grid>
             <Grid container spacing = {32}>
               <Grid item xs = {12}>
