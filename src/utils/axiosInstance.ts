@@ -2,11 +2,11 @@ import axiosBase, {AxiosInstance} from 'axios';
 import Cookies from 'universal-cookie';
 import {Headers} from 'request';
 
-const PRODUCTION_URL = 'https://somethingapi.club/';
-// const DOMAIN         = process.env.NODE_ENV == 'production' ? PRODUCTION_URL : process.env.REACT_APP_DOMAIN;
+const PRODUCTION_URL = 'https://api.westay.org';
+// const DOMAIN         = 'https://api.westay.org/';
 const DOMAIN         = process.env.NODE_ENV == 'production' ? PRODUCTION_URL : process.env.REACT_APP_DOMAIN;
 const ADMIN_URL      = DOMAIN + 'api/';
-const CUSTOMER_URL   = DOMAIN + 'customer-api/';
+export const CUSTOMER_URL   = DOMAIN + 'customer-api/';
 
 const cookies = new Cookies();
 const headers = {

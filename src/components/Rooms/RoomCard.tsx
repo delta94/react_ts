@@ -1,6 +1,5 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import fakeIMG from '@/assets/room_demo.jpeg';
-import fakeIMG2 from '@/assets/room_demo2.jpeg';
 import align from '@/styles/Position/align.module.scss';
 import {ClockFast} from 'mdi-material-ui';
 import mapMarker from '@/assets/SvgIcon/map-marker.svg';
@@ -158,15 +157,15 @@ interface IProps {
 
 // @ts-ignore
 const RoomCard: ComponentType<IProps> = (props: IProps) => {
-  const {classes, room} = props;
+  const {classes, room}             = props;
   const [paperHover, setPaperHover] = useState<boolean>(false);
-  const {width, history} = useContext<IGlobalContext>(GlobalContext);
-  const typoVariant: ThemeStyle = (width === 'sm' || width === 'xs') ? 'subtitle2' : 'h6';
-  const totalComfort = (room.comforts.data.length - 3);
+  const {width, history}            = useContext<IGlobalContext>(GlobalContext);
+  const typoVariant: ThemeStyle     = (width === 'sm' || width === 'xs') ? 'subtitle2' : 'h6';
+  const totalComfort                = (room.comforts.data.length - 3);
 
   const settings: Settings = {
     speed: 300,
-    dots: (width === 'sm' || width === 'xs'),
+    dots: false,
     slidesToShow: 1,
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
@@ -186,7 +185,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
       >
         <Grid container spacing = {0}>
           <Grid item lg = {3} sm = {4} xs = {12} className = {classes.imgSize}>
-            <LazyLoad>
+            <LazyLoad offset = {window.innerHeight}>
               <Slider {...settings}>
                 {room.media.data.length > 0 ? _.map(room.media.data, o => (
                   <img key = {o.image} src = {`http://westay.org/storage/rooms/${o.image}`}
@@ -215,7 +214,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                           <Grid item lg = {12} sm = {12} xs = {12}>
                           <span className = {classes.verticalMid}>
                           <StarRatings
-                            numberOfStars = {4}
+                            numberOfStars = {room.standard_point}
                             starDimension = {`15px`}
                             starSpacing = {`1px`}
                             starEmptyColor = {'#ffb40b'}
@@ -295,7 +294,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                       <Grid item lg = {12} sm = {12}>
                         {/*Discount*/}
                       </Grid>
-                      {room.manager ? (
+                      {room.manager == 1 ? (
                         <Grid item lg = {12} sm = {12} xs = {12} className = {align.textRight}>
                           <Tooltip
                             classes = {{tooltip: classes.tooltip}}

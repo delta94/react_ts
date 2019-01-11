@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid/Grid';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography/Typography';
-import React, {ComponentType, Fragment, useState, useContext, ChangeEvent, useEffect} from 'react';
+import React, {ComponentType, Fragment, useState, useContext, ChangeEvent} from 'react';
 import StarRatings from 'react-star-ratings';
 import {compose} from 'recompose';
 import classNames from 'classnames';
@@ -15,6 +15,7 @@ import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import qs from 'query-string';
 import {updateObject} from '@/store/utility';
+import {arrayFilterCheckBoxEvent} from '@/utils/mixins';
 
 interface IProps {
   classes?: any
@@ -54,10 +55,12 @@ const RatingBar: ComponentType<IProps> = (props: IProps) => {
 
   const checkboxEvent = (e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     const params: RoomUrlParams = qs.parse(location.search!);
-    let value                   = parseInt(e.target.value);
-    let list                    = [...ratingLists];
+    // let value                   = parseInt(e.target.value);
+    // let list                    = [...ratingLists];
+    //
+    // checked ? list.push(value) : _.remove(list, n => n === value);
 
-    checked ? list.push(value) : _.remove(list, n => n === value);
+    let list = arrayFilterCheckBoxEvent(ratingLists, e, checked);
 
     list = _.sortBy(list);
 

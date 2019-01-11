@@ -52,3 +52,13 @@ export const getBankList = async (uuid: string) => {
   return res.data;
 };
 
+export const redirectToBaoKim = async (uuid: string, bank_id: number) => {
+  const request = {
+    payment_method: 4,
+    bank_payment_method_id: bank_id,
+  };
+
+  const res: AxiosRes<string> = await axios.post(`payment/${uuid}`, request);
+  return res.data
+};
+

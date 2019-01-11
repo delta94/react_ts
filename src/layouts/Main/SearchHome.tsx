@@ -4,7 +4,6 @@ import {ReducersType} from '@/store/reducers';
 import {SearchFilterState} from '@/store/reducers/searchFilter';
 import appC from '@/styles/App.module.scss';
 import {FormikProps} from '@/types/Interface/Formik';
-import {AddExtraType} from '@/types/Requests/ResponseTemplate';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import Gray from '@material-ui/core/colors/grey';
@@ -27,7 +26,10 @@ import {withRouter, RouteProps} from 'react-router-dom';
 import {compose} from 'recompose';
 import {Dispatch} from 'redux';
 import * as Yup from 'yup';
-import {RoomIndexGetParams, RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
+import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
+import Hidden from '@material-ui/core/Hidden/Hidden';
+import DatePickerHomeXsOnly from '@/views/Homepage/DatePicker/DatePickerHomeXsOnly';
+
 
 const DatePicker = Loadable({
   loader: (): Promise<any> => import('@/components/Utils/DateRange'),
@@ -70,6 +72,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     padding: 40,
   },
   inputSearch: {
+    [theme!.breakpoints!.only!('xs')]: {
+      width: '64%',
+    },
     height: '30px',
     width: '85%',
     border: 'none',
@@ -94,6 +99,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   spinner: {
     width: '30px !important',
     height: '30px !important',
+  },
+  marginSearch: {
+    marginLeft: 21,
   },
 });
 
@@ -158,7 +166,7 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
               <Grid container spacing = {16}>
                 <Grid item md = {12} xs = {12}>
                   <Paper elevation = {4} className = {classes.paperSize} square>
-                    <SearchIcon className = {appC['ml-25']} fontSize = 'large' />
+                    <SearchIcon className = {classes.marginSearch} fontSize = 'large' />
                     <input type = 'text'
                            name = 'name'
                            onChange = {handleChange}
@@ -174,12 +182,17 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
                   <Paper elevation = {4}
                          className = {classes.paperSize}
                          square>
-                    <DatePicker />
+                    <Hidden xsDown>
+                      <DatePicker />
+                    </Hidden>
+                    <Hidden smUp>
+                      <DatePickerHomeXsOnly />
+                    </Hidden>
                   </Paper>
                 </Grid>
                 <Grid item md = {8} xs = {12} sm = {12}>
                   <Paper elevation = {4} className = {classes.paperSize} square>
-                    <People className = {appC['ml-25']} fontSize = 'large' />
+                    <People className = {classes.marginSearch} fontSize = 'large' />
                     <Grid container spacing = {8}>
                       <Grid item lg = {12}>
                         <div className = {appC['ml-20']}>

@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useContext, useEffect} from 'react';
+import React, {ComponentType, Fragment, useContext, useState} from 'react';
 import {compose} from 'recompose';
 import Paper from '@material-ui/core/Paper/Paper';
 import {IPaymentContext, PaymentContext} from '@/store/context/Payment/PaymentContext';
@@ -14,6 +14,8 @@ import mapMarker from '@/assets/SvgIcon/map-marker.svg';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import moment from 'moment';
 import {formatMoney} from '@/utils/mixins';
+import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
+import Blue from '@material-ui/core/colors/blue';
 
 interface IProps {
   classes?: any
@@ -44,6 +46,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   spaceTop: {
     marginTop: 8,
   },
+  fontLow: {
+    fontSize: '0.9rem',
+  },
+  expandText: {
+    color: Blue[500],
+    float: 'right',
+    textDecoration: 'underline',
+    cursor: 'pointer'
+  }
 });
 
 // @ts-ignore
@@ -51,95 +62,167 @@ const PaymentInfo: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
 
   const {state} = useContext<IPaymentContext>(PaymentContext);
+  const {width} = useContext<IGlobalContext>(GlobalContext);
+
+  const xsMode = width === 'xs';
+  const [infoStatus, setInfoStatus] = useState<boolean>(!xsMode);
 
   const {room, lists} = state;
 
-  let checkInDate = lists ? moment(lists!.checkin) : moment();
+  let checkInDate  = lists ? moment(lists!.checkin) : moment();
   let checkOutDate = lists ? moment(lists!.checkout) : moment();
 
+  const HeaderInfo = () => (
+    <Fragment>
+      <Grid item xs = {12}>
+        <img src = {`http://westay.org/storage/rooms/${room!.media.data[0].image}`}
+             className = {classes.imgSize} />
+      </Grid>
+      <Grid item xs = {12}>
+        <Typography variant = 'subtitle2'>{room!.details.data[0].name}</Typography>
+        <StarRatings
+          numberOfStars = {room!.standard_point}
+          starDimension = {`15px`}
+          starSpacing = {`1px`}
+          starEmptyColor = {'#ffb40b'}
+        /><br />
+        <img src = {mapMarker} className = {classNames(
+          classes.mapMarker, classes.verticalMid,
+        )} />&nbsp;
+        <span className = {classes.address}>
+                {room!.details.data[0].address}
+                </span>
+      </Grid>
+    </Fragment>
+  );
 
   return (
     <Fragment>
-      <Grid item md = {12}>
-        <Paper className = {classes.root}>
-          <Grid container spacing = {16}>
-            <Grid item md = {12}>
-              <Typography variant = 'subtitle2'>THÔNG TIN ĐƠN ĐẶT PHÒNG</Typography>
-              <Divider />
+      <Grid container spacing = {16}>
+        <Grid item xs = {12}>
+          <Paper className = {classes.root}>
+            <Grid container spacing = {16}>
+              <Grid item xs = {12}>
+                <Typography variant = 'subtitle2'>THÔNG TIN ĐƠN ĐẶT PHÒNG</Typography>
+                <Divider />
+              </Grid>
+              {room ? (
+                <Fragment>
+                  <HeaderInfo />
+                  <Grid item xs = {12}>
+                    <Grid container spacing = {16}>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Ngày nhận phòng</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                          checkInDate.format('Y/MM/DD')
+                        }</Grid>
+                      </Grid>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Ngày trả phòng</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                          checkOutDate.format('Y/MM/DD')
+                        }</Grid>
+                      </Grid>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Số khách</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow}
+                              justify = 'flex-end'>{lists!.number_of_guests} người</Grid>
+                      </Grid>
+                    </Grid>
+                    <Divider className = {classes.spaceTop} />
+                    <Grid container spacing = {16} className = {classes.spaceTop}>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Giá</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow}
+                              justify = 'flex-end'>{`${formatMoney(lists!.price_original)}đ`}</Grid>
+                      </Grid>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Phí dịch vụ</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow}
+                              justify = 'flex-end'>{`${formatMoney(lists!.additional_fee)}đ`}</Grid>
+                      </Grid>
+                      {lists!.price_discount > 0 ? (
+                        <Grid container item xs = {12}>
+                          <Grid item xs = {6} className = {classes.fontLow}>Giảm giá</Grid>
+                          <Grid container item xs = {6} className = {classes.fontLow}
+                                justify = 'flex-end'>{`${formatMoney(lists!.price_discount)}đ`}</Grid>
+                        </Grid>
+                      ) : ''}
+                    </Grid>
+                    <Divider className = {classes.spaceTop} />
+                    <Grid container spacing = {16} className = {classes.spaceTop}>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>
+                          <Typography variant = 'h6'>Tổng cộng:</Typography>
+                        </Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>
+                          <Typography variant = 'h6'>{`${formatMoney(lists!.total_fee)}đ`}</Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Fragment>
+              ) : <SimpleLoader />}
             </Grid>
-            {room ? (
-              <Fragment>
-                <Grid item md = {12}>
-                  <img src = {`http://westay.org/storage/rooms/${room!.media.data[0].image}`}
-                       className = {classes.imgSize} />
-                </Grid>
-                <Grid item md = {12}>
-                  <Typography variant = 'subtitle2'>{room!.details.data[0].name}</Typography>
-                  <StarRatings
-                    numberOfStars = {room!.standard_point}
-                    starDimension = {`15px`}
-                    starSpacing = {`1px`}
-                    starEmptyColor = {'#ffb40b'}
-                  /><br />
-                  <img src = {mapMarker} className = {classNames(
-                    classes.mapMarker, classes.verticalMid,
-                  )} />&nbsp;
-                  <span className = {classes.address}>
-                {room!.details.data[0].address}
-                </span>
-                </Grid>
-                <Grid item md = {12}>
-                  <Grid container spacing = {16}>
-                    <Grid container item md = {12}>
-                      <Grid item md = {6}>Ngày nhận phòng</Grid>
-                      <Grid container item md = {6} justify = 'flex-end'>{
-                        checkInDate.format('Y/MM/DD')
-                      }</Grid>
-                    </Grid>
-                    <Grid container item md = {12}>
-                      <Grid item md = {6}>Ngày trả phòng</Grid>
-                      <Grid container item md = {6} justify = 'flex-end'>{
-                        checkOutDate.format('Y/MM/DD')
-                      }</Grid>
-                    </Grid>
-                    <Grid container item md = {12}>
-                      <Grid item md = {6}>Số khách</Grid>
-                      <Grid container item md = {6} justify = 'flex-end'>{lists!.number_of_guests} người</Grid>
-                    </Grid>
-                  </Grid>
-                  <Divider className = {classes.spaceTop} />
-                  <Grid container spacing = {16} className = {classes.spaceTop}>
-                    <Grid container item md = {12}>
-                      <Grid item md = {6}>Giá</Grid>
-                      <Grid container item md = {6} justify = 'flex-end'>{`${formatMoney(lists!.price_original)}đ`}</Grid>
-                    </Grid>
-                    <Grid container item md = {12}>
-                      <Grid item md = {6}>Phí dịch vụ</Grid>
-                      <Grid container item md = {6} justify = 'flex-end'>{`${formatMoney(lists!.additional_fee)}đ`}</Grid>
-                    </Grid>
-                    {lists!.price_discount > 0 ? (
-                      <Grid container item md = {12}>
-                        <Grid item md = {6}>Giảm giá</Grid>
-                        <Grid container item md = {6} justify = 'flex-end'>{`${formatMoney(lists!.price_discount)}đ`}</Grid>
+          </Paper>
+        </Grid>
+        <Grid item xs = {12}>
+          <Paper className = {classes.root}>
+            <Grid container spacing = {16}>
+              <Grid item xs = {12} onClick={() => setInfoStatus(!infoStatus)}>
+                <Typography variant = 'subtitle2'>
+                  THÔNG TIN KHÁCH HÀNG
+                  <span className={classes.expandText}>{infoStatus ? 'Thu gọn' : 'Xem thêm'}</span>
+                </Typography>
+                <Divider />
+              </Grid>
+              {room && lists ? (
+                <Grid item container spacing = {16}>
+                  {infoStatus ? (
+                    <Fragment>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Người đặt phòng</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                          lists!.name
+                        }</Grid>
                       </Grid>
-                    ): ''}
-                  </Grid>
-                  <Divider className = {classes.spaceTop} />
-                  <Grid container spacing = {16} className = {classes.spaceTop}>
-                    <Grid container item md = {12}>
-                      <Grid item md = {6}>
-                        <Typography variant = 'h6'>Tổng cộng:</Typography>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Số điện thoại</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                          lists!.phone
+                        }</Grid>
                       </Grid>
-                      <Grid container item md = {6} justify = 'flex-end'>
-                        <Typography variant = 'h6'>{`${formatMoney(lists!.total_fee)}đ`}</Typography>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Email</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                          lists!.email
+                        }</Grid>
                       </Grid>
-                    </Grid>
-                  </Grid>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Người nhận phòng</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                          lists!.name_received ? lists!.name_received : lists!.name
+                        }</Grid>
+                      </Grid>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Số điện thoại người nhận</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                          lists!.phone_received ? lists!.phone_received : lists!.phone
+                        }</Grid>
+                      </Grid>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {4} className = {classes.fontLow}>Email</Grid>
+                        <Grid container item xs = {8} className = {classes.fontLow} justify = 'flex-end'>{
+                          lists!.email_received ? lists!.email_received : lists!.email
+                        }</Grid>
+                      </Grid>
+                    </Fragment>
+                  ): ''}
                 </Grid>
-              </Fragment>
-            ) : <SimpleLoader />}
-          </Grid>
-        </Paper>
+              ) : <SimpleLoader />}
+            </Grid>
+          </Paper>
+        </Grid>
       </Grid>
     </Fragment>
   );
