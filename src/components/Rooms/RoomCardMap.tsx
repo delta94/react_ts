@@ -250,7 +250,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                             {(room) ? (
                               <span className = {classes.verticalMid}>
                                 <StarRatings
-                                  numberOfStars = {4}
+                                  numberOfStars = {room.standard_point}
                                   starDimension = {`15px`}
                                   starSpacing = {`1px`}
                                   starEmptyColor = {'#ffb40b'}

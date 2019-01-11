@@ -18,3 +18,7 @@ deploy:
     branch: master
 addons:
   ssh_known_hosts: 128.199.212.96
+branches:
+  only:
+  - master
+  - dev

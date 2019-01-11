@@ -1,5 +1,6 @@
-export interface RoomIndexGetParams {
-  include?: string
+import {BaseGetRequestParams} from '@/types/Requests/RequestTemplate';
+
+export interface RoomIndexGetParams extends BaseGetRequestParams {
   name?: string
   city?: string
   district?: string
@@ -27,10 +28,11 @@ export interface RoomIndexGetParams {
   service?: string
   valuable?: string
   quality?: string
-  avg_rating?: string | number
+  avg_rating?: string
   recommend?: string
-  limit?: string | number
-  page?: number
+  page?: number,
+  standard_point?: string
+  type_room?: string
 }
 
 export interface RoomUrlParams {
@@ -49,5 +51,7 @@ export interface RoomUrlParams {
   deal_hot?: string | number | null
   rating?: string | null
   view?: 'map' | 'list'
+  amenities?: string | null
+  room_type?: string | null
 }
 

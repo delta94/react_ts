@@ -1,4 +1,16 @@
 import moment, {Moment} from 'moment';
+import {ChangeEvent} from 'react';
+import _ from 'lodash';
+import {PromiseCallBack} from '@/types/Requests/RequestTemplate';
+
+export const promiseAll = async (...tasks: PromiseCallBack[]) => {
+  const listCallBack = _.map(tasks, task => {
+    let {params, callback} = task;
+    return () => callback(...params);
+  });
+
+  return await Promise.all(_.map(listCallBack, cb => cb()))
+};
 
 /**
  * Format money to user friendly
@@ -38,3 +50,10 @@ export const formatTime = (date: string, hours: number = 0, minutes: number = 0,
   return momentObject.format('YYYY-MM-DD HH:mm:ss');
 };
 
+export const arrayFilterCheckBoxEvent = <E extends HTMLInputElement>(current: number[], event: ChangeEvent<E>, status: boolean) => {
+  let list  = [...current];
+  let value = parseInt(event.target.value);
+  status ? list.push(value) : _.remove(list, n => n === value);
+
+  return list;
+};

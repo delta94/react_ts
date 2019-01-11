@@ -2,13 +2,15 @@ import {createContext, Dispatch} from 'react';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {LocationDescriptorObject} from 'history';
 import qs from 'query-string';
-import {AxiosRes, Pagination, BaseResponse} from '@/types/Requests/ResponseTemplate';
+import {AxiosRes, Pagination, BaseResponse, TypeSelect} from '@/types/Requests/ResponseTemplate';
 import {axios} from '@/utils/axiosInstance';
-import {BOOKING_TYPE_DAY} from '@/utils/store/global';
 import {updateObject} from '@/store/utility';
 import {RoomIndexGetParams, RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import {Range} from 'react-input-range';
 import _ from 'lodash';
+import {ComfortIndexGetParams} from '@/types/Requests/Comforts/ComfortRequests';
+import {ComfortIndexRes} from '@/types/Requests/Comforts/ComfortResponses';
+import {AxiosResponse} from 'axios';
 
 export const MIN_PRICE  = 0;
 export const MAX_PRICE  = 10000000;
@@ -27,13 +29,20 @@ export type RoomIndexAction = { type: 'setRooms', rooms: RoomIndexRes[], meta?: 
   | { type: 'setLoadMore', isLoadMore: boolean }
   | { type: 'setMapOpen', isMapOpen: boolean }
   | { type: 'setRating', ratingLists: number[] }
+  | { type: 'setComforts', comforts: ComfortIndexRes[] }
+  | { type: 'setRoomTypes', roomTypes: TypeSelect[] }
+  | { type: 'setAmenitiesFilter', amenities: number[] }
+  | { type: 'setFilter', amenities?: number[], roomTypesFilter?: number[], ratingLists?: number[] }
 
 export type RoomIndexState = {
   readonly rooms: RoomIndexRes[]
+  readonly comforts: ComfortIndexRes[]
+  readonly roomTypes: TypeSelect[]
   readonly sorts: any
   readonly price: Range,
   readonly ratingLists: number[]
   readonly amenities: number[]
+  readonly roomTypesFilter: number[]
   readonly meta: Pagination | null
   readonly isLoadMore: boolean
   readonly isMapOpen: boolean
@@ -44,9 +53,12 @@ export const RoomIndexStateInit: RoomIndexState = {
     min: MIN_PRICE,
     max: MAX_PRICE,
   },
+  roomTypes: [],
+  comforts: [],
   rooms: [],
   amenities: [],
   ratingLists: [],
+  roomTypesFilter: [],
   sorts: null,
   meta: null,
   isLoadMore: false,
@@ -80,6 +92,25 @@ export const RoomIndexReducer = (state: RoomIndexState, action: RoomIndexAction)
       return updateObject<RoomIndexState>(state, {
         ratingLists: action.ratingLists,
       });
+    case 'setComforts':
+      return updateObject<RoomIndexState>(state, {
+        comforts: action.comforts,
+      });
+    case 'setAmenitiesFilter':
+      return updateObject<RoomIndexState>(state, {
+        amenities: action.amenities,
+      });
+    case 'setRoomTypes':
+      return updateObject<RoomIndexState>(state, {
+        roomTypes: action.roomTypes,
+      });
+    case 'setFilter':
+      return updateObject(state, {
+        roomTypesFilter: !action.roomTypesFilter ? state.roomTypesFilter : action.roomTypesFilter,
+        amenities: !action.amenities ? state.amenities : action.amenities,
+        ratingLists: !action.ratingLists ? state.ratingLists : action.ratingLists,
+        rooms: [],
+      });
     default:
       return state;
   }
@@ -106,8 +137,10 @@ export const getRooms = async (location: LocationDescriptorObject, page?: number
     price_day_to: params.price_day_to,
     manager: (typeof params.instant !== 'undefined') ? 1 : 0,
     sort_price_day: (params.lowest_price === null) ? 0 : 1,
-    avg_rating: (params.rating && params.rating.length > 0) ? _.split(params.rating, ',')[0] : undefined,
-    page
+    standard_point: (params.rating) ? _.split(params.rating, ',')[0] : undefined,
+    comfort_lists: (params.amenities) ? params.amenities : undefined,
+    type_room: params.room_type ? params.room_type : undefined,
+    page,
   };
 
   const url = `rooms?${qs.stringify(query)}`;
@@ -127,6 +160,32 @@ export const fetchRoom = async (url: string) => {
   return res.data;
 };
 
+export const fetchComforts = async () => {
+  const params: ComfortIndexGetParams = {
+    include: 'details',
+    limit: -1,
+  };
+
+  const url = `comforts?${qs.stringify(params)}`;
+
+  const res: AxiosRes<ComfortIndexRes[]> = await axios.get(url);
+  return res.data;
+};
+
+export const fetchRoomType = async () => {
+  const res: AxiosResponse<TypeSelect[]> = await axios.get('rooms/type');
+  return res.data;
+};
+
+export const promiseComfortsAndRoomType = async () => {
+  return await Promise.all([fetchComforts(), fetchRoomType()]);
+};
+
+/**
+ * Load more room when user scroll down
+ * @param {RoomIndexState} state
+ * @param {React.Dispatch<RoomIndexAction>} dispatch
+ */
 export const loadMoreRooms = (state: RoomIndexState, dispatch: Dispatch<RoomIndexAction>) => {
   const {meta, rooms} = state;
   if (meta !== null) {

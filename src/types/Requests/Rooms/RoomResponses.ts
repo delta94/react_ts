@@ -1,5 +1,5 @@
 import {TransformerInclude} from '@/types/Requests/ResponseTemplate';
-import {ComfortIndexResponses} from '@/types/Requests/Comforts/ComfortResponses';
+import {ComfortIndexRes} from '@/types/Requests/Comforts/ComfortResponses';
 import {MediaIndexRes} from '@/types/Requests/Media/MediaIndexResponse';
 
 export interface RoomIndexRes<T = any> {
@@ -43,7 +43,7 @@ export interface RoomIndexRes<T = any> {
   avg_rating_txt:string,
   details: TransformerInclude<RoomDetails[]>;
   user: TransformerInclude<User>;
-  comforts: TransformerInclude<ComfortIndexResponses[]>;
+  comforts: TransformerInclude<ComfortIndexRes[]>;
   media: TransformerInclude<MediaIndexRes[]>
 }
 

@@ -28,10 +28,18 @@ interface IProps extends RouteChildrenProps<PaymentRouterParams> {
 const styles: any = (theme: ThemeCustom) => createStyles({
   container: {
     marginTop: 30,
+    [theme!.breakpoints!.between!('xs', 'sm')]: {
+      marginTop: 5
+    }
   },
   parentContainer: {
     minHeight: '100vh',
     backgroundColor: Grey[200],
+  },
+  info: {
+    [theme!.breakpoints!.between!('xs', 'sm')]: {
+      order: 1,
+    },
   },
 });
 
@@ -64,13 +72,13 @@ const Payment: ComponentType<IProps> = (props: IProps) => {
   return (
     <PaymentContext.Provider value = {{state, dispatch}}>
       <NavTop />
-      <GridContainer xs = {10} className = {classes.parentContainer}>
+      <GridContainer xs = {11} sm = {11} md = {10} className = {classes.parentContainer}>
         <Grid container spacing = {16} className = {classes.container}>
-          <Grid item md = {8}>
+          <Grid item xs = {12} md = {8} className = {classes.info}>
             <BankList />
           </Grid>
-          <Grid container item md = {4}>
-            <PaymentInfo/>
+          <Grid item xs = {12} md = {4}>
+            <PaymentInfo />
           </Grid>
         </Grid>
       </GridContainer>
