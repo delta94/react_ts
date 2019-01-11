@@ -146,7 +146,7 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
     if (isSubmitting && !isValidating) {
       errors.firstName ? scrollDefault('firstName') : (
         errors.lastName ? scrollDefault('lastName') : (
-          errors.email ? scrollDefault('email-booking') : (
+          errors.email ? scrollDefault('email-lists') : (
             errors.phone ? scrollDefault('phone-number') : (
               errors.country ? scrollDefault('country') : (
                 errors.guestName && scrollDefault('guest-name')
@@ -356,7 +356,7 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
                           color = 'primary'
                           disabled = {!room || isSubmitting}
                           type = 'submit'>
-                    {(room && !isSubmitting) ? 'Process your booking' : <SimpleLoading />}
+                    {(room && !isSubmitting) ? 'Process your lists' : <SimpleLoading />}
                   </Button>
                 </Grid>
               </Grid>

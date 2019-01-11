@@ -1,10 +1,9 @@
 import * as act from '@/store/actions/actionTypes';
 import {ReducersType} from '@/store/reducers';
 import {SearchFilterState, SearchFilterAction, DateRange} from '@/store/reducers/searchFilter';
-import Event from '@material-ui/icons/Event';
 import moment, {Moment} from 'moment';
-import React, {useState, useEffect, ComponentType} from 'react';
-import {DateRangePicker, FocusedInputShape} from 'react-dates';
+import React, {useState, useEffect, ComponentType, Fragment} from 'react';
+import {FocusedInputShape, DayPickerRangeController} from 'react-dates';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
 import {Dispatch} from 'redux';
@@ -12,14 +11,22 @@ import 'react-dates/initialize';
 import '@/styles/date-picker.scss';
 import '@/styles/Airbnb/date-picker-homepage.scss';
 
-
 interface IProps {
   filter: SearchFilterState
+
   updateDate(date: DateRange): any
 }
 
 const DateRangePK: ComponentType<IProps> = (props: IProps) => {
   const {filter, updateDate} = props;
+
+  const [init, setInit]                 = useState(false);
+  const [focusedInput, setFocusedInput] = useState<FocusedInputShape>('startDate');
+
+  const {startDate, endDate} = filter;
+
+  const sd = startDate ? moment(startDate) : null;
+  const ed = endDate ? moment(endDate) : null;
 
   const onDateChange = (startDate: Moment | null, endDate: Moment | null) => {
     if (focusedInput === 'startDate') {
@@ -41,31 +48,31 @@ const DateRangePK: ComponentType<IProps> = (props: IProps) => {
 
   }, []);
 
-  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
+  useEffect(() => {
+    console.log(filter, focusedInput);
+  }, [filter]);
+
   return (
-    <DateRangePicker
-      startDateId = 'startDate'
-      endDateId = 'endDate'
-      startDate = {filter.startDate ? moment(filter.startDate) : null}
-      endDate = {filter.endDate ? moment(filter.endDate) : null}
-      onDatesChange = {({startDate, endDate}) => {
-        onDateChange(startDate, endDate);
-      }}
-      focusedInput = {focusedInput}
-      onFocusChange = {focusedInput => {
-        setFocusedInput(focusedInput);
-      }}
-      minimumNights = {0}
-      customInputIcon = {<Event />}
-      noBorder
-      displayFormat = 'DD/MM/YYYY'
-      hideKeyboardShortcutsPanel
-      // isDayBlocked={(day: Moment) => {
-      //   console.log(day.format('YYYY-MM-DD'));
-      //   return day.format('YYYY-MM-DD') == moment('2019-01-12').format('YYYY-MM-DD');
-      // }}
-      readOnly
-    />
+    <Fragment>
+      {(
+        <DayPickerRangeController
+          startDate = {sd}
+          endDate = {ed}
+          onDatesChange = {({startDate, endDate}) => {
+            onDateChange(startDate, endDate);
+          }}
+          focusedInput = {focusedInput}
+          onFocusChange = {focusedInput => {
+            setFocusedInput(!!focusedInput ? focusedInput : 'startDate');
+          }}
+          orientation = 'verticalScrollable'
+          numberOfMonths = {3}
+          verticalHeight = {400}
+          noBorder
+          initialVisibleMonth = {() => moment()}
+        />
+      )}
+    </Fragment>
   );
 };
 

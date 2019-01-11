@@ -92,7 +92,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     border: '1px solid #e0e0e0',
     color: theme.palette!.text!.primary,
     fontSize: 11,
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff',
   },
   arrowPopper: {
     '&[x-placement*="bottom"] $arrowArrow': {

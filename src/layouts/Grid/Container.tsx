@@ -7,12 +7,13 @@ interface IProps {
   lg?: GridSize
   xl?: GridSize
   sm?: GridSize
+  className?: string
 }
 
 const GridContainer: ComponentType<IProps> = props => {
   return (
     <Fragment>
-      <Grid container alignItems = 'center' justify = 'center' alignContent = 'center'>
+      <Grid container justify = 'center' alignContent = 'center' className = {props.className}>
         <Grid item
               xs = {props.xs}
               sm = {props.sm || props.xs}

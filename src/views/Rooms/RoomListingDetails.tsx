@@ -5,13 +5,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import React, {ComponentType, Fragment, useContext, useEffect, useState} from 'react';
 import {compose} from 'recompose';
 import RoomCard from '@/components/Rooms/RoomCard';
-import {
-  RoomIndexContext,
-  IRoomIndexContext,
-  getRooms,
-  fetchRoom,
-  loadMoreRooms,
-} from '@/store/context/Room/RoomIndexContext';
+import {RoomIndexContext, IRoomIndexContext, getRooms, loadMoreRooms} from '@/store/context/Room/RoomIndexContext';
 import _ from 'lodash';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
@@ -34,20 +28,22 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
   const {classes}               = props;
   const [isEmpty, setIsEmpty]   = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const {location}              = useContext<IGlobalContext>(GlobalContext);
   const {state, dispatch}       = useContext<IRoomIndexContext>(RoomIndexContext);
 
   const {rooms, meta, isLoadMore} = state;
 
   const lazyLoadRooms = () => {
-    if (isLoadMore) loadMoreRooms(state, dispatch)
+    if (isLoadMore && rooms.length > 0) loadMoreRooms(state, dispatch);
   };
 
   useEffect(() => {
+    setLoading(true);
     getRooms(location).then((data) => {
       const roomData   = data.data;
       const pagination = data.meta;
-
+      setLoading(false);
       dispatch({
         type: 'setRooms',
         rooms: roomData,
@@ -59,28 +55,23 @@ const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
   }, [location]);
 
   useEffect(() => {
-    setIsEmpty((meta !== null) && (rooms.length === 0));
-  }, [rooms]);
+    setIsEmpty((meta !== null) && (rooms.length === 0) && !isLoading);
+  }, [rooms, isLoading]);
 
   useEffect(() => {
-    if (rooms && meta) {
-      dispatch({
-        type: 'setLoadMore',
-        isLoadMore: true
-      })
-    } else {
-      dispatch({
-        type: 'setLoadMore',
-        isLoadMore: false
-      })
-    }
+    let isLoadMore = !!(rooms && meta);
+
+    dispatch({
+      type: 'setLoadMore',
+      isLoadMore,
+    });
   }, [!!meta]);
 
   return (
     <Fragment>
       <InfiniteScroll
         loadMore = {lazyLoadRooms}
-        hasMore = {isLoadMore}
+        hasMore = {isLoadMore && !isLoading}
         loader = {<SimpleLoader key = {1} height = {200} width = {300} />}
       >
         <Grid container spacing = {16} justify = 'center' className = {classNames({

@@ -75,9 +75,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   modal: {
     marginLeft: 'auto',
     marginRight: 'auto',
-    marginTop: '8%',
+    marginTop: '15vh',
     width: '40%',
     padding: 40,
+    [theme!.breakpoints!.only!('xs')]: {
+      width: '70%',
+    }
   },
   spaceTop: {
     marginTop: 10,

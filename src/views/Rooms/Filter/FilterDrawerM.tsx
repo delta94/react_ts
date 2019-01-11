@@ -74,10 +74,10 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
       <DialogTitle disableTypography>
         <Typography variant = 'h6' className = {classes.center}>Filter</Typography>
         <IconButton
-          className = {classes.closeButton}
-          onClick = {() => setIndex(TAB_LIST)}>
-          <CloseIcon />
-        </IconButton>
+        className = {classes.closeButton}
+        onClick = {() => setIndex(TAB_LIST)}>
+        <CloseIcon />
+      </IconButton>
       </DialogTitle>
       <DialogContent className={classes.dialog}>
         <Grid item xs = {12} container className = {classes.sortMargin} spacing = {0}>

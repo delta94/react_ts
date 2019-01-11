@@ -236,8 +236,14 @@ const InformationOfHomestay: ComponentType<IInformationOfHomestay> = (props: IIn
                   </div>
                 </Grid>
                 <Grid item xs>
-                  <span className = {classes.price}>1.200.000 <sup>&#8363;</sup></span>
-                  <sub className = {classes.perTime}>/4 hours</sub>
+                  <div>
+                    <span className = {classes.price}>1.200.000 <sup>&#8363;</sup></span>
+                    <sub className = {classes.perTime}>/4 hours</sub>
+                  </div>
+                  <div style = {{textAlign: 'right'}}>
+                        <span className = {classes.oldPrice}>1.300.000 <sup>&#8363;</sup>
+                        <sub>/4h</sub></span>
+                  </div>
                 </Grid>
               </Grid>
             </Grid>

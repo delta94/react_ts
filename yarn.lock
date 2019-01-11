@@ -1128,6 +1128,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-i18next@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-i18next/-/react-i18next-8.1.0.tgz#5faacbfe7dc0f24729c1df6914610bfe861a50de"
+  integrity sha512-d4xhcjX5b3roNMObRNMfb1HinHQlQLPo8xlDj60dnHeeAw2bBymR2cy/l1giJpHzo/ZFgSvgVUvIWr4kCrenCg==
+  dependencies:
+    react-i18next "*"
+
 "@types/react-jss@^8.6.0":
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/@types/react-jss/-/react-jss-8.6.0.tgz#ce8009fb65e1986431cec372dff18d7087cf7a48"
@@ -5221,6 +5228,13 @@ hoek@4.x.x:
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.2.1.tgz#9634502aa12c445dd5a7c5734b572bb8738aacbb"
   integrity sha512-QLg82fGkfnJ/4iy1xZ81/9SIJiq1NGFUMGs6ParyjBZr6jW2Ufj/snDqTHixNlHdPNwN2RLVD0Pi3igeK9+JfA==
 
+hoist-non-react-statics@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.0.1.tgz#fba3e7df0210eb9447757ca1a7cb607162f0a364"
+  integrity sha512-1kXwPsOi0OGQIZNVMPvgWJ9tSnGMiMfJdihqEzrPEXlHOBh9AAHXX/QYmAJTXztnz/K+PQ8ryCb4eGaN6HlGbQ==
+  dependencies:
+    react-is "^16.3.2"
+
 hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0, hoist-non-react-statics@^2.5.5:
   version "2.5.5"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
@@ -5307,6 +5321,13 @@ html-minifier@^3.2.3:
     param-case "2.1.x"
     relateurl "0.2.x"
     uglify-js "3.4.x"
+
+html-parse-stringify2@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/html-parse-stringify2/-/html-parse-stringify2-2.0.1.tgz#dc5670b7292ca158b7bc916c9a6735ac8872834a"
+  integrity sha1-3FZwtyksoVi3vJFsmmc1rIhyg0o=
+  dependencies:
+    void-elements "^2.0.1"
 
 html-webpack-plugin@4.0.0-alpha.2:
   version "4.0.0-alpha.2"
@@ -9359,6 +9380,15 @@ react-grid-gallery@^0.5.3:
     prop-types "^15.5.8"
     react-images "^0.5.16"
 
+react-i18next@*, react-i18next@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-9.0.2.tgz#6c524c01402549ca010e90539dbe40996e213702"
+  integrity sha512-gR+GelJzwDUWYyOEnIGnbBA96ZHqkWgHg9t0wVyBAiYVhTrMIyOWX6tBL7zpETwodAXcQKj/Gd4NlgRZqfQnzA==
+  dependencies:
+    "@babel/runtime" "^7.1.2"
+    hoist-non-react-statics "3.0.1"
+    html-parse-stringify2 "2.0.1"
+
 react-image-lightbox@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/react-image-lightbox/-/react-image-lightbox-5.1.0.tgz#b47b904b027c918acdd9efa94dc0a0ddd8125c86"
@@ -11588,6 +11618,11 @@ vm-browserify@0.0.4:
   integrity sha1-XX6kW7755Kb/ZflUOOCofDV9WnM=
   dependencies:
     indexof "0.0.1"
+
+void-elements@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
+  integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"
