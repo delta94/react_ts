@@ -16,9 +16,6 @@ deploy:
   provider: script
   script: rsync -r --delete-after --quiet build root@128.199.212.96:/var/www/westay-react/
   on:
-    branch: dev
+    branch: master
 addons:
   ssh_known_hosts: 128.199.212.96
-branches:
-  only:
-  - master
