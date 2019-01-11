@@ -81,12 +81,21 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     WebkitTransform: 'translateX(-50%) translateY(-50%)',
     MozTransform: 'translateX(-50%) translateY(-50%)',
     transform: 'translateX(-50%) translateY(-50%)',
+    [theme!.breakpoints!.down!('md')]: {
+      fontSize: '4vw',
+    },
   },
   status: {
     color: '#46afcc',
     fontWeight: 500,
     textAlign: 'center',
     fontSize: '1.5vw',
+    [theme!.breakpoints!.down!('md')]: {
+      fontSize: '2vw',
+    },
+    [theme!.breakpoints!.down!('sm')]: {
+      fontSize: '2.5vw',
+    },
   },
   titleReview: {
     fontSize: 18,

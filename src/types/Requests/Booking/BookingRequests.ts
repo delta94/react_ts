@@ -39,3 +39,14 @@ export interface BookingPriceCalculatorReq {
   number_of_guests: number;
   booking_type: number;
 }
+
+export interface BookingPayment {
+  hosting_id: number | null;
+  checkin: string;
+  checkout: string;
+  checkin_hour: string;
+  checkout_hour: string;
+  checkout_minute: string;
+  number_guests: number;
+  booking_type: number;
+}
