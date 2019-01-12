@@ -1,13 +1,14 @@
 language: node_js
 node_js:
-- "stable"
+- stable
 cache:
   directories:
   - node_modules
 script:
 - yarn build
 before_deploy:
-- openssl aes-256-cbc -K $encrypted_04cf818f5d75_key -iv $encrypted_04cf818f5d75_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
+- openssl aes-256-cbc -K $encrypted_04cf818f5d75_key -iv $encrypted_04cf818f5d75_iv
+  -in deploy_rsa.enc -out /tmp/deploy_rsa -d
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/deploy_rsa
 - ssh-add /tmp/deploy_rsa
@@ -19,3 +20,6 @@ deploy:
     branch: master
 addons:
   ssh_known_hosts: 128.199.212.96
+notifications:
+  slack:
+    secure: r0PIFoTIDBrxGZPDDPfge15qt0ULt9nNWhZUwWXvOD691tnUh9x21qLGW9Zy+57ouFy/RZ9t8e+a6yXQkpnV7KUyn8rfnNjFmLIDG482YXhTHFy3lhWbd8hJA9o0EsBFgFogk8rQSA1mKnTTmMvCcc2zeTZWBiHYxYMpnR6FFQhfRWMRAryK1tAqJhOvjJ7BzqTLv5SL/O8NtZKd7NVqTKiG484vDDLomxPDeSpgu4BFfWCXGoVVs7Lv8NlhhMET44+kpjj9IxT4Zhff2oQ4sWgtgN6F1e4FX06lYwW2ukuhIUGxVtY+T7D+iXOQmFOUHa0cVuXTxu+zWVSQk5lWAHHqokJzPpha72rJ2Ea2ZC38qikKhhfTEss7Iarg/bLR944Eol8eK2HG/COIPxumbmJzS6vZGtICNbbVDc/gtL0ZaA+9fgSmDLdrOJZzS5TfvCOJZJKbsDHDWxhr35tFeNiCakrFOtWpJtjIbFTm95mrJ2o+yHh0l0dVgkWAlegZZDQTY9d0nsnEuTxwB44DOZyndEVQ4AnyQ7GiJz3H4OlMOS6Y5ACoyTPGd12Wyl/pFuta9dn3Xvj3AC0Q+/jtIe0lcz4NRejyrL5mt0jX0ao3oY4K+UO0TjTrjwui54XEHmu33PWOG3TgkImcsE2RPX+8gN9EQ5Rm24JkE66Kvv0=
