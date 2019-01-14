@@ -20,7 +20,6 @@ interface IProps {
 const DateRangePK: ComponentType<IProps> = (props: IProps) => {
   const {filter, updateDate} = props;
 
-  const [init, setInit]                 = useState(false);
   const [focusedInput, setFocusedInput] = useState<FocusedInputShape>('startDate');
 
   const {startDate, endDate} = filter;
@@ -47,10 +46,6 @@ const DateRangePK: ComponentType<IProps> = (props: IProps) => {
     }
 
   }, []);
-
-  useEffect(() => {
-    console.log(filter, focusedInput);
-  }, [filter]);
 
   return (
     <Fragment>

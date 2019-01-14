@@ -77,7 +77,6 @@ const RoomCardSlider: ComponentType<IProps> = (props: IProps) => {
 
   const {rooms} = state;
 
-  if (rooms == null) {return <SimpleLoader/>}
   const settings: Settings = {
     dots: false,
     arrows:false,
@@ -91,6 +90,8 @@ const RoomCardSlider: ComponentType<IProps> = (props: IProps) => {
     swipe:false,
     touchMove:false,
   };
+
+  if (rooms == null) {return <SimpleLoader/>}
 
   return (
     <Fragment>

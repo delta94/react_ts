@@ -136,7 +136,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSizee] = useState<number>(2);
-  const [data, setData] = useState<Array<any>>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const [data, setData] = useState<any[]>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
   const {rooms} = state;

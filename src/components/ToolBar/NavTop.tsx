@@ -122,7 +122,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
       <AppBar position = 'static' color = 'secondary'>
         <Toolbar>
           <Hidden smDown>
-            <Button {...to('/')}>
+            <Button href='/'>
               <Typography variant = 'h6' color = 'inherit'>
                 LOGO
               </Typography>

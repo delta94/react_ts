@@ -51,6 +51,11 @@ export interface RoomDetails<T=any> {
   name: string,
   address: string,
 }
+
+export interface RoomScheduleRes {
+  blocks: string[]
+}
+
 export interface User<T=any> {
   name: string,
   avatar_url: string,
