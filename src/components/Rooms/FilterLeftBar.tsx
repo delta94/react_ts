@@ -9,12 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabe
 import Checkbox from '@material-ui/core/Checkbox/Checkbox';
 import Divider from '@material-ui/core/Divider/Divider';
 import Blue from '@material-ui/core/colors/blue';
-import {
-  IRoomIndexContext,
-  RoomIndexContext,
-  newRoomLocation,
-  promiseComfortsAndRoomType,
-} from '@/store/context/Room/RoomIndexContext';
+import {IRoomIndexContext, RoomIndexContext, newRoomLocation, loadFilter} from '@/store/context/Room/RoomIndexContext';
 import {ComfortIndexRes} from '@/types/Requests/Comforts/ComfortResponses';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import {arrayFilterCheckBoxEvent} from '@/utils/mixins';
@@ -116,20 +111,7 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
   }, [isExpand, comforts]);
 
   useEffect(() => {
-    promiseComfortsAndRoomType().then(res => {
-      const [comfortsRes, roomTypes] = res;
-      dispatch({
-        type: 'setComforts',
-        comforts: comfortsRes.data,
-      });
-      dispatch({
-        type: 'setRoomTypes',
-        roomTypes,
-      });
-    }).catch(err => {
-
-    });
-
+    loadFilter(dispatch);
   }, []);
 
   return (

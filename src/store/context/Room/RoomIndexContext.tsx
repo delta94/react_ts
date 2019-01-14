@@ -1,4 +1,4 @@
-import {createContext, Dispatch} from 'react';
+import {createContext, Dispatch, useEffect} from 'react';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {LocationDescriptorObject} from 'history';
 import qs from 'query-string';
@@ -177,8 +177,27 @@ export const fetchRoomType = async () => {
   return res.data;
 };
 
-export const promiseComfortsAndRoomType = async () => {
-  return await Promise.all([fetchComforts(), fetchRoomType()]);
+/**
+ * Load filter and room type
+ * @param {React.Dispatch<RoomIndexAction>} dispatch
+ */
+export const loadFilter = (dispatch: Dispatch<RoomIndexAction>) => {
+  Promise.all([
+    fetchComforts(),
+    fetchRoomType(),
+  ]).then(res => {
+    const [comfortsRes, roomTypes] = res;
+    dispatch({
+      type: 'setComforts',
+      comforts: comfortsRes.data,
+    });
+    dispatch({
+      type: 'setRoomTypes',
+      roomTypes,
+    });
+  }).catch(err => {
+
+  })
 };
 
 /**

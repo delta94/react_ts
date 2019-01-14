@@ -72,6 +72,7 @@ const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
       <InfiniteScroll
         loadMore = {lazyLoadRooms}
         hasMore = {isLoadMore && !isLoading}
+        threshold = {1400}
         loader = {<SimpleLoader key = {1} height = {200} width = {300} />}
       >
         <Grid container spacing = {16} justify = 'center' className = {classNames({
