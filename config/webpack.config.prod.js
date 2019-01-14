@@ -430,6 +430,7 @@ module.exports = {
     // MY PLUGIN
     new CompressionPlugin({
       algorithm: 'gzip',
+      cache: true,
       test: /\.js$|\.tsx$|\.ts$|\.css$|\.html$|\.eot?.+$|\.ttf?.+$|\.woff?.+$|\.svg?.+$/,
     }),
     // Generates an `index.html` file with the <script> injected.

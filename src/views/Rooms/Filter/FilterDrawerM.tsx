@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useContext, useState} from 'react';
+import React, {ComponentType, Fragment, useContext, useState, useEffect} from 'react';
 import {compose} from 'recompose';
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
@@ -14,6 +14,7 @@ import {
   RoomIndexContext,
   IRoomIndexContext,
   STEP_PRICE,
+  loadFilter, newRoomLocation,
 } from '@/store/context/Room/RoomIndexContext';
 import {usePriceEffect, priceFilterChange} from '@/components/Rooms/PriceRange';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
@@ -23,6 +24,11 @@ import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import IconButton from '@material-ui/core/IconButton/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import {TAB_LIST} from '@/views/Rooms/BottomNav';
+import StarRatings from 'react-star-ratings';
+import {updateObject} from '@/store/utility';
+import _ from 'lodash';
+import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
+import qs from 'query-string';
 
 interface IProps {
   classes?: any
@@ -46,9 +52,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   dialog: {
     [theme!.breakpoints!.only!('xs')]: {
-      padding: '0 12px'
-    }
-  }
+      padding: '0 20px',
+    },
+  },
 });
 
 // @ts-ignore
@@ -57,15 +63,49 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
   const {location, history} = useContext<IGlobalContext>(GlobalContext);
   const {state, dispatch}   = useContext<IRoomIndexContext>(RoomIndexContext);
 
+  const params: RoomUrlParams = qs.parse(location.search!);
+
+  const [star, setStar]     = useState<number>(5);
+
+
+  const {ratingLists, roomTypes} = state;
+
   const [price, setPrice] = useState<Range>({
     min: state.price.min,
     max: state.price.max,
   });
 
+  const updateLocation = () => {
+    let rateList = star.toString();
+    const newParams  = updateObject(params, {
+      rating: rateList
+    });
+
+    const locationTo = newRoomLocation(newParams);
+
+    dispatch({
+      type: 'setFilter',
+      ratingLists: [star],
+    });
+
+    history.push(locationTo);
+  }
+
   const applyFilter = () => {
     setIndex(TAB_LIST);
     priceFilterChange(price, location, history, dispatch);
+    updateLocation()
   };
+
+  const changeRating = (rate: number) => {
+    setStar(rate);
+  };
+
+  useEffect(() => {
+    if (roomTypes.length === 0) loadFilter(dispatch);
+
+    if (ratingLists.length > 0) setStar(ratingLists[0])
+  }, []);
 
   usePriceEffect(price, setPrice, state);
 
@@ -74,12 +114,12 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
       <DialogTitle disableTypography>
         <Typography variant = 'h6' className = {classes.center}>Filter</Typography>
         <IconButton
-        className = {classes.closeButton}
-        onClick = {() => setIndex(TAB_LIST)}>
-        <CloseIcon />
-      </IconButton>
+          className = {classes.closeButton}
+          onClick = {() => setIndex(TAB_LIST)}>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
-      <DialogContent className={classes.dialog}>
+      <DialogContent className = {classes.dialog}>
         <Grid item xs = {12} container className = {classes.sortMargin} spacing = {0}>
           <Grid item xs = {12} container spacing = {8}>
             <Grid item sm = {10} xs = {9}>
@@ -101,15 +141,17 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
             </Grid>
           </Grid>
           {/*TODO: Star Rating Mobile Version*/}
-          {/*<Grid item xs = {12} className = {classes.sortMargin}>*/}
-            {/*<Typography variant = 'subtitle2'>Star rating</Typography><br />*/}
-            {/*<StarRatings*/}
-              {/*numberOfStars = {5}*/}
-              {/*rating = {3}*/}
-              {/*starDimension = {'2rem'}*/}
-              {/*starRatedColor = '#FFC412'*/}
-            {/*/>*/}
-          {/*</Grid>*/}
+          <Grid item xs = {12} className = {classes.sortMargin}>
+            <Typography variant = 'subtitle2'>Star rating</Typography><br />
+            <StarRatings
+              numberOfStars = {5}
+              rating = {star}
+              changeRating = {changeRating}
+              starDimension = {'2rem'}
+              starRatedColor = '#FFC412'
+              starHoverColor = '#FFC412'
+            />
+          </Grid>
           <Grid item xs = {12} className = {classes.sortMargin}>
             <Typography variant = 'subtitle2'>Price per night</Typography><br />
             <InputRange

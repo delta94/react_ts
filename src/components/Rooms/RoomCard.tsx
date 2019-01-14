@@ -342,13 +342,13 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                       </Grid>
                     </Grid>
                     <Grid container item lg = {12} sm = {12} justify = 'center' alignItems = 'flex-end'>
-                      <Grid item lg = {12} sm = {12} className = {align.textCenter}>
-                        <Button
-                          color = 'primary'
-                          variant = 'contained'
-                          size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
-                        >Book now</Button>
-                      </Grid>
+                      {/*<Grid item lg = {12} sm = {12} className = {align.textCenter}>*/}
+                        {/*<Button*/}
+                          {/*color = 'primary'*/}
+                          {/*variant = 'contained'*/}
+                          {/*size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}*/}
+                        {/*>Book now</Button>*/}
+                      {/*</Grid>*/}
                     </Grid>
                   </Grid>
                 </Grid>

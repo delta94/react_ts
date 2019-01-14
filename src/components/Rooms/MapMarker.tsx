@@ -59,7 +59,8 @@ const MapMarker: ComponentType<IProps> = (props: LocalProps) => {
     let id     = `room-${room.id}`;
     let offset = -80;
     if (width === 'md' || width === 'sm') {
-      offset = Math.floor(window.innerWidth / -1.4);
+      offset = Math.floor(window.innerHeight / -1.9);
+      console.log(offset);
     }
 
     let effect: ReactScrollLinkProps = {

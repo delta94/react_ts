@@ -1,6 +1,5 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import fakeIMG from '@/assets/room_demo.jpeg';
-import fakeIMG2 from '@/assets/room_demo2.jpeg';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import React, {ComponentType, Fragment, useContext} from 'react';
@@ -23,7 +22,6 @@ import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {ThemeStyle} from '@material-ui/core/styles/createTypography';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
-import LazyLoad from 'react-lazyload';
 import Button from '@material-ui/core/Button/Button';
 import {RoomMapContext, IRoomMapContext} from '@/store/context/Room/RoomMapContext';
 
@@ -40,7 +38,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       maxWidth: 300,
     },
     [theme!.breakpoints!.only!('sm')]: {
-      height: 240,
+      height: 220,
     },
     [theme!.breakpoints!.only!('xs')]: {
       maxWidth: 'calc(93vw - 4px)',
@@ -221,15 +219,14 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
       >
         <Grid container spacing = {0}>
           <Grid item lg = {4} sm = {4} xs = {12} className = {classes.imgSize}>
-            <LazyLoad overflow = {true}>
-              <Slider {...settings}>
-                {room.media.data.length > 0 ? _.map(room.media.data, o => (
-                  <img key={o.image} src = {`http://westay.org/storage/rooms/${o.image}`} className = {classes.imgSize} />
-                )) : (
-                  <img src = {fakeIMG} className = {classes.imgSize} />
-                )}
-              </Slider>
-            </LazyLoad>
+            <Slider {...settings}>
+              {room.media.data.length > 0 ? _.map(room.media.data, o => (
+                <img key = {o.image} src = {`http://westay.org/storage/rooms/${o.image}`}
+                     className = {classes.imgSize} />
+              )) : (
+                <img src = {fakeIMG} className = {classes.imgSize} />
+              )}
+            </Slider>
           </Grid>
           <Grid item lg = {8} sm = {8} xs = {12}>
             <Grid container className = {classes.maxHeight}>
