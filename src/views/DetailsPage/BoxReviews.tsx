@@ -10,11 +10,11 @@ import Avatar from "@material-ui/core/Avatar";
 import avatarDemo from '@/assets/avatar_demo.jpg';
 import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
-
-// @ts-ignore
-import StarRatings from 'react-star-ratings';
+import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
 import Pagination from 'rc-pagination';
 import localeInfo from 'rc-pagination/lib/locale/en_US';
+// @ts-ignore
+import StarRatings from 'react-star-ratings';
 import 'rc-pagination/assets/index.css';
 
 interface IProps {
@@ -27,6 +27,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   rowMargin: {
     margin: '10px 0',
     padding: '12px 24px',
+    [theme!.breakpoints!.down!('xs')]: {
+      padding: '10px 0px',
+    },
     borderTop: '1px solid #e0e0e0',
   },
   rowMarginBorderTop:{
@@ -84,6 +87,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     [theme!.breakpoints!.down!('md')]: {
       fontSize: '4vw',
     },
+    [theme!.breakpoints!.down!('xs')]: {
+      fontSize: '9vw',
+    },
   },
   status: {
     color: '#46afcc',
@@ -95,10 +101,27 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
     [theme!.breakpoints!.down!('sm')]: {
       fontSize: '2.5vw',
+      paddingTop:5,
     },
+    [theme!.breakpoints!.down!('xs')]: {
+      fontSize: '4.5vw',
+      paddingTop:5,
+    },
+  },
+  titleRating:{
+    textAlign:'right',
+    [theme!.breakpoints!.down!('xs')]: {
+      textAlign:'left',
+    },
+  },
+  valueRating:{
+    textAlign:'right',
   },
   titleReview: {
     fontSize: 18,
+    [theme!.breakpoints!.down!('xs')]: {
+      fontSize: 16.5,
+    },
     fontWeight: 500,
     lineHeight: '1.375em',
     color: '#484848',
@@ -138,6 +161,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
   const [pageSize, setPageSizee] = useState<number>(2);
   const [data, setData] = useState<Array<any>>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  const {width} = useContext<IGlobalContext>(GlobalContext);
 
   const {rooms} = state;
   if (rooms == null){return <SimpleLoader/>}
@@ -154,10 +178,10 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
     return (
       <Grid container className = {classes.rowMarginBorderTop} key = {index}>
         <Grid item container xs = {12}>
-          <Grid item xs = {2}>
+          <Grid item xs = {3} sm={2}>
             <Avatar alt = 'Avatar' src = {avatarDemo} className = {classes.avatar} />
           </Grid>
-          <Grid item xs = {10}>
+          <Grid item xs = {9} sm={10}>
             <Typography variant = 'h6' className = {classes.nameUser}>Cristiano Ronaldo {todo}</Typography>
             <Typography variant = {'caption'}>December 2018</Typography>
             <Typography className = {classes.comments}>
@@ -177,7 +201,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
           Ratings
         </Typography>
         <Grid container>
-          <Grid item xs = {3}>
+          <Grid item xs = {12} sm={3}>
             <div className = {classes.rowMargin2}>
               <div style = {{textAlign: 'center'}}>
                 <StarRatings
@@ -199,64 +223,64 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
               </Typography>
             </div>
           </Grid>
-          <Grid item container xs = {9}>
+          <Grid item container xs = {12} sm={9}>
             <Grid item xs = {12}>
               <div className = {classes.rowMargin2}>
                 <Grid container className = {classes.rowMargin2}>
-                  <Grid item xs = {7} style = {{textAlign: 'right'}}>
+                  <Grid item xs = {4} sm={7} className = {classes.titleRating}>
                     <Typography className = {classes.titleReview}>
                       Service
                     </Typography>
                   </Grid>
-                  <Grid item xs = {5} style = {{textAlign: 'right'}}>
+                  <Grid item xs = {8} sm={5} className = {classes.valueRating}>
                     <StarRatings
                       rating = {5} //index rating
-                      starDimension = '24px'
+                      starDimension = {width === 'xs' ? '22px' : '24px'}
                       starSpacing = '1px'
                       starRatedColor = '#46afcc'
                     />
                   </Grid>
                 </Grid>
                 <Grid container className = {classes.rowMargin2}>
-                  <Grid item xs = {7} style = {{textAlign: 'right'}}>
+                  <Grid item xs = {4} sm={7} className = {classes.titleRating}>
                     <Typography className = {classes.titleReview}>
                       Quality
                     </Typography>
                   </Grid>
-                  <Grid item xs = {5} style = {{textAlign: 'right'}}>
+                  <Grid item xs = {8} sm={5} className = {classes.valueRating}>
                     <StarRatings
                       rating = {5} //index rating
-                      starDimension = '24px'
+                      starDimension = {width === 'xs' ? '22px' : '24px'}
                       starSpacing = '1px'
                       starRatedColor = '#46afcc'
                     />
                   </Grid>
                 </Grid>
                 <Grid container className = {classes.rowMargin2}>
-                  <Grid item xs = {7} style = {{textAlign: 'right'}}>
+                  <Grid item xs = {4} sm={7} className = {classes.titleRating}>
                     <Typography className = {classes.titleReview}>
                       Valuable
                     </Typography>
                   </Grid>
-                  <Grid item xs = {5} style = {{textAlign: 'right'}}>
+                  <Grid item xs = {8} sm={5} className = {classes.valueRating}>
                     <StarRatings
                       rating = {4.5} //index rating
-                      starDimension = '24px'
+                      starDimension = {width === 'xs' ? '22px' : '24px'}
                       starSpacing = '1px'
                       starRatedColor = '#46afcc'
                     />
                   </Grid>
                 </Grid>
                 <Grid container className = {classes.rowMargin2}>
-                  <Grid item xs = {7} style = {{textAlign: 'right'}}>
+                  <Grid item xs = {4} sm={7} className = {classes.titleRating}>
                     <Typography className = {classes.titleReview}>
                       Clealiness
                     </Typography>
                   </Grid>
-                  <Grid item xs = {5} style = {{textAlign: 'right'}}>
+                  <Grid item xs = {8} sm={5} className = {classes.valueRating}>
                     <StarRatings
                       rating = {4.5} //index rating
-                      starDimension = '24px'
+                      starDimension = {width === 'xs' ? '22px' : '24px'}
                       starSpacing = '1px'
                       starRatedColor = '#46afcc'
                     />

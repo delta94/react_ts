@@ -47,13 +47,6 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   rowMargin:{
     marginBottom:16,
   },
-  PaperBooking:{
-    border:'1px solid #e4e4e4',
-    position:'sticky',
-    top: '15%',
-    left: 'auto',
-    right: 0,
-  },
   PaperDatePick:{
     border:'1px solid #e4e4e4',
   },
@@ -154,7 +147,6 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
 
   return (
     <Fragment>
-      <Paper square elevation={8} className={classes.PaperBooking}>
        <div className={classes.boxPadding}>
          <Grid container className={classes.rowMargin}>
            <Grid item xs={6}>
@@ -253,7 +245,6 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
            </Grid>
          </Grid>
        </div>
-      </Paper>
     </Fragment>
   );
 };
