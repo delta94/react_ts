@@ -106,6 +106,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
   };
 
   const logoutTrigger = () => {
+    window.location.reload();
     cookies.remove('_token', {
       path: '/',
     });
@@ -122,7 +123,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
       <AppBar position = 'static' color = 'secondary'>
         <Toolbar>
           <Hidden smDown>
-            <Button href='/'>
+            <Button href = '/'>
               <Typography variant = 'h6' color = 'inherit'>
                 LOGO
               </Typography>

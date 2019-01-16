@@ -165,25 +165,25 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 interface IProps {
   classes?: any
   room: RoomIndexRes
+  isHover: boolean
 }
 
 // @ts-ignore
 const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
-  const {classes, room}                          = props;
+  const {classes, room, isHover}                 = props;
   const {width}                                  = useContext<IGlobalContext>(GlobalContext);
-  const {state: mapState, dispatch: mapDispatch} = useContext<IRoomMapContext>(RoomMapContext);
 
-  const {id}   = mapState;
   const xsMode = width === 'xs';
 
   const typoVariant: ThemeStyle = (width === 'sm' || width === 'xs') ? 'subtitle2' : 'h6';
   const totalComfort            = (room.comforts.data.length < 25) ? room.comforts.data.length : 20;
 
   const settings: Settings = {
+    accessibility: !xsMode,
     speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    lazyLoad: 'ondemand',
+    lazyLoad: 'progressive',
     draggable: !xsMode,
     autoplay: xsMode,
     autoplaySpeed: 5000,
@@ -201,20 +201,9 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
     win!.focus();
   };
 
-  const cardHover = (status: boolean) => {
-    mapDispatch({
-      type: 'setRoomId',
-      id: status ? room.id : 0,
-    });
-  };
-
-  const hoverStatus = (room.id == id);
-
   return (
     <Fragment>
-      <Paper elevation = {hoverStatus ? 10 : 3}
-             onMouseEnter = {() => cardHover(true)}
-             onMouseLeave = {() => cardHover(false)}
+      <Paper elevation = {isHover ? 10 : 3}
              className = {classes.paper}
       >
         <Grid container spacing = {0}>
@@ -316,7 +305,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                               <Button
                                 onClick = {cardEvent}
                                 className = {classes.buttonTrans}
-                                variant = {hoverStatus ? 'contained' : 'outlined'}
+                                variant = {isHover ? 'contained' : 'outlined'}
                                 color = 'primary'
                                 size = 'small'
                               >Details</Button>
@@ -336,6 +325,10 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
   );
 };
 
+const memoCheck = (prevProps: IProps, nextProps: IProps) => {
+  return prevProps.isHover === nextProps.isHover
+}
+
 export default compose<IProps, any>(
   withStyles(styles),
-)(RoomCardMap);
+)(React.memo(RoomCardMap, memoCheck));

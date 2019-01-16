@@ -3,7 +3,7 @@ import {FormikProps} from '@/types/Interface/Formik';
 import {OK} from '@/types/Requests/Code';
 import {CouponDiscountCalculateReq} from '@/types/Requests/Coupons/CouponRequests';
 import {CouponDiscountCalculateRes} from '@/types/Requests/Coupons/CouponResponses';
-import {BaseResponse, AxiosValidateError} from '@/types/Requests/ResponseTemplate';
+import {AxiosValidateError, AxiosRes} from '@/types/Requests/ResponseTemplate';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {axios} from '@/utils/axiosInstance';
 import {DEFAULT_DATE_FORMAT} from '@/utils/store/global';
@@ -14,7 +14,7 @@ import Grid from '@material-ui/core/Grid/Grid';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel';
 import OutlineInput from '@material-ui/core/OutlinedInput/OutlinedInput';
 import Paper from '@material-ui/core/Paper/Paper';
-import {AxiosResponse, AxiosError} from 'axios';
+import {AxiosError} from 'axios';
 import {Formik, FormikActions} from 'formik';
 import moment from 'moment';
 import React, {ComponentType, useContext} from 'react';
@@ -76,7 +76,7 @@ const BookingCouponForm: ComponentType<IProps> = props => {
         };
 
         axios.post('coupons/calculate-discount', data)
-          .then((res: AxiosResponse<BaseResponse<CouponDiscountCalculateRes>>) => {
+          .then((res: AxiosRes<CouponDiscountCalculateRes>) => {
             const body = res.data.data;
             const code = body.code;
             if (code === OK) {
