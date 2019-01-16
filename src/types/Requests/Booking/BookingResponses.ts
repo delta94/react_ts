@@ -39,7 +39,9 @@ export interface BookingIndexRes {
   email_reviews: number
   price_range: number
   created_at: string
+  total_txt: string
   updated_at: string
+  bank_list: any
   room: TransformerInclude<RoomIndexRes>
 }
 

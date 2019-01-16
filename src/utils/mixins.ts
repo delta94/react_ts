@@ -1,5 +1,5 @@
 import moment, {Moment} from 'moment';
-import {ChangeEvent} from 'react';
+import {ChangeEvent, useMemo} from 'react';
 import _ from 'lodash';
 import {PromiseCallBack} from '@/types/Requests/RequestTemplate';
 
@@ -9,7 +9,7 @@ export const promiseAll = async (...tasks: PromiseCallBack[]) => {
     return () => callback(...params);
   });
 
-  return await Promise.all(_.map(listCallBack, cb => cb()))
+  return await Promise.all(_.map(listCallBack, cb => cb()));
 };
 
 /**
@@ -56,4 +56,8 @@ export const arrayFilterCheckBoxEvent = <E extends HTMLInputElement>(current: nu
   status ? list.push(value) : _.remove(list, n => n === value);
 
   return list;
+};
+
+export const selfMemo = <T = any>(value: T): T => {
+  return useMemo(() => value, [value]);
 };

@@ -1,6 +1,5 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import fakeIMG from '@/assets/room_demo.jpeg';
-import fakeIMG2 from '@/assets/room_demo2.jpeg';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import React, {ComponentType, Fragment, useContext} from 'react';
@@ -23,7 +22,6 @@ import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {ThemeStyle} from '@material-ui/core/styles/createTypography';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
-import LazyLoad from 'react-lazyload';
 import Button from '@material-ui/core/Button/Button';
 import {RoomMapContext, IRoomMapContext} from '@/store/context/Room/RoomMapContext';
 
@@ -40,7 +38,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       maxWidth: 300,
     },
     [theme!.breakpoints!.only!('sm')]: {
-      height: 240,
+      height: 220,
     },
     [theme!.breakpoints!.only!('xs')]: {
       maxWidth: 'calc(93vw - 4px)',
@@ -167,25 +165,25 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 interface IProps {
   classes?: any
   room: RoomIndexRes
+  isHover: boolean
 }
 
 // @ts-ignore
 const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
-  const {classes, room}                          = props;
+  const {classes, room, isHover}                 = props;
   const {width}                                  = useContext<IGlobalContext>(GlobalContext);
-  const {state: mapState, dispatch: mapDispatch} = useContext<IRoomMapContext>(RoomMapContext);
 
-  const {id}   = mapState;
   const xsMode = width === 'xs';
 
   const typoVariant: ThemeStyle = (width === 'sm' || width === 'xs') ? 'subtitle2' : 'h6';
   const totalComfort            = (room.comforts.data.length < 25) ? room.comforts.data.length : 20;
 
   const settings: Settings = {
+    accessibility: !xsMode,
     speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    lazyLoad: 'ondemand',
+    lazyLoad: 'progressive',
     draggable: !xsMode,
     autoplay: xsMode,
     autoplaySpeed: 5000,
@@ -203,33 +201,21 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
     win!.focus();
   };
 
-  const cardHover = (status: boolean) => {
-    mapDispatch({
-      type: 'setRoomId',
-      id: status ? room.id : 0,
-    });
-  };
-
-  const hoverStatus = (room.id == id);
-
   return (
     <Fragment>
-      <Paper elevation = {hoverStatus ? 10 : 3}
-             onMouseEnter = {() => cardHover(true)}
-             onMouseLeave = {() => cardHover(false)}
+      <Paper elevation = {isHover ? 10 : 3}
              className = {classes.paper}
       >
         <Grid container spacing = {0}>
           <Grid item lg = {4} sm = {4} xs = {12} className = {classes.imgSize}>
-            <LazyLoad overflow = {true}>
-              <Slider {...settings}>
-                {room.media.data.length > 0 ? _.map(room.media.data, o => (
-                  <img key={o.image} src = {`http://westay.org/storage/rooms/${o.image}`} className = {classes.imgSize} />
-                )) : (
-                  <img src = {fakeIMG} className = {classes.imgSize} />
-                )}
-              </Slider>
-            </LazyLoad>
+            <Slider {...settings}>
+              {room.media.data.length > 0 ? _.map(room.media.data, o => (
+                <img key = {o.image} src = {`http://westay.org/storage/rooms/${o.image}`}
+                     className = {classes.imgSize} />
+              )) : (
+                <img src = {fakeIMG} className = {classes.imgSize} />
+              )}
+            </Slider>
           </Grid>
           <Grid item lg = {8} sm = {8} xs = {12}>
             <Grid container className = {classes.maxHeight}>
@@ -319,7 +305,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                               <Button
                                 onClick = {cardEvent}
                                 className = {classes.buttonTrans}
-                                variant = {hoverStatus ? 'contained' : 'outlined'}
+                                variant = {isHover ? 'contained' : 'outlined'}
                                 color = 'primary'
                                 size = 'small'
                               >Details</Button>
@@ -339,6 +325,10 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
   );
 };
 
+const memoCheck = (prevProps: IProps, nextProps: IProps) => {
+  return prevProps.isHover === nextProps.isHover
+}
+
 export default compose<IProps, any>(
   withStyles(styles),
-)(RoomCardMap);
+)(React.memo(RoomCardMap, memoCheck));

@@ -17,15 +17,17 @@ import Hidden from '@material-ui/core/Hidden';
 import Paper from '@material-ui/core/Paper/Paper';
 import Divider from '@material-ui/core/Divider';
 import {
-  getData, RoomDetailsAction,
+  RoomDetailsAction,
   RoomDetailsContext,
   RoomDetailsReducer,
-  RoomDetailsState, RoomDetailsStateInit,
+  RoomDetailsState,
+  RoomDetailsStateInit,
+  getData,
 } from '@/store/context/Room/RoomDetailsContext';
-import {AxiosError} from 'axios';
 import {match, RouteChildrenProps} from 'react-router';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import Typography from '@material-ui/core/Typography/Typography';
+import DatePickerRoomDetail from '@/components/Utils/DatePickerRoomDetail';
 
 interface IProps extends RouteChildrenProps {
   classes?: any,
@@ -65,7 +67,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   boxPadding: {
     padding: 16,
   },
-  boxSuggest:{
+  boxSuggest: {
     margin: '10px 0',
     padding: '16px 0',
   },
@@ -76,30 +78,20 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     color: '#484848',
     padding: '8px 0',
   },
-  divider:{
+  divider: {
     margin: '8px 0',
   },
 });
 
 const DetailsPage: ComponentType<IProps> = (props: IProps) => {
-  const {classes, match} = props;
+  const {classes, match}    = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [state, dispatch] = useReducer<RoomDetailsState, RoomDetailsAction>(RoomDetailsReducer, RoomDetailsStateInit);
-  const {history} = useContext<IGlobalContext>(GlobalContext);
+  const [state, dispatch]   = useReducer<RoomDetailsState, RoomDetailsAction>(RoomDetailsReducer, RoomDetailsStateInit);
+  const {history}           = useContext<IGlobalContext>(GlobalContext);
 
   useEffect(() => {
     let id = parseInt(match.params.id);
-
-    if (isNaN(id)) history.push('/');
-
-    getData(id).then((data) => {
-      dispatch({
-        type: 'setDetails',
-        action: data,
-      });
-    }).catch((err: AxiosError) => {
-      history.push('/404');
-    });
+    getData(id, dispatch, history);
   }, []); // phu thuoc
 
   return (
@@ -121,6 +113,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
                 <Paper square elevation = {1}>
                   <div className = {classes.boxPadding}>
                     <BoxDetails />
+                    <DatePickerRoomDetail />
                     <BoxReviews />
                   </div>
                 </Paper>
@@ -133,13 +126,13 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
             </Grid>
             <Grid container spacing = {32}>
               <Grid item xs = {12}>
-                <div className={classes.boxSuggest}>
+                <div className = {classes.boxSuggest}>
                   <div>
                     <Typography className = {classes.title}>
                       Phòng tương tự
                     </Typography>
                   </div>
-                  <Divider className={classes.divider}/>
+                  <Divider className = {classes.divider} />
                   <SliderSuggest />
                 </div>
               </Grid>

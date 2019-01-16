@@ -11,12 +11,12 @@ import {formatMoney} from '@/utils/mixins';
 import Blue from '@material-ui/core/colors/blue';
 import {scroller} from 'react-scroll';
 import {ReactScrollLinkProps} from 'react-scroll/modules/components/Link';
-import {IRoomMapContext, RoomMapContext} from '@/store/context/Room/RoomMapContext';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 
 interface IProps extends Required<Coords> {
   classes?: any
   room: RoomIndexRes
+  isHover: boolean
 }
 
 interface LocalProps extends IProps, ChildComponentProps {
@@ -50,16 +50,14 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 
 // @ts-ignore
 const MapMarker: ComponentType<IProps> = (props: LocalProps) => {
-  const {classes, room}   = props;
-  const {width}           = useContext<IGlobalContext>(GlobalContext);
-  const {state: mapState} = useContext<IRoomMapContext>(RoomMapContext);
+  const {classes, room, $hover, isHover} = props;
+  const {width}                          = useContext<IGlobalContext>(GlobalContext);
 
-  const {id}        = mapState;
   const markerEvent = () => {
     let id     = `room-${room.id}`;
     let offset = -80;
     if (width === 'md' || width === 'sm') {
-      offset = Math.floor(window.innerWidth / -1.4);
+      offset = Math.floor(window.innerHeight / -1.9);
     }
 
     let effect: ReactScrollLinkProps = {
@@ -70,8 +68,6 @@ const MapMarker: ComponentType<IProps> = (props: LocalProps) => {
     };
     scroller.scrollTo(id, effect);
   };
-
-  const isHover = room.id == id;
 
   return (
     <Fragment>
@@ -93,6 +89,10 @@ const MapMarker: ComponentType<IProps> = (props: LocalProps) => {
   );
 };
 
+const memoCheck = (prevProps: IProps, nextProps: IProps) => {
+  return prevProps.isHover === nextProps.isHover;
+};
+
 export default compose<IProps, any>(
   withStyles(styles),
-)(MapMarker);
+)(React.memo(MapMarker, memoCheck));

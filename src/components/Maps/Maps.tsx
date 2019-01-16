@@ -66,14 +66,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   roomList: {
     [theme!.breakpoints!.only!('xs')]: {
       maxWidth: 'calc(93vw - 4px)',
-    }
-  }
+    },
+  },
 });
 
 // @ts-ignore
 const Maps: ComponentType<IProps> = (props: IProps) => {
   const {classes}                   = props;
   const [page, setPage]             = useState<number>(1);
+  const [hoverId, setHoverId]       = useState<number>(0);
   const [roomChunks, setRoomChunks] = useState<RoomIndexRes[]>([]);
   const [center, setCenter]         = useState<Coords>({
     lat: 0,
@@ -86,19 +87,19 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
 
   const {rooms, meta} = state;
   const {isMapOpen}   = mapState;
-  const xsMode = width === 'xs';
+  const xsMode        = width === 'xs';
 
   const settings: Settings = {
     speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
-    arrows: false
+    arrows: false,
   };
 
   const mapOptions: MapOptions = {
     gestureHandling: 'greedy',
-    zoomControl: !xsMode
+    zoomControl: !xsMode,
   };
 
   const pageChange = (current: number, pageSize: number) => {
@@ -121,10 +122,7 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
   };
 
   const hoverAction = (key: number) => {
-    mapDispatch({
-      type: 'setRoomId',
-      id: key,
-    });
+    setHoverId(key);
   };
 
   const focusRoomLocation = (room: RoomIndexRes) => {
@@ -160,8 +158,15 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
     !xsMode ? (
       <Fragment>
         {roomChunks.length > 0 ? _.map(roomChunks, room => (
-          <Grid key = {room.id} id = {`room-${room.id}`} item xs = {12} onClick = {() => focusRoomLocation(room)}>
-            <RoomCardMap room = {room} />
+          <Grid
+            key = {room.id}
+            id = {`room-${room.id}`}
+            item xs = {12}
+            onClick = {() => focusRoomLocation(room)}
+            onMouseEnter = {() => hoverAction(room.id)}
+            onMouseLeave = {() => hoverAction(0)}
+          >
+            <RoomCardMap room = {room} isHover = {hoverId === room.id} />
           </Grid>
         )) : <SimpleLoader height = {200} width = {200} />}
         <Grid container item xs = {12} justify = 'flex-end'>
@@ -178,8 +183,15 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
       <Grid item xs = {12} className = {classes.roomList}>
         <Slider {...settings}>
           {roomChunks.length > 0 ? _.map(roomChunks, room => (
-            <Grid key = {room.id} id = {`room-${room.id}`} item xs = {12} onClick = {() => focusRoomLocation(room)}>
-              <RoomCardMap room = {room} />
+            <Grid
+              key = {room.id}
+              id = {`room-${room.id}`}
+              item xs = {12}
+              onClick = {() => focusRoomLocation(room)}
+              onMouseEnter = {() => hoverAction(room.id)}
+              onMouseLeave = {() => hoverAction(0)}
+            >
+              <RoomCardMap room = {room} isHover = {hoverId === room.id} />
             </Grid>
           )) : <SimpleLoader height = {100} width = {200} />}
         </Slider>
@@ -196,7 +208,7 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
         TransitionComponent = {TransitionCustom}
       >
         <DialogTitle disableTypography>
-          <Typography variant = 'h6'>Map for developer</Typography>
+          <Typography variant = 'h6'>Bản đồ</Typography>
           <IconButton
             className = {classes.closeButton}
             onClick = {mapClose}
@@ -206,7 +218,8 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
         </DialogTitle>
         <DialogContent>
           <Grid container spacing = {0}>
-            <Grid container item xs = {12} lg = {5} spacing = {xsMode ? 0 : 16} className = {classes.list} id = 'room-map-list'
+            <Grid container item xs = {12} lg = {5} spacing = {xsMode ? 0 : 16} className = {classes.list}
+                  id = 'room-map-list'
                   justify = 'center'>
               <RoomList />
             </Grid>
@@ -220,11 +233,12 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
                 center = {center}
                 defaultZoom = {10}
                 hoverDistance = {40}
-                onChildMouseEnter = {hoverAction}
+                onChildMouseEnter = {h => hoverAction(parseInt(h))}
                 onChildMouseLeave = {h => hoverAction(0)}
               >
                 {_.map(roomChunks, room => (
                   <MapMarker
+                    isHover = {hoverId === room.id}
                     room = {room}
                     key = {room.id}
                     lat = {room.latitude}

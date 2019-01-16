@@ -36,7 +36,8 @@ import {compose} from 'recompose';
 import {Dispatch} from 'redux';
 import Cookies from 'universal-cookie';
 import * as Yup from 'yup';
-import borderC from '@/styles/Styling/border.module.scss'
+import borderC from '@/styles/Styling/border.module.scss';
+import {withRouter, RouteChildrenProps} from 'react-router';
 
 interface IPasswordInput {
   isShown: boolean;
@@ -56,14 +57,12 @@ interface DispatchLocal {
   saveDraftLoginInfo(value: any): any
 }
 
-
-interface IProps extends FormikProps<IFormikValues>, DispatchLocal {
+interface IProps extends FormikProps<IFormikValues>, DispatchLocal, RouteChildrenProps {
   classes: any;
   cookies: Cookies;
   animation: AnimationState;
   loginInfo: LoginInfoState;
 }
-
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   paper: {
@@ -80,7 +79,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     padding: 40,
     [theme!.breakpoints!.only!('xs')]: {
       width: '70%',
-    }
+    },
   },
   spaceTop: {
     marginTop: 10,
@@ -243,7 +242,7 @@ const FormMilk = withFormik({
   },
 
   handleSubmit: (values: IFormikValues, bags: FormikBag<IProps, IFormikValues>) => {
-    const {cookies} = bags.props;
+    const {cookies, history} = bags.props;
 
     const data: LoginRequest = {
       username: values.account_email,
@@ -268,7 +267,10 @@ const FormMilk = withFormik({
       bags.setSubmitting(false);
       bags.props.handleLoginButton(false);
     }).catch(e => {
-      let res    = e.response.data;
+      let res = e.response.data;
+
+      if (!res.data) history.push('/404');
+
       let errors = res.data.errors;
       bags.setFieldError('loginIncorrect', errors[0]);
       bags.setSubmitting(false);
@@ -301,6 +303,7 @@ const mapDispatchToProps = (dispatch: Dispatch<LoginInfoAction | AnimationAction
 
 export default compose<IProps, any>(
   connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
   withCookies,
   FormMilk,
   withStyles(styles),

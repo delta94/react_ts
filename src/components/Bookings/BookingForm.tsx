@@ -30,6 +30,9 @@ import {compose} from 'recompose';
 import * as Yup from 'yup';
 import {StringSchema} from 'yup';
 import {BookingFormState} from '@/store/context/Booking/BookingFormContext';
+import {AxiosRes} from '@/types/Requests/ResponseTemplate';
+import {BookingIndexRes} from '@/types/Requests/Booking/BookingResponses';
+import {withRouter, RouteComponentProps} from 'react-router';
 
 interface IFormikValues {
   firstName: string;
@@ -43,7 +46,7 @@ interface IFormikValues {
   additionalServices: Array<number>;
 }
 
-interface IProps {
+interface IProps extends RouteComponentProps {
   classes?: any;
   state: BookingFormState;
 }
@@ -393,7 +396,7 @@ const FormMilk = withFormik({
   },
 
   handleSubmit: (values: IFormikValues, bags: FormikBag<IProps, IFormikValues>) => {
-    const {state} = bags.props;
+    const {state, history} = bags.props;
 
     const {room} = state;
 
@@ -415,8 +418,10 @@ const FormMilk = withFormik({
       status: AVAILABLE,
       type: ONLINE,
     };
-    axios.post('bookings', data).then(res => {
-      console.log(res);
+    axios.post('bookings', data).then((res: AxiosRes<BookingIndexRes>) => {
+      const data = res.data.data;
+      let url    = `/payment/invoice/${data.uuid}`;
+      history.push(url);
       bags.setSubmitting(false);
     }).catch(e => {
       console.log(e.response);
@@ -429,6 +434,7 @@ const FormMilk = withFormik({
 });
 
 export default compose<IProps, any>(
+  withRouter,
   FormMilk,
   withStyles(styles),
 )(BookingForm);
