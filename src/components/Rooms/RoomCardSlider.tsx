@@ -15,7 +15,7 @@ import SimpleLoader from '@/components/Loading/SimpleLoader';
 import Paper from '@material-ui/core/Paper/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid/Grid';
-import '@/styles/RoomCardSlider.scss';
+
 
 
 interface IProps extends RouteChildrenProps {
@@ -39,9 +39,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   price: {
     fontSize: 18,
     fontWeight: 500,
+    [theme!.breakpoints!.down!('sm')]: {
+      fontSize: 16,
+    },
   },
   perTime: {
     fontSize: 13,
+    [theme!.breakpoints!.down!('sm')]: {
+      fontSize: 12,
+    },
   },
   oldPrice: {
     color: 'grey',
@@ -64,6 +70,11 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     fontWeight: 800,
     lineHeight: '1.375em',
     color: '#484848' ,
+    minHeight: 45,
+    overflow: 'hidden',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical'
   },
   imgSlider: {
     width: '100%',

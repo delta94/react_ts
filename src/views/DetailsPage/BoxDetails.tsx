@@ -45,6 +45,21 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     color: 'grey',
     paddingLeft: 5,
   },
+  boxName:{
+    paddingRight:20,
+  },
+  roomName:{
+    fontSize: 28,
+    [theme!.breakpoints!.down!('sm')]: {
+      fontSize: 22,
+    },
+    [theme!.breakpoints!.down!('xs')]: {
+      fontSize: 20,
+    },
+    fontWeight: 700 ,
+    lineHeight: '1.125em',
+    color: '#484848',
+  },
   txtAddress: {
     color: '#008489',
     fontSize: 14,
@@ -60,6 +75,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     color: '#46afcc',
     margin: '0 5px',
     fontSize: 13,
+    [theme!.breakpoints!.down!('xs')]: {
+      fontSize: 11,
+    },
   },
   collectionAmenities: {
     paddingLeft: 0,
@@ -74,6 +92,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     position: 'relative',
     width: 90,
     height: 90,
+    [theme!.breakpoints!.down!('xs')]: {
+      width: 70,
+      height: 70,
+    },
     display: 'inline-block',
   },
   imgAvatar: {
@@ -81,6 +103,14 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     height: 'inherit',
     objectFit: 'cover',
     borderRadius: '50%',
+  },
+  imgCertified:{
+    width: 32,
+    height: 32,
+    [theme!.breakpoints!.down!('xs')]: {
+      width: 24,
+      height: 24,
+    },
   },
   infoHost: {
     position: 'absolute',
@@ -177,6 +207,11 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     lineHeight: '1.375em',
     color: '#484848',
   },
+  expansionPanelSummary:{
+    [theme!.breakpoints!.down!('xs')]: {
+      display: 'block',
+    },
+  },
   expansionPanel: {
     boxShadow: 'none',
     borderTop: '1px solid #e0e0e0',
@@ -204,12 +239,12 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
   return (
     <Fragment>
       <Grid container>
-        <Grid item xs = {9}>
+        <Grid item xs = {9} className = {classes.boxName}>
           <Grid container direction = 'column'
                 justify = 'center'
                 alignItems = 'flex-start'>
             <Grid item>
-              <Typography variant = 'h5'>{rooms!.details.data[0].name}</Typography>
+              <Typography className = {classes.roomName}>{rooms!.details.data[0].name}</Typography>
             </Grid>
             <Grid item className = {classes.rowMargin}>
               <StarRatings
@@ -286,7 +321,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 <div className = {classes.avatar}>
                   <img alt = 'Avatar' src = {rooms!.user.data.avatar_url} className = {classes.imgAvatar} />
                   <div className = {classes.infoHost}>
-                    <img src = {medalCertified} width = {32} height = {32} />
+                    <img src = {medalCertified} className={classes.imgCertified} />
                   </div>
                 </div>
               </Tooltip>
@@ -296,25 +331,25 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
       </Grid>
       <Divider />
       <Grid container className = {classes.rowMargin20}>
-        <Grid item xs = {6} sm = {3}>
+        <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <Home className = {classes.roomAmenitiesIcon} />
             <div className = {classes.roomAmenitiesTitle}><span>{rooms!.room_type_txt}</span></div>
           </div>
         </Grid>
-        <Grid item xs = {6} sm = {3}>
+        <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <People className = {classes.roomAmenitiesIcon} />
             <div className = {classes.roomAmenitiesTitle}><span>{rooms!.max_guest} guests</span></div>
           </div>
         </Grid>
-        <Grid item xs = {6} sm = {3}>
+        <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <MeetingRoom className = {classes.roomAmenitiesIcon} />
             <div className = {classes.roomAmenitiesTitle}><span>{rooms!.number_room} rooms</span></div>
           </div>
         </Grid>
-        <Grid item xs = {6} sm = {3}>
+        <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <LocalHotel className = {classes.roomAmenitiesIcon} />
             <div className = {classes.roomAmenitiesTitle}><span>{rooms!.number_bed} beds</span></div>
@@ -342,7 +377,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
       </Grid>
       <Grid container className = {classes.rowMargin20}>
         <ExpansionPanel classes = {{root: classes.expansionPanel}}>
-          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />}>
+          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />} classes={{content:classes.expansionPanelSummary}}>
             <Typography className = {classNames(classes.titleHighlight, classes.headingPanel)}>
               About homestay
             </Typography>
@@ -357,10 +392,10 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 <Typography variant = {'subtitle2'}>The space: </Typography>
               </Grid>
               <Grid item xs = {8}>
-                <Typography variant = {'body2'}>- 25 min from Surfers Paradise</Typography>
-                <Typography variant = {'body2'}>- Soothing hot outdoor spa</Typography>
-                <Typography variant = {'body2'}>- Heating & Air Conditioning</Typography>
-                <Typography variant = {'body2'}>- Property is on 10 acres of beautiful land</Typography>
+                <Typography variant = {'body2'}> - 25 min from Surfers Paradise</Typography>
+                <Typography variant = {'body2'}> - Soothing hot outdoor spa</Typography>
+                <Typography variant = {'body2'}> - Heating & Air Conditioning</Typography>
+                <Typography variant = {'body2'}> - Property is on 10 acres of beautiful land</Typography>
               </Grid>
             </Grid>
             <Grid container className = {classes.rowMargin}>
@@ -368,7 +403,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 <Typography variant = {'subtitle2'}>Guest access: </Typography>
               </Grid>
               <Grid item xs = {8}>
-                <Typography variant = {'body2'}>- Guests have access to the entire property with the exception of the
+                <Typography variant = {'body2'}> - Guests have access to the entire property with the exception of the
                                                 main house that the owner occupies.</Typography>
               </Grid>
             </Grid>
@@ -377,30 +412,30 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
       </Grid>
       <Grid container className = {classes.rowMargin20}>
         <ExpansionPanel classes = {{root: classes.expansionPanel}}>
-          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />}>
+          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />} classes = {{content: classes.expansionPanelSummary}}>
             <Typography className = {classNames(classes.titleHighlight, classes.headingPanel)}>
               Amenities
             </Typography>
             <Grid container>
-              <Grid item xs = {6} sm = {3}>
+              <Grid item xs = {3} sm = {3}>
                 <div className = {classes.collectionAmenities}>
                   <MeetingRoom className = {classes.roomAmenitiesIcon} />
                   <div className = {classes.roomAmenitiesTitle}><span>2 Bedroom(s)</span></div>
                 </div>
               </Grid>
-              <Grid item xs = {6} sm = {3}>
+              <Grid item xs = {3} sm = {3}>
                 <div className = {classes.collectionAmenities}>
                   <LocalHotel className = {classes.roomAmenitiesIcon} />
                   <div className = {classes.roomAmenitiesTitle}><span>2 beds</span></div>
                 </div>
               </Grid>
-              <Grid item xs = {6} sm = {3}>
+              <Grid item xs = {3} sm = {3}>
                 <div className = {classes.collectionAmenities}>
                   <Wifi className = {classes.roomAmenitiesIcon} />
                   <div className = {classes.roomAmenitiesTitle}><span>Free Wifi</span></div>
                 </div>
               </Grid>
-              <Grid item xs = {6} sm = {3}>
+              <Grid item xs = {3} sm = {3}>
                 <div className = {classes.collectionAmenities}>
                   <Fastfood className = {classes.roomAmenitiesIcon} />
                   <div className = {classes.roomAmenitiesTitle}><span>Free Breakfast</span></div>

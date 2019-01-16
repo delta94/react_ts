@@ -1,4 +1,4 @@
-import theme, {ThemeCustom} from '@/components/Theme/Theme';
+import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import React, {ComponentType, useContext} from 'react';
@@ -11,6 +11,8 @@ import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/Room
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import RoomCardSlider from '@/components/Rooms/RoomCardSlider';
+import NextArrowSlider from '@/views/DetailsPage/NextArrowSlider';
+import PrevArrowSlider from '@/views/DetailsPage/PrevArrowSlider';
 
 
 interface IProps extends RouteChildrenProps {
@@ -18,24 +20,48 @@ interface IProps extends RouteChildrenProps {
 }
 
 const styles: any = (theme: ThemeCustom) => createStyles({
-  root: {},
+  nextArrow:{
 
+  }
 });
 
 const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
-  const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  // const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
   const {width} = useContext<IGlobalContext>(GlobalContext);
 
-  const {rooms} = state;
-
-  if (rooms == null) {return <SimpleLoader/>}
   const settings: Settings = {
     speed: 500,
-    dots: false,
+    dots: width === 'xs' || width === 'sm',
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: width === 'md' || width === 'lg',
+    nextArrow: <NextArrowSlider />,
+    prevArrow: <PrevArrowSlider />,
+    responsive: [
+      {
+        breakpoint: 769,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+          autoplay:true,
+          autoplaySpeed: 5000,
+        }
+      },
+      {
+        breakpoint: 599,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+          autoplay:true,
+          autoplaySpeed: 5000,
+        }
+      },
+    ]
   };
 
   return (
