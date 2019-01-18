@@ -7,10 +7,10 @@ import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
 import {createStyles, withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Lock from '@material-ui/icons/LockOutlined';
 import React, {ComponentType, useContext, useMemo} from 'react';
@@ -20,17 +20,16 @@ import {ThemeCustom} from '@/components/Theme/Theme';
 import {ProfileContext, IProfileContext} from '@/store/context/Profile/ProfileContext';
 import {Formik, FormikActions} from 'formik';
 import {FormikProps} from '@/types/Interface/Formik';
+import * as Yup from 'yup';
+import moment from 'moment';
+import {ProfileInfoReq} from '@/types/Requests/Profile/ProfileReq';
+import {axios} from "@/utils/axiosInstance";
 
-interface FormikProfileValues {
-  gender: number
-  phone: string
-  name: string
-}
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   boxEditProfile: {
     position: 'relative',
-    justified: 'center',
+    justifyContent: 'center',
   },
   formControl: {
     minWidth: 120,
@@ -69,377 +68,507 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
 });
 
+interface FormikProfileValues {
+  gender: number
+  phone: string
+  name: string
+  email: string
+  day: string | null
+  month: string | null
+  year: string | null
+  address: string | null
+  description: string | null
+}
+
 interface IEditProfile {
   classes?: any;
 }
 
 const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
   const {classes} = props;
-
   const {state} = useContext<IProfileContext>(ProfileContext);
 
   const {profile} = state;
+  let birthday: any = null;
+  if (profile == null) {
+    birthday = '';
+  } else {
+    birthday = profile!.birthday;
+  }
+
+  const arrMenuItem = (x: number, y: number) => {
+    let i = x;
+    let arr = [];
+    while (i <= y) {
+      if (i < 10) {
+        arr.push(<MenuItem key = {i} value = {`0${i}`}>{`0${i}`}</MenuItem>);
+      } else {
+        arr.push(<MenuItem key = {i} value = {`${i}`}>{`${i}`}</MenuItem>);
+      }
+      i++;
+    }
+    return arr;
+  };
+
 
   const formikInit = useMemo<FormikProfileValues>(() => {
     return {
       name: profile ? profile!.name : '',
       gender: profile ? profile!.gender : 0,
       phone: profile ? profile!.phone : '',
+      email: profile ? profile!.email : '',
+      day: moment(birthday).format('DD'),
+      month: moment(birthday).format('MM'),
+      year: moment(birthday).format('YYYY'),
+      address: profile ? profile!.address : '',
+      description: '',
     };
   }, [profile]);
 
+  const validationForm = Yup.object().shape({ // Validate form field
+    gender: Yup.number()
+      .required('gioi tinh cua ban'),
+    name: Yup.string()
+      .required('Name is required')
+      .min(3, 'ten phai co it nhat 3 ki tu')
+      .max(50, 'ten khong qua 225 ki tu'),
+    email: Yup.string()
+      .required('Email is required')
+      .email('Vui lòng nhập đúng định dạng email'),
+    phone: Yup.string()
+      .required('Phone is required')
+      .test('checkNaN', 'Khong duoc nhap chu', value => !isNaN(value))
+      .min(10, 'so dien thoai phai co it nhat 10 so')
+      .max(11, 'so dien thoai phai khong qua 11 so'),
+  });
+
   return (
     <div className = {classes.boxEditProfile}>
-      {profile ? (
-        <Formik
-          initialValues = {formikInit}
-          validateOnChange = {false}
-          onSubmit = {(values: FormikProfileValues, actions: FormikActions<FormikProfileValues>) => {
+      <Formik
+        initialValues = {formikInit}
+        validationSchema = {() => validationForm}
+        validateOnChange = {false}
+        enableReinitialize = {true}
+        onSubmit = {(values: FormikProfileValues, actions: FormikActions<FormikProfileValues>) => {
+          let day = values.day ? values.day : '';
+          let month = values.month ? values.month : '';
+          let year = values.year ? values.year : '';
 
-          }}
-        >
-          {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting,
-            }: FormikProps<FormikProfileValues>) => (
-            <Paper square>
-              <div className = {classes.editRequired}>
-                <Typography variant = 'h5' className = {classes.typoBigTitle}>Required</Typography>
+          const data: ProfileInfoReq = {
+            uuid: profile!.uuid,
+            name: values.name,
+            email: values.email,
+            gender: values.gender,
+            birthday: moment(`${year}` + `${month}` + `${day}`).format('YYYY-MM-DD'),
+            address: values.address,
+            phone: values.phone,
+          };
 
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>I am </Typography>
-                  </Grid>
-                  <Grid item xs = {2}>
-                    <FormControl className = {classes.formControl}>
-                      <InputLabel htmlFor = 'Gender'>Gender</InputLabel>
-                      <Select
-                        value = {values.gender}
-                        onChange = {handleChange}
-                        name = 'gender'
-                        inputProps = {{
-                          name: 'gender',
-                          id: 'gender-simple',
-                        }}
-                      >
-                        <MenuItem value = ''>
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value = {0}>Mr</MenuItem>
-                        <MenuItem value = {1}>Ms</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs = {5}>
-                    <TextField
-                      required
-                      onChange = {handleChange}
-                      onBlur = {handleBlur}
-                      value = {values.name}
-                      id = 'standard-required'
-                      label = 'Full Name'
-                      name = 'name'
-                      fullWidth
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
-                      Phone Number
-                    </Typography>
-                  </Grid>
-                  <Grid item xs = {2}>
-                    <FormControl required className = {classes.formControl}>
-                      <InputLabel htmlFor = 'Gender'>arena code</InputLabel>
-                      <Select
-                        value = {1}
-                        // onChange = {handleChange}
-                        inputProps = {{
-                          name: 'gender',
-                          id: 'gender-simple',
-                        }}
-                      >
-                        <MenuItem value = {0}>
-                          <span><img alt = 'national' src = {VN_vi} className = {classes.avatarNational} /></span>
-                          <span>&nbsp;+84</span>
-                        </MenuItem>
-                        <MenuItem value = {1}>+888</MenuItem>
-                        <MenuItem value = {2}>+52</MenuItem>
-                        <MenuItem value = {3}>+1</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs = {5}>
-                    <Tooltip title = 'Private' placement = 'right-start' classes = {{tooltip: classes.lightTooltip}}>
-                      <FormControl
-                        className = {classes.formControl}
-                        aria-describedby = 'phone-helper-text'
-                        fullWidth
-                        required
-                      >
-                        <InputLabel htmlFor = 'Phone'>Phone</InputLabel>
-                        <Input
-                          value = {values.phone}
+          axios.put('profile', data)
+            .then(res => {
+              console.log("thanh cong " + res.data.data);
+              actions.setSubmitting(false);
+            })
+            .catch(error => {
+              console.log("that bai" + error);
+              actions.setSubmitting(false);
+            });
+        }}
+      >
+        {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            handleReset,
+          }: FormikProps<FormikProfileValues>) => {
+          return (
+            <form onSubmit = {handleSubmit}>
+              <Paper square>
+                <div className = {classes.editRequired}>
+                  <Typography variant = 'h5' className = {classes.typoBigTitle}>Required</Typography>
+
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>I
+                                                                                                    am </Typography>
+                    </Grid>
+                    <Grid item xs = {2}>
+                      <FormControl className = {classes.formControl}>
+                        <InputLabel htmlFor = 'Gender'>Gender</InputLabel>
+                        <Select
+                          value = {values.gender}
                           onChange = {handleChange}
-                          name = 'phone'
-                          endAdornment = {
-                            <InputAdornment position = 'end'>
-                              <Lock color = 'error' />
-                            </InputAdornment>
-                          }
+                          name = 'gender'
                           inputProps = {{
-                            'aria-label': 'Phone',
+                            name: 'gender',
+                            id: 'gender-simple',
                           }}
-                        />
-                        <FormHelperText id = 'phone-helper-text'>
-                          The number for guest contacts, booking requests, reminders, and other notifications.
-                        </FormHelperText>
+                        >
+                          <MenuItem value = {0}>
+                            <em>Unknown</em>
+                          </MenuItem>
+                          <MenuItem value = {1}>Mr</MenuItem>
+                          <MenuItem value = {2}>Ms</MenuItem>
+                        </Select>
                       </FormControl>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
-                      Email Address
-                    </Typography>
-                  </Grid>
-                  <Grid item xs = {7}>
-                    <Tooltip title = 'Private' placement = 'right-start' classes = {{tooltip: classes.lightTooltip}}>
+                    </Grid>
+                    <Grid item xs = {5}>
                       <FormControl
                         className = {classes.formControl}
-                        aria-describedby = 'email-helper-text'
                         fullWidth
                         required
+                        error = {!!errors.name}
                       >
-                        <InputLabel htmlFor = 'Email'>Email</InputLabel>
+                        <InputLabel htmlFor = 'Full Name'>Name</InputLabel>
                         <Input
-                          endAdornment = {<InputAdornment position = 'end'><Lock color = 'error' /></InputAdornment>}
+                          value = {values.name}
+                          onChange = {handleChange}
+                          onBlur = {handleBlur}
+                          name = 'name'
                           inputProps = {{
-                            'aria-label': 'Email',
+                            'aria-label': 'Name',
                           }}
                         />
-                        <FormHelperText id = 'email-helper-text'>We won’t share your private email address with anyone
-                                                                 else</FormHelperText>
+                        {touched.name && <FormHelperText>{errors.name}</FormHelperText>}
                       </FormControl>
-                    </Tooltip>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
-                      Date of birth
-                    </Typography>
-                  </Grid>
-                  <Grid item xs = {2}>
-                    <Tooltip title = 'Private' placement = 'right-start' classes = {{tooltip: classes.lightTooltip}}>
-                      <TextField
-                        id = 'standard-select-currency'
-                        select
-                        label = 'Day'
-                        className = {classes.formControl}
-                        value = {0}
-                        SelectProps = {{
-                          MenuProps: {
-                            className: classes.menu,
-                          },
-                        }}
-                      >
-                        <MenuItem value = {0}>1</MenuItem>
-                        <MenuItem value = {1}>2</MenuItem>
-                        <MenuItem value = {2}>3</MenuItem>
-                        <MenuItem value = {3}>4</MenuItem>
-                      </TextField>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item xs = {2}>
-                    <Tooltip title = 'Private' placement = 'right-start' classes = {{tooltip: classes.lightTooltip}}>
-                      <TextField
-                        id = 'standard-select-currency'
-                        select
-                        label = 'Month'
-                        className = {classes.formControl}
-                        value = {0}
-                        // onChange = {handleChange}
-                        SelectProps = {{
-                          MenuProps: {
-                            className: classes.menu,
-                          },
-                        }}
-                      >
-                        <MenuItem value = {0}>January</MenuItem>
-                        <MenuItem value = {1}>February</MenuItem>
-                        <MenuItem value = {2}>March</MenuItem>
-                        <MenuItem value = {3}>April</MenuItem>
-                      </TextField>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item xs = {3}>
-                    <Grid container direction = 'row' spacing = {8} justify = 'space-between'>
-                      <Grid item xs = {10}>
-                        <Tooltip title = 'Private' placement = 'right-start'
-                                 classes = {{tooltip: classes.lightTooltip}}>
-                          <TextField
-                            id = 'standard-select-currency'
-                            select
-                            label = 'Year'
-                            className = {classes.formControl}
-                            value = {0}
-                            // onChange = {handleChange}
-                            SelectProps = {{
-                              MenuProps: {
-                                className: classes.menu,
-                              },
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
+                        Phone Number
+                      </Typography>
+                    </Grid>
+                    <Grid item xs = {2}>
+                      <FormControl required className = {classes.formControl}>
+                        <InputLabel htmlFor = 'arenaCode'>arena code</InputLabel>
+                        <Select
+                          value = {1}
+                          // onChange = {handleChange}
+                          inputProps = {{
+                            name: 'arenaCode',
+                            id: 'arena-Code',
+                          }}
+                        >
+                          <MenuItem value = {0}>
+                              <span><img alt = 'national' src = {VN_vi}
+                                         className = {classes.avatarNational} />&nbsp;</span>
+                            <span>+84</span>
+                          </MenuItem>
+                          <MenuItem value = {1}>+888</MenuItem>
+                          <MenuItem value = {2}>+52</MenuItem>
+                          <MenuItem value = {3}>+1</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs = {5}>
+                      <Tooltip title = 'Private' placement = 'right-start'
+                               classes = {{tooltip: classes.lightTooltip}}>
+                        <FormControl
+                          className = {classes.formControl}
+                          aria-describedby = 'phone-helper-text'
+                          fullWidth
+                          required
+                          error = {!!errors.phone}
+                        >
+                          <InputLabel htmlFor = 'Phone'>Phone</InputLabel>
+                          <Input
+                            value = {values.phone}
+                            onChange = {handleChange}
+                            onBlur = {handleBlur}
+                            name = 'phone'
+                            endAdornment = {
+                              <InputAdornment position = 'end'>
+                                <Lock color = 'error' />
+                              </InputAdornment>
+                            }
+                            inputProps = {{
+                              'aria-label': 'Phone',
                             }}
-                          >
-                            <MenuItem value = {0}>1999</MenuItem>
-                            <MenuItem value = {1}>1998</MenuItem>
-                            <MenuItem value = {2}>1997</MenuItem>
-                            <MenuItem value = {3}>1996</MenuItem>
-                          </TextField>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item xs = {2}>
-                        <Lock color = 'error' style = {{padding: '25px 0 0 10px'}} />
+                          />
+                          {!!errors.phone ? touched.phone && <FormHelperText>{errors.phone}</FormHelperText> :
+                            <FormHelperText id = 'phone-helper-text'>
+                              The number for guest contacts, booking requests, reminders, and other notifications.
+                            </FormHelperText>
+                          }
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
+                        Email Address
+                      </Typography>
+                    </Grid>
+                    <Grid item xs = {7}>
+                      <Tooltip title = 'Private' placement = 'right-start'
+                               classes = {{tooltip: classes.lightTooltip}}>
+                        <FormControl
+                          className = {classes.formControl}
+                          aria-describedby = 'email-helper-text'
+                          fullWidth
+                          required
+                          error = {!!errors.email}
+                        >
+                          <InputLabel htmlFor = 'Email'>Email</InputLabel>
+                          <Input
+                            name = 'email'
+                            value = {values.email}
+                            onChange = {handleChange}
+                            onBlur = {handleBlur}
+                            endAdornment = {<InputAdornment position = 'end'><Lock
+                              color = 'error' /></InputAdornment>}
+                            inputProps = {{
+                              'aria-label': 'Email',
+                            }}
+                          />
+                          {!!errors.email ? touched.email && <FormHelperText>{errors.email}</FormHelperText> :
+                            <FormHelperText id = 'email-helper-text'>We won’t share your private email address with
+                                                                     anyone else</FormHelperText>
+                          }
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
+                        Date of birth
+                      </Typography>
+                    </Grid>
+                    <Grid item xs = {2}>
+                      <Tooltip title = 'Private' placement = 'right-start'
+                               classes = {{tooltip: classes.lightTooltip}}>
+                        <TextField
+                          id = 'standard-select-Day'
+                          select
+                          label = 'Day'
+                          className = {classes.formControl}
+                          onChange = {handleChange}
+                          onBlur = {handleBlur}
+                          name = 'day'
+                          value = {values.day ? values.day : '1'}
+                          SelectProps = {{
+                            MenuProps: {
+                              className: classes.menu,
+                            },
+                          }}
+                        >
+                          {arrMenuItem(1, 31)}
+                        </TextField>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item xs = {2}>
+                      <Tooltip title = 'Private' placement = 'right-start'
+                               classes = {{tooltip: classes.lightTooltip}}>
+                        <TextField
+                          id = 'standard-select-month'
+                          select
+                          label = 'Month'
+                          onChange = {handleChange}
+                          onBlur = {handleBlur}
+                          name = 'month'
+                          className = {classes.formControl}
+                          value = {values.month ? values.month : '1'}
+                          // onChange = {handleChange}
+                          SelectProps = {{
+                            MenuProps: {
+                              className: classes.menu,
+                            },
+                          }}
+                        >
+                          {arrMenuItem(1, 12)}
+                        </TextField>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item xs = {3}>
+                      <Grid container direction = 'row' spacing = {8} justify = 'space-between'>
+                        <Grid item xs = {10}>
+                          <Tooltip title = 'Private' placement = 'right-start'
+                                   classes = {{tooltip: classes.lightTooltip}}>
+                            <TextField
+                              id = 'standard-select-year'
+                              select
+                              label = 'Year'
+                              className = {classes.formControl}
+                              onChange = {handleChange}
+                              onBlur = {handleBlur}
+                              name = 'year'
+                              value = {values.year ? values.year : '1900'}
+                              // onChange = {handleChange}
+                              SelectProps = {{
+                                MenuProps: {
+                                  className: classes.menu,
+                                },
+                              }}
+                            >
+                              {arrMenuItem(1900, parseInt(moment().format('YYYY')))}
+                            </TextField>
+                          </Tooltip>
+                        </Grid>
+                        <Grid item xs = {2}>
+                          <Lock color = 'error' style = {{padding: '25px 0 0 10px'}} />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Address </Typography>
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left'
+                                  className = {classes.typoTitle}>Address </Typography>
+                    </Grid>
+                    <Grid item xs = {7}>
+                      <FormControl
+                        className = {classes.formControl}
+                        aria-describedby = 'address-helper-text'
+                        fullWidth
+                      >
+                        <InputLabel htmlFor = 'Address'>Address</InputLabel>
+                        <Input
+                          name = 'address'
+                          value = {values.address ? values.address : ''}
+                          onChange = {handleChange}
+                          inputProps = {{
+                            'aria-label': 'Address',
+                          }}
+                        />
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                  <Grid item xs = {7}>
-                    <FormControl
-                      className = {classes.formControl}
-                      aria-describedby = 'address-helper-text'
-                      fullWidth
-                    >
-                      <InputLabel htmlFor = 'Address'>Address</InputLabel>
-                      <Input
-                        inputProps = {{
-                          'aria-label': 'Address',
-                        }}
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Describe
+                                                                                                    Yourself </Typography>
+                    </Grid>
+                    <Grid item xs = {7}>
+                      <TextField
+                        id = 'desYourSelf'
+                        label = 'Help people to get to know you.'
+                        fullWidth
+                        multiline
+                        rowsMax = '4'
+                        onChange = {handleChange}
+                        margin = 'normal'
+                        helperText = 'Please Tell them what it like to have you as a guest or a host, your style of travelling or               hosting...'
                       />
-                    </FormControl>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Describe
-                                                                                                  Yourself </Typography>
-                  </Grid>
-                  <Grid item xs = {7}>
-                    <TextField
-                      id = 'desYourSelf'
-                      label = 'Help people to get to know you.'
-                      fullWidth
-                      multiline
-                      rowsMax = '4'
-                      onChange = {handleChange}
-                      margin = 'normal'
-                      helperText = 'Please Tell them what it like to have you as a guest or a host, your style of travelling or               hosting...'
-                    />
-                  </Grid>
-                </Grid>
-              </div>
+                </div>
+                <div className = {classes.editRequired}>
+                  <Typography variant = 'h5' className = {classes.typoBigTitle}>Optional</Typography>
 
-              <div className = {classes.editRequired}>
-                <Typography variant = 'h5' className = {classes.typoBigTitle}>Optional</Typography>
-
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>School </Typography>
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left'
+                                  className = {classes.typoTitle}>School </Typography>
+                    </Grid>
+                    <Grid item xs = {7}>
+                      <Tooltip title = 'Private' placement = 'right-start'
+                               classes = {{tooltip: classes.lightTooltip}}>
+                        <FormControl
+                          className = {classes.formControl}
+                          aria-describedby = 'email-helper-text'
+                          fullWidth
+                        >
+                          <Input
+                            endAdornment = {<InputAdornment position = 'end'><Lock
+                              color = 'error' /></InputAdornment>}
+                            inputProps = {{
+                              'aria-label': 'Email',
+                            }}
+                          />
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
                   </Grid>
-                  <Grid item xs = {7}>
-                    <Tooltip title = 'Private' placement = 'right-start' classes = {{tooltip: classes.lightTooltip}}>
-                      <FormControl
-                        className = {classes.formControl}
-                        aria-describedby = 'email-helper-text'
-                        fullWidth
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left'
+                                  className = {classes.typoTitle}>Work </Typography>
+                    </Grid>
+                    <Grid item xs = {7}>
+                      <Tooltip title = 'Private' placement = 'right-start'
+                               classes = {{tooltip: classes.lightTooltip}}>
+                        <FormControl
+                          className = {classes.formControl}
+                          aria-describedby = 'Work-helper-text'
+                          fullWidth
+                        >
+                          <Input
+                            endAdornment = {<InputAdornment position = 'end'><Lock
+                              color = 'error' /></InputAdornment>}
+                            inputProps = {{
+                              'aria-label': 'Work',
+                            }}
+                          />
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                        className = {classes.rowInputs}>
+                    <Grid item xs = {3}>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Emergency
+                                                                                                    Contact </Typography>
+                    </Grid>
+                    <Grid item xs = {7}>
+                      <Tooltip title = 'Private' placement = 'right-start'
+                               classes = {{tooltip: classes.lightTooltip}}>
+                        <FormControl
+                          className = {classes.formControl}
+                          aria-describedby = 'emergencyContact-helper-text'
+                          fullWidth
+                        >
+                          <Input
+                            endAdornment = {<InputAdornment position = 'end'><Lock
+                              color = 'error' /></InputAdornment>}
+                            inputProps = {{
+                              'aria-label': 'Emergency Contact',
+                            }}
+                          />
+                          <FormHelperText id = 'emergencyContact-helper-text'>
+                            Give our Customer Experience team a trusted
+                            contact we can alert in an urgent
+                            situation.
+                          </FormHelperText>
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing = {0} direction = 'row' justify = 'flex-end' alignItems = 'center'
+                        className = {classes.rowButton}>
+                    <Grid item xs = {2}>
+                      <Button variant = 'contained' size = 'large' onClick = {handleReset}>
+                        Reset
+                      </Button>
+                    </Grid>
+                    <Grid item xs = {2}>
+                      <Button variant = 'contained' color = 'primary' size = 'large' type = 'submit'
+                              disabled = {isSubmitting}
                       >
-                        <Input
-                          endAdornment = {<InputAdornment position = 'end'><Lock color = 'error' /></InputAdornment>}
-                          inputProps = {{
-                            'aria-label': 'Email',
-                          }}
-                        />
-                      </FormControl>
-                    </Tooltip>
+                        Save
+                      </Button>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Work </Typography>
-                  </Grid>
-                  <Grid item xs = {7}>
-                    <Tooltip title = 'Private' placement = 'right-start' classes = {{tooltip: classes.lightTooltip}}>
-                      <FormControl
-                        className = {classes.formControl}
-                        aria-describedby = 'Work-helper-text'
-                        fullWidth
-                      >
-                        <Input
-                          endAdornment = {<InputAdornment position = 'end'><Lock color = 'error' /></InputAdornment>}
-                          inputProps = {{
-                            'aria-label': 'Work',
-                          }}
-                        />
-                      </FormControl>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
-                <Grid container spacing = {32} direction = 'row' justify = 'center' className = {classes.rowInputs}>
-                  <Grid item xs = {3}>
-                    <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Emergency
-                                                                                                  Contact </Typography>
-                  </Grid>
-                  <Grid item xs = {7}>
-                    <Tooltip title = 'Private' placement = 'right-start' classes = {{tooltip: classes.lightTooltip}}>
-                      <FormControl
-                        className = {classes.formControl}
-                        aria-describedby = 'emergencyContact-helper-text'
-                        fullWidth
-                      >
-                        <Input
-                          endAdornment = {<InputAdornment position = 'end'><Lock color = 'error' /></InputAdornment>}
-                          inputProps = {{
-                            'aria-label': 'Emergency Contact',
-                          }}
-                        />
-                        <FormHelperText id = 'emergencyContact-helper-text'>
-                          Give our Customer Experience team a trusted
-                          contact we can alert in an urgent
-                          situation.
-                        </FormHelperText>
-                      </FormControl>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
-                <Grid container spacing = {0} direction = 'row' justify = 'flex-end' alignItems = 'center'
-                      className = {classes.rowButton}>
-                  <Grid item xs = {2}>
-                    <Button variant = 'contained' size = 'large'>
-                      Reset
-                    </Button>
-                  </Grid>
-                  <Grid item xs = {2}>
-                    <Button variant = 'contained' color = 'primary' size = 'large' type = 'submit'>
-                      Save
-                    </Button>
-                  </Grid>
-                </Grid>
-              </div>
-            </Paper>
-          )}
-        </Formik>
-      ) : ''}
+                </div>
+              </Paper>
+            </form>
+          );
+        }}
+      </Formik>
     </div>
   );
 };
@@ -447,5 +576,3 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
 export default compose<IEditProfile, any>(
   withStyles(styles),
 )(EditProfile);
-
-

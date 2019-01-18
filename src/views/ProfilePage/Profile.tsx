@@ -19,7 +19,7 @@ interface IProps {
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   bgColor: {
-    backgroundColor: '#F8F7F9',
+    backgroundColor: '#fcfcfc',
   },
 });
 
