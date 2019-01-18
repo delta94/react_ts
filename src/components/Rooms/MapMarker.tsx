@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useContext} from 'react';
+import React, {ComponentType, Fragment, useContext, useMemo} from 'react';
 import {compose} from 'recompose';
 import {Coords, ChildComponentProps} from 'google-map-react';
 import '@/styles/Custom/bubble.scss';
@@ -39,6 +39,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     border: `1px solid ${Blue[900]}`,
     cursor: 'pointer',
     color: 'white',
+    transition: theme!.transitions!.create!(['all'], {
+      duration: 200,
+      easing: 'ease-in-out',
+    }),
   },
   arrowHover: {
     borderColor: `${Blue[900]} transparent transparent transparent`,
@@ -50,7 +54,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 
 // @ts-ignore
 const MapMarker: ComponentType<IProps> = (props: LocalProps) => {
-  const {classes, room, $hover, isHover} = props;
+  const {classes, room, isHover} = props;
   const {width}                          = useContext<IGlobalContext>(GlobalContext);
 
   const markerEvent = () => {

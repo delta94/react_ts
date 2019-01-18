@@ -2,7 +2,7 @@ import {ThemeCustom} from '@/components/Theme/Theme';
 import fakeIMG from '@/assets/room_demo.jpeg';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useContext} from 'react';
+import React, {ComponentType, Fragment, useContext, useMemo} from 'react';
 import {compose} from 'recompose';
 import Grid from '@material-ui/core/Grid/Grid';
 import Slider, {Settings} from 'react-slick';
@@ -23,7 +23,6 @@ import {ThemeStyle} from '@material-ui/core/styles/createTypography';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import Button from '@material-ui/core/Button/Button';
-import {RoomMapContext, IRoomMapContext} from '@/store/context/Room/RoomMapContext';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   imgSize: {
@@ -166,12 +165,13 @@ interface IProps {
   classes?: any
   room: RoomIndexRes
   isHover: boolean
+  focus(room: RoomIndexRes): void
 }
 
 // @ts-ignore
 const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
-  const {classes, room, isHover}                 = props;
-  const {width}                                  = useContext<IGlobalContext>(GlobalContext);
+  const {classes, room, isHover, focus} = props;
+  const {width}                  = useContext<IGlobalContext>(GlobalContext);
 
   const xsMode = width === 'xs';
 
@@ -201,6 +201,8 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
     win!.focus();
   };
 
+  const roomMemo = useMemo(() => room, []);
+
   return (
     <Fragment>
       <Paper elevation = {isHover ? 10 : 3}
@@ -209,7 +211,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
         <Grid container spacing = {0}>
           <Grid item lg = {4} sm = {4} xs = {12} className = {classes.imgSize}>
             <Slider {...settings}>
-              {room.media.data.length > 0 ? _.map(room.media.data, o => (
+              {roomMemo.media.data.length > 0 ? _.map(roomMemo.media.data, o => (
                 <img key = {o.image} src = {`http://westay.org/storage/rooms/${o.image}`}
                      className = {classes.imgSize} />
               )) : (
@@ -217,7 +219,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
               )}
             </Slider>
           </Grid>
-          <Grid item lg = {8} sm = {8} xs = {12}>
+          <Grid item lg = {8} sm = {8} xs = {12} onClick={() => focus(roomMemo)}>
             <Grid container className = {classes.maxHeight}>
               <Grid item xs = {12}>
                 <Grid container spacing = {0} className = {classNames(
@@ -230,13 +232,13 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                       <Grid item lg = {12} sm = {12}>
                         <Grid container>
                           <Grid item lg = {12} sm = {12} xs = {12}>
-                            <Typography variant = 'subtitle2'>{room.details.data[0].name}</Typography>
+                            <Typography variant = 'subtitle2'>{roomMemo.details.data[0].name}</Typography>
                           </Grid>
                           <Grid item lg = {12} sm = {12} xs = {12}>
                             {(room) ? (
                               <span className = {classes.verticalMid}>
                                 <StarRatings
-                                  numberOfStars = {room.standard_point}
+                                  numberOfStars = {roomMemo.standard_point}
                                   starDimension = {`15px`}
                                   starSpacing = {`1px`}
                                   starEmptyColor = {'#ffb40b'}
@@ -249,7 +251,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                             {/*<img src = {mapMarker} className = {classNames(*/}
                             {/*classes.mapMarker, classes.verticalMid,*/}
                             {/*)} />&nbsp;*/}
-                            {/*<a className = {classes.address}>{room.details.data[0].address}</a>*/}
+                            {/*<a className = {classes.address}>{roomMemo.details.data[0].address}</a>*/}
                             {/*</span>*/}
                           </Grid>
                           <Hidden xsUp>
@@ -281,9 +283,9 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                           <Grid container item xs = {xsMode ? 12 : 9} spacing = {16}>
                             <Grid item>
                               <Typography variant = {typoVariant} className = {classes.priceTag}>
-                                {room.price_day > 0 ? (
+                                {roomMemo.price_day > 0 ? (
                                   <Fragment>
-                                    {`${formatMoney(room.price_day, 0)}`}
+                                    {`${formatMoney(roomMemo.price_day, 0)}`}
                                     <sub className = {classes.subEl}>đ/day</sub>
                                   </Fragment>
                                 ) : ''}
@@ -291,9 +293,9 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                             </Grid>
                             <Grid item>
                               <Typography variant = {typoVariant} className = {classes.priceTag}>
-                                {room.price_hour > 0 ? (
+                                {roomMemo.price_hour > 0 ? (
                                   <Fragment>
-                                    {`${formatMoney(room.price_hour, 0)}`}
+                                    {`${formatMoney(roomMemo.price_hour, 0)}`}
                                     <sub className = {classes.subEl}>/4h</sub>
                                   </Fragment>
                                 ) : ''}
@@ -326,8 +328,8 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
 };
 
 const memoCheck = (prevProps: IProps, nextProps: IProps) => {
-  return prevProps.isHover === nextProps.isHover
-}
+  return prevProps.isHover === nextProps.isHover;
+};
 
 export default compose<IProps, any>(
   withStyles(styles),

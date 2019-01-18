@@ -68,18 +68,18 @@ const SideDrawer: ComponentType<ISideDrawerProps> = (props: ILocalProps) => {
       <img src = {BG} className = {classes.img} />
       <List>
         <ListItem>
-          <Typography variant = 'subtitle2'>My Account</Typography>
+          <Typography variant = 'subtitle2'>Tài khoản</Typography>
           {isLogin ? (
             <Typography
               variant = 'subtitle2'
               onClick={logoutTrigger}
               className = {classes.signOut}
-            >Sign out</Typography>
+            >Đăng xuất</Typography>
           ) : ''}
         </ListItem>
         <ListItem button {...to('/')} onClick = {() => setOpen(false)}>
           <ListItemIcon><Home /></ListItemIcon>
-          <ListItemText primary = 'Book a room' classes={{
+          <ListItemText primary = 'Đặt phòng' classes={{
             primary: classes.text
           }} />
         </ListItem>
@@ -87,7 +87,7 @@ const SideDrawer: ComponentType<ISideDrawerProps> = (props: ILocalProps) => {
           <Fragment>
             <ListItem button>
               <ListItemIcon><AccountCircle /></ListItemIcon>
-              <ListItemText primary = 'My profile' classes={{
+              <ListItemText primary = 'Thông tin cá nhân' classes={{
                 primary: classes.text
               }}/>
             </ListItem>
@@ -98,7 +98,7 @@ const SideDrawer: ComponentType<ISideDrawerProps> = (props: ILocalProps) => {
             handleLoginButton(true);
           }}>
             <ListItemIcon><AccountCircle /></ListItemIcon>
-            <ListItemText primary = 'Sign in/Create account' classes={{
+            <ListItemText primary = 'Đăng nhập / Đăng ký' classes={{
               primary: classes.text
             }}/>
           </ListItem>
@@ -106,7 +106,7 @@ const SideDrawer: ComponentType<ISideDrawerProps> = (props: ILocalProps) => {
         <Divider />
         <ListItem button>
           <ListItemIcon><AccountQuestion /></ListItemIcon>
-          <ListItemText primary = 'Customer service' classes={{
+          <ListItemText primary = 'Trợ giúp' classes={{
             primary: classes.text
           }}/>
         </ListItem>

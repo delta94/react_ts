@@ -1,7 +1,7 @@
-import * as _         from '@/store/actions/animationTypes';
+import * as _ from '@/store/actions/animationTypes';
 import {updateObject} from '@/store/utility';
 
-export type AnimationState =  {
+export type AnimationState = {
   readonly isLoginFormOpen: boolean;
   readonly isSignUpFormOpen: boolean;
 }
@@ -17,7 +17,7 @@ const init: AnimationState = {
 };
 
 const changeStatus = (state: AnimationState, action: AnimationAction) => {
-  return updateObject(state, {
+  return updateObject<AnimationState>(state, {
     isLoginFormOpen: action.status,
   });
 };
@@ -25,7 +25,15 @@ const changeStatus = (state: AnimationState, action: AnimationAction) => {
 const reducer = (state: AnimationState = init, action: AnimationAction): AnimationState => {
   switch (action.type) {
     case _.LOGIN_BUTTON_CLICK:
-      return changeStatus(state, action);
+      return updateObject<AnimationState>(state, {
+        isSignUpFormOpen: false,
+        isLoginFormOpen: action.status
+      });
+    case _.SIGN_UP_BUTTON_CLICK:
+      return updateObject<AnimationState>(state, {
+        isSignUpFormOpen: action.status,
+        isLoginFormOpen: false
+      });
     default:
       return state;
   }

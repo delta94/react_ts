@@ -149,7 +149,7 @@ const PriceRange: ComponentType<IProps> = (props: IProps) => {
     <Grid container spacing = {16}>
       <Grid item xs = {12}>
         <Typography variant = 'subtitle2'>
-          Price per night
+          Khoảng giá
         </Typography>
       </Grid>
       <Grid container item xs = {12} className = {classes.marginPriceRange}>
@@ -165,7 +165,7 @@ const PriceRange: ComponentType<IProps> = (props: IProps) => {
       <Grid container item lg = {6} sm = {6}>
         <FormControl>
           <InputLabel shrink htmlFor = 'min-price-filter'>
-            Min
+            Tối thiểu
           </InputLabel>
           <InputBase
             id = 'min-price-filter'
@@ -183,7 +183,7 @@ const PriceRange: ComponentType<IProps> = (props: IProps) => {
       <Grid container item lg = {6} sm = {6}>
         <FormControl>
           <InputLabel shrink htmlFor = 'max-price-filter'>
-            Max
+            Tối đa
           </InputLabel>
           <InputBase
             id = 'max-price-filter'

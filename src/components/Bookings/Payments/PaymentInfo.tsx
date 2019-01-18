@@ -8,14 +8,12 @@ import {IPaymentContext, PaymentContext} from '@/store/context/Payment/PaymentCo
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
 import Divider from '@material-ui/core/Divider/Divider';
-import StarRatings from 'react-star-ratings';
-import classNames from 'classnames';
-import mapMarker from '@/assets/SvgIcon/map-marker.svg';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import moment from 'moment';
 import {formatMoney} from '@/utils/mixins';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 import Blue from '@material-ui/core/colors/blue';
+import InfoHeader from '@/components/Bookings/InfoHeader';
 
 interface IProps {
   classes?: any
@@ -24,24 +22,6 @@ interface IProps {
 const styles: any = (theme: ThemeCustom) => createStyles({
   root: {
     padding: '1rem',
-  },
-  imgSize: {
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    objectFit: 'cover',
-    width: '100%',
-    height: 120,
-    verticalAlign: 'middle',
-  },
-  mapMarker: {
-    width: '0.8rem',
-  },
-  verticalMid: {
-    verticalAlign: 'middle',
-  },
-  address: {
-    fontSize: '0.8rem',
-    fontWeight: 500,
   },
   spaceTop: {
     marginTop: 8,
@@ -53,8 +33,8 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     color: Blue[500],
     float: 'right',
     textDecoration: 'underline',
-    cursor: 'pointer'
-  }
+    cursor: 'pointer',
+  },
 });
 
 // @ts-ignore
@@ -64,7 +44,7 @@ const PaymentInfo: ComponentType<IProps> = (props: IProps) => {
   const {state} = useContext<IPaymentContext>(PaymentContext);
   const {width} = useContext<IGlobalContext>(GlobalContext);
 
-  const xsMode = width === 'xs';
+  const xsMode                      = width === 'xs';
   const [infoStatus, setInfoStatus] = useState<boolean>(!xsMode);
 
   const {room, lists} = state;
@@ -72,43 +52,15 @@ const PaymentInfo: ComponentType<IProps> = (props: IProps) => {
   let checkInDate  = lists ? moment(lists!.checkin) : moment();
   let checkOutDate = lists ? moment(lists!.checkout) : moment();
 
-  const HeaderInfo = () => (
-    <Fragment>
-      <Grid item xs = {12}>
-        <img src = {`http://westay.org/storage/rooms/${room!.media.data[0].image}`}
-             className = {classes.imgSize} />
-      </Grid>
-      <Grid item xs = {12}>
-        <Typography variant = 'subtitle2'>{room!.details.data[0].name}</Typography>
-        <StarRatings
-          numberOfStars = {room!.standard_point}
-          starDimension = {`15px`}
-          starSpacing = {`1px`}
-          starEmptyColor = {'#ffb40b'}
-        /><br />
-        <img src = {mapMarker} className = {classNames(
-          classes.mapMarker, classes.verticalMid,
-        )} />&nbsp;
-        <span className = {classes.address}>
-                {room!.details.data[0].address}
-                </span>
-      </Grid>
-    </Fragment>
-  );
-
   return (
     <Fragment>
       <Grid container spacing = {16}>
         <Grid item xs = {12}>
           <Paper className = {classes.root}>
             <Grid container spacing = {16}>
-              <Grid item xs = {12}>
-                <Typography variant = 'subtitle2'>THÔNG TIN ĐƠN ĐẶT PHÒNG</Typography>
-                <Divider />
-              </Grid>
               {room ? (
                 <Fragment>
-                  <HeaderInfo />
+                  <InfoHeader room = {room} />
                   <Grid item xs = {12}>
                     <Grid container spacing = {16}>
                       <Grid container item xs = {12}>
@@ -169,10 +121,10 @@ const PaymentInfo: ComponentType<IProps> = (props: IProps) => {
         <Grid item xs = {12}>
           <Paper className = {classes.root}>
             <Grid container spacing = {16}>
-              <Grid item xs = {12} onClick={() => setInfoStatus(!infoStatus)}>
+              <Grid item xs = {12} onClick = {() => setInfoStatus(!infoStatus)}>
                 <Typography variant = 'subtitle2'>
                   THÔNG TIN KHÁCH HÀNG
-                  <span className={classes.expandText}>{infoStatus ? 'Thu gọn' : 'Xem thêm'}</span>
+                  <span className = {classes.expandText}>{infoStatus ? 'Thu gọn' : 'Xem thêm'}</span>
                 </Typography>
                 <Divider />
               </Grid>
@@ -217,7 +169,7 @@ const PaymentInfo: ComponentType<IProps> = (props: IProps) => {
                         }</Grid>
                       </Grid>
                     </Fragment>
-                  ): ''}
+                  ) : ''}
                 </Grid>
               ) : <SimpleLoader />}
             </Grid>

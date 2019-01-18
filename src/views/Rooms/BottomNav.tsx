@@ -12,6 +12,7 @@ import FilterDrawerM from '@/views/Rooms/Filter/FilterDrawerM';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import Slide from '@material-ui/core/Slide/Slide';
 import {IRoomMapContext, RoomMapContext} from '@/store/context/Room/RoomMapContext';
+import Zoom from '@material-ui/core/Zoom/Zoom';
 
 interface IProps {
   classes?: any
@@ -32,6 +33,10 @@ export const MAP      = 2;
 
 export const TransitionCustom = (props: any) => (
   <Slide direction = 'up' {...props} />
+);
+
+export const TransitionZoom = (props: any) => (
+  <Zoom {...props} />
 );
 
 // @ts-ignore

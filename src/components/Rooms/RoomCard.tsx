@@ -337,7 +337,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                         ) : (
                           <Typography
                             variant = 'subtitle2'
-                          >Awaiting review</Typography>
+                          >Chờ đánh giá</Typography>
                         )}
                       </Grid>
                     </Grid>

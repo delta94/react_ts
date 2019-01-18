@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid/Grid';
 import Paper from '@material-ui/core/Paper/Paper';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useReducer, useContext} from 'react';
+import React, {ComponentType, Fragment, useContext} from 'react';
 import {compose} from 'recompose';
 import FilterLeftBar from '@/components/Rooms/FilterLeftBar';
 import Hidden from '@material-ui/core/Hidden/Hidden';
@@ -14,13 +14,8 @@ import MapVector from '@/assets/map-vector.svg';
 import classNames from 'classnames';
 import Button from '@material-ui/core/Button/Button';
 import Maps from '@/components/Maps/Maps';
-import {
-  RoomMapState,
-  RoomMapAction,
-  RoomMapReducer,
-  RoomMapStateInit,
-  RoomMapContext, IRoomMapContext,
-} from '@/store/context/Room/RoomMapContext';
+import {RoomMapContext, IRoomMapContext} from '@/store/context/Room/RoomMapContext';
+import ScrollTopButton from '@/components/Rooms/ScrollTopButton';
 
 interface IProps {
   classes?: any
@@ -50,7 +45,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   mapPaper: {
     cursor: 'pointer',
-  },
+  }
 });
 
 // @ts-ignore
@@ -62,12 +57,13 @@ const RoomListing: ComponentType<IProps> = (props: IProps) => {
   const mapClick = () => {
     mapDispatch({
       type: 'setMapOpen',
-      status: true
-    })
+      status: true,
+    });
   };
 
   return (
     <Fragment>
+      <ScrollTopButton/>
       <Maps />
       <Hidden smDown>
         <Grid container spacing = {0} className = {classes.root}>
@@ -89,7 +85,7 @@ const RoomListing: ComponentType<IProps> = (props: IProps) => {
               >View map</Button>
             </Paper>
             <Paper elevation = {1} className = {classNames(
-              classes.margin15,  classes.filterLeft,
+              classes.margin15, classes.filterLeft,
             )}>
               <FilterLeftBar />
             </Paper>

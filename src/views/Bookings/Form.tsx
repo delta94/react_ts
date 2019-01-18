@@ -20,7 +20,7 @@ import {
   BookingFormContext,
   BookingFormState,
   BookingFormAction,
-  BookingFormReducer, BookingFormStateInit, priceCalculator, IBookingFormParams,
+  BookingFormReducer, BookingFormStateInit, priceCalculator, IBookingFormParams, priceCaculate, getRoomBookingForm,
 } from '@/store/context/Booking/BookingFormContext';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 
@@ -34,7 +34,6 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
 });
 
-
 const Form: FunctionComponent<IProps> = props => {
   const {
           classes,
@@ -42,17 +41,25 @@ const Form: FunctionComponent<IProps> = props => {
         } = props;
 
   const params: IBookingFormParams | any = qs.parse(location!.search);
-  const [state, dispatch]     = useReducer<BookingFormState, BookingFormAction>(BookingFormReducer, BookingFormStateInit);
-  const {history} = useContext<IGlobalContext>(GlobalContext);
+  const [state, dispatch]                = useReducer<BookingFormState, BookingFormAction>(BookingFormReducer, BookingFormStateInit);
+  const {history}                        = useContext<IGlobalContext>(GlobalContext);
 
   useEffect(() => {
-    priceCalculator(params, state).then(res => {
+
+    Promise.all([
+      priceCaculate(params),
+      getRoomBookingForm(params),
+    ]).then(res => {
+      const [price, room] = res;
+
       dispatch({
         type: 'setRoom',
-        value: res,
+        room: room.data,
+        price: price.data,
       });
+
     }).catch(err => {
-      history.push('/error');
+      history.push('/404');
     });
 
   }, [location]);
@@ -60,17 +67,17 @@ const Form: FunctionComponent<IProps> = props => {
   return (
     <Fragment>
       <NavTop />
-      <BookingFormContext.Provider value={{state, dispatch}}>
-      <GridContainer xs = {10} sm = {11} xl = {6}>
-        <Grid container spacing = {16} className = {classes.marginContainer}>
-          <Grid item lg = {8} md = {6} xs = {12}>
-            <BookingForm state={state} />
+      <BookingFormContext.Provider value = {{state, dispatch}}>
+        <GridContainer xs = {10} sm = {11} xl = {6}>
+          <Grid container spacing = {16} className = {classes.marginContainer}>
+            <Grid item lg = {8} md = {6} xs = {12}>
+              <BookingForm state = {state} />
+            </Grid>
+            <Grid item lg = {4} md = {6} xs = {12}>
+              <BookingInfoDetail />
+            </Grid>
           </Grid>
-          <Grid item lg = {4} md = {6} xs = {12}>
-            <BookingInfoDetail />
-          </Grid>
-        </Grid>
-      </GridContainer>
+        </GridContainer>
       </BookingFormContext.Provider>
     </Fragment>
   );

@@ -4,7 +4,6 @@ import {OK} from '@/types/Requests/Code';
 import {CouponDiscountCalculateReq} from '@/types/Requests/Coupons/CouponRequests';
 import {CouponDiscountCalculateRes} from '@/types/Requests/Coupons/CouponResponses';
 import {AxiosValidateError, AxiosRes} from '@/types/Requests/ResponseTemplate';
-import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {axios} from '@/utils/axiosInstance';
 import {DEFAULT_DATE_FORMAT} from '@/utils/store/global';
 import Button from '@material-ui/core/Button/Button';
@@ -51,7 +50,7 @@ const BookingCouponForm: ComponentType<IProps> = props => {
 
   const {state, dispatch} = useContext<IBookingFormContext>(BookingFormContext);
 
-  const {room} = state;
+  const {room, price} = state;
 
   return (
     <Formik
@@ -59,19 +58,18 @@ const BookingCouponForm: ComponentType<IProps> = props => {
       validationSchema = {() => FormValidationSchema}
       validateOnChange = {false}
       onSubmit = {(values: IFormikValues, actions: FormikActions<IFormikValues>) => {
-        const roomAll: RoomIndexRes            = room.all;
         const data: CouponDiscountCalculateReq = {
           coupon: values.coupon,
-          price_original: room.price_original,
-          room_id: roomAll.id,
-          checkin: moment.unix(room.checkin).format(DEFAULT_DATE_FORMAT),
-          checkout: moment.unix(room.checkout).format(DEFAULT_DATE_FORMAT),
-          booking_type: room.booking_type,
-          merchant_id: roomAll.merchant_id,
-          room_type: room.rent_type,
-          number_of_guest: room.number_of_guests,
-          city_id: roomAll.city_id,
-          district_id: roomAll.district_id,
+          price_original: price!.price_original,
+          room_id: room!.id,
+          checkin: moment.unix(price!.checkin).format(DEFAULT_DATE_FORMAT),
+          checkout: moment.unix(price!.checkout).format(DEFAULT_DATE_FORMAT),
+          booking_type: price!.booking_type,
+          merchant_id: room!.merchant_id,
+          room_type: room!.rent_type,
+          number_of_guest: price!.number_of_guests,
+          city_id: room!.city_id,
+          district_id: room!.district_id,
           day: moment().format('Y-M-D'),
         };
 

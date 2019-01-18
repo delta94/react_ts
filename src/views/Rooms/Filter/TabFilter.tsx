@@ -56,14 +56,14 @@ const TabFilter: ComponentType<IProps> = (props: IProps) => {
     <Fragment>
       <Paper square elevation = {1}>
         <Tabs
-          fullWidth
+          variant='fullWidth'
           value = {tabFocus}
           indicatorColor = 'primary'
           textColor = 'primary'
           onChange = {(e, value) => tabFocusChange(value)}
         >
-          <Tab label = 'All Rooms' />
-          <Tab label = 'Instant Book' />
+          <Tab label = 'Tất cả phòng' />
+          <Tab label = 'Đặt phòng nhanh' />
         </Tabs>
       </Paper>
     </Fragment>
