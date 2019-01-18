@@ -44,7 +44,7 @@ const getProfile = async () => {
 };
 
 const getUserBookingList = async () => {
-  const res: AxiosRes<BookingIndexRes[]> = await axios.get('bookings');
+  const res: AxiosRes<BookingIndexRes[]> = await axios.get('bookings?include=room.details,media');
   return res.data;
 };
 

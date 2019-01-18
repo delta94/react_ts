@@ -87,8 +87,8 @@ interface IEditProfile {
 const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
   const {classes} = props;
   const {state} = useContext<IProfileContext>(ProfileContext);
-
   const {profile} = state;
+
   let birthday: any = null;
   if (profile == null) {
     birthday = '';
@@ -166,11 +166,9 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
 
           axios.put('profile', data)
             .then(res => {
-              console.log("thanh cong " + res.data.data);
               actions.setSubmitting(false);
             })
             .catch(error => {
-              console.log("that bai" + error);
               actions.setSubmitting(false);
             });
         }}

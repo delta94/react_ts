@@ -4,11 +4,6 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import Hidden from '@material-ui/core/Hidden';
 import React, {ComponentType, Dispatch, Fragment, MouseEvent, SetStateAction, useContext, useState} from 'react';
 import {compose} from 'recompose';
-import imgRoomDemo from '@/assets/room_demo.jpeg';
-import imgRoomDemo2 from '@/assets/room_demo2.jpeg';
-import imgRoomDemo4 from '@/assets/room_demo4.jpeg';
-import imgRoomDemo5 from '@/assets/room_demo5.jpeg';
-import imgRoomDemo6 from '@/assets/room_demo6.jpeg';
 import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 import _ from 'lodash';
 // @ts-ignore

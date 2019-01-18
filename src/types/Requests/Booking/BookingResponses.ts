@@ -1,5 +1,6 @@
 import {TransformerInclude} from '@/types/Requests/ResponseTemplate';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
+import {MediaIndexRes} from "@/types/Requests/Media/MediaIndexResponse";
 
 export interface BookingIndexRes {
   id: number
@@ -43,6 +44,7 @@ export interface BookingIndexRes {
   updated_at: string
   bank_list: any
   room: TransformerInclude<RoomIndexRes>
+  media: TransformerInclude<MediaIndexRes[]>
 }
 
 export interface BookingPriceCalculatorRes {
