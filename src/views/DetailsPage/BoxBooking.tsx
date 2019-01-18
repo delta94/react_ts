@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useState, Fragment, ChangeEvent, useContext} from 'react';
+import React, {ComponentType, useState, Fragment, ChangeEvent, useContext, useReducer} from 'react';
 import {compose} from 'recompose';
 import Paper from '@material-ui/core/Paper/Paper';
 import Grid from '@material-ui/core/Grid/Grid';
@@ -19,7 +19,12 @@ import FormControl from '@material-ui/core/FormControl/FormControl';
 import Button from '@material-ui/core/Button/Button';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
-import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
+import {
+  IRoomDetailsContext,
+  RoomDetailsAction,
+  RoomDetailsContext, RoomDetailsReducer,
+  RoomDetailsState, RoomDetailsStateInit
+} from '@/store/context/Room/RoomDetailsContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import {connect} from 'react-redux';
@@ -31,6 +36,12 @@ import moment from 'moment';
 import qs from 'query-string';
 import {BookingPayment} from '@/types/Requests/Booking/BookingRequests';
 import {LocationDescriptorObject} from 'history';
+import {
+  BookingFormAction,
+  BookingFormContext,
+  BookingFormReducer,
+  BookingFormState, BookingFormStateInit
+} from "@/store/context/Booking/BookingFormContext";
 
 interface IProps {
   classes?: any,
@@ -89,6 +100,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   menuSelect:{
     maxHeight: 'calc(100% - 60%)'
   },
+  spaceTop: {
+    marginTop: 8,
+  },
+  fontLow: {
+    fontSize: '0.9rem',
+  },
 });
 
 const BoxBooking: ComponentType<IProps> = (props: IProps) => {
@@ -96,15 +113,11 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
   const [ckbox, setCkbox]       = useState<boolean>(false);
   const [guest,setGuest] = useState<number>(1);
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+
   const {history} = useContext<IGlobalContext>(GlobalContext);
 
   const {rooms} = state;
   if (rooms == null){return <SimpleLoader/>}
-
-  let bookType = 2;
-  if (ckbox) {
-    bookType=1;
-  }
 
   const handleBooking =()=>{
     const queryString: BookingPayment ={
@@ -115,7 +128,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
       checkout_hour: moment(book!.endDate).format('h'),
       checkout_minute: moment(book!.endDate).format('mm'),
       number_guests:guest,
-      booking_type:bookType,
+      booking_type: ckbox ? 1 : 2,
     };
 
     const location: LocationDescriptorObject = {
@@ -125,8 +138,6 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
     history.push(location);
   };
 
-
-
   const handleChangeSelect = (event:ChangeEvent<HTMLSelectElement>) => {
     setGuest(parseInt(event.target.value)); // event tra ve string
   };
@@ -134,7 +145,6 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
   const formatNumber= (x:number) =>{
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
-
   const arrMenuItem = (x:number) =>{
     let i=1;
     let arr = [];
@@ -225,6 +235,41 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                </FormControl>
              </Paper>
            </Grid>
+           {rooms ? (
+             <Fragment>
+               <Grid item xs = {12}>
+                 <Divider />
+                 <Grid container spacing = {16} className = {classes.spaceTop}>
+                   <Grid container item xs = {12}>
+                     <Grid item xs = {6} className = {classes.fontLow}>Giá</Grid>
+                     <Grid container item xs = {6} className = {classes.fontLow}
+                           justify = 'flex-end'>1900000</Grid>
+                   </Grid>
+                   <Grid container item xs = {12}>
+                     <Grid item xs = {6} className = {classes.fontLow}>Phí dịch vụ</Grid>
+                     <Grid container item xs = {6} className = {classes.fontLow}
+                           justify = 'flex-end'>1900000</Grid>
+                   </Grid>
+                   <Grid container item xs = {12}>
+                     <Grid item xs = {6} className = {classes.fontLow}>Giảm giá</Grid>
+                     <Grid container item xs = {6} className = {classes.fontLow}
+                           justify = 'flex-end'>1900000</Grid>
+                   </Grid>
+                 </Grid>
+                 <Divider className = {classes.spaceTop} />
+                 <Grid container spacing = {16} className = {classes.spaceTop}>
+                   <Grid container item xs = {12}>
+                     <Grid item xs = {6} className = {classes.fontLow}>
+                       <Typography variant = 'h6'>Tổng cộng:</Typography>
+                     </Grid>
+                     <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>
+                       <Typography variant = 'h6'>1900000</Typography>
+                     </Grid>
+                   </Grid>
+                 </Grid>
+               </Grid>
+             </Fragment>
+           ) : <SimpleLoader />}
            <Grid item xs={12} className={classes.rowMargin}>
              <Button variant={"contained"} color={"primary"}
                      fullWidth  className={classes.btSearch} size={'large'}

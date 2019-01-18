@@ -66,9 +66,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   boxDetails: {
     width: '100%',
-    marginTop: 30,
+    paddingTop: 30,
+    backgroundColor: '#fafafa',
     [theme!.breakpoints!.down!('sm')]: {
-      marginTop: 0,
+      paddingTop: 0,
     },
   },
   boxPadding: {
@@ -100,7 +101,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   PaperBooking:{
     // border:'1px solid #e4e4e4',
     position:'sticky',
-    top: '15%',
+    top: '10%',
     left: 'auto',
     right: 0,
   },
@@ -136,7 +137,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
           <GridContainer xs = {12} sm = {12} md = {11} lg = {11}>
             <Grid container justify = 'center'>
               <Grid item sm = {12} md = {11} lg = {8} className={classes.boxPadding}>
-                <Paper square elevation = {0} className={classes.paperDetail}>
+                <Paper elevation = {0}>
                   <div className = {classes.boxPadding}>
                     <BoxDetails />
                     <DatePickerRoomDetail />
@@ -146,7 +147,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
               </Grid>
               <Hidden mdDown>
                 <Grid item sm = {12} md = {11} lg = {4} className={classes.boxPadding}>
-                  <Paper square elevation={8} className={classes.PaperBooking}>
+                  <Paper elevation = {2} className = {classes.PaperBooking}>
                     <BoxBooking />
                   </Paper>
                 </Grid>
