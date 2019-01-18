@@ -15,19 +15,21 @@ export interface IBookingFormContext {
 }
 
 export type BookingFormState = {
-  readonly room: RoomIndexRes | any;
+  readonly room: RoomIndexRes | null;
+  readonly price?: BookingPriceCalculatorRes | null
   readonly coupon: string;
   readonly discount: number;
 }
 
-export type BookingFormAction = { type: 'setRoom', value: RoomIndexRes | null }
+export type BookingFormAction = { type: 'setRoom', room: RoomIndexRes, price: BookingPriceCalculatorRes }
   | { type: 'setCoupon', coupon: string, discount: number }
-  | {type: 'removeCoupon'}
+  | { type: 'removeCoupon' }
 
 export const BookingFormStateInit: BookingFormState = {
   room: null,
   coupon: '',
   discount: 0,
+  price: null,
 };
 
 export interface IBookingFormParams {
@@ -46,7 +48,8 @@ export const BookingFormReducer = (state: BookingFormState, action: BookingFormA
   switch (action.type) {
     case 'setRoom':
       return updateObject<BookingFormState>(state, {
-        room: action.value,
+        room: action.room,
+        price: action.price,
       });
     case 'setCoupon':
       return updateObject<BookingFormState>(state, {
@@ -63,11 +66,11 @@ export const BookingFormReducer = (state: BookingFormState, action: BookingFormA
   }
 };
 
-export const priceCalculator = async (params: IBookingFormParams,  state: BookingFormState): Promise<any> => {
+export const priceCalculator = async (params: IBookingFormParams, state: BookingFormState): Promise<any> => {
   let additional_fee = 0;
-  let discount= 0;
-  let CI = '';
-  let CO = '';
+  let discount       = 0;
+  let CI             = '';
+  let CO             = '';
   try {
     CI = formatTime(params.checkin, params.checkin_hour, params.checkin_minute);
     CO = formatTime(params.checkout, params.checkout_hour, params.checkout_minute);
@@ -86,10 +89,39 @@ export const priceCalculator = async (params: IBookingFormParams,  state: Bookin
   };
 
   const response: AxiosRes<BookingPriceCalculatorRes> = await axios.post('bookings/price-calculator', data);
-  const info: AxiosRes<RoomIndexRes> = await axios.get(`rooms/${params.hosting_id}?include=details`);
+  const info: AxiosRes<RoomIndexRes>                  = await axios.get(`rooms/${params.hosting_id}?include=details,media`);
 
-  return updateObject<BookingPriceCalculatorRes, any>(response.data.data, {
-    details: info.data.data.details.data[0],
-    all: info.data.data,
-  });
+};
+
+export const priceCaculate = async (params: IBookingFormParams) => {
+  let additional_fee = 0;
+  let discount       = 0;
+  let CI             = '';
+  let CO             = '';
+  try {
+    CI = formatTime(params.checkin, params.checkin_hour, params.checkin_minute);
+    CO = formatTime(params.checkout, params.checkout_hour, params.checkout_minute);
+  } catch (e) {
+    console.error(e);
+  }
+
+  const data: BookingPriceCalculatorReq = {
+    room_id: params.hosting_id,
+    checkin: CI,
+    checkout: CO,
+    additional_fee: additional_fee,
+    number_of_guests: params.number_guests,
+    booking_type: params.booking_type,
+    price_discount: discount,
+  };
+
+  const res: AxiosRes<BookingPriceCalculatorRes> = await axios.post('bookings/price-calculator', data);
+
+  return res.data;
+};
+
+export const getRoomBookingForm = async (params: IBookingFormParams) => {
+  const res: AxiosRes<RoomIndexRes> = await axios.get(`rooms/${params.hosting_id}?include=details,media`);
+
+  return res.data;
 };

@@ -29,7 +29,7 @@ import Info from '@material-ui/icons/Info';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import InvisibilityIcon from '@material-ui/icons/VisibilityOff';
 import {withFormik, FormikBag} from 'formik';
-import React, {useState, FunctionComponent} from 'react';
+import React, {useState, FunctionComponent, Fragment} from 'react';
 import {withCookies} from 'react-cookie';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
@@ -38,6 +38,9 @@ import Cookies from 'universal-cookie';
 import * as Yup from 'yup';
 import borderC from '@/styles/Styling/border.module.scss';
 import {withRouter, RouteChildrenProps} from 'react-router';
+import Divider from '@material-ui/core/Divider/Divider';
+import AlignS from '@/styles/Position/align.module.scss'
+import Blue from '@material-ui/core/colors/blue';
 
 interface IPasswordInput {
   isShown: boolean;
@@ -55,6 +58,7 @@ interface IFormikValues {
 interface DispatchLocal {
   handleLoginButton(status: boolean): any
   saveDraftLoginInfo(value: any): any
+  handleSignUpAnimation(status: boolean): void
 }
 
 interface IProps extends FormikProps<IFormikValues>, DispatchLocal, RouteChildrenProps {
@@ -93,10 +97,14 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     marginTop: 12,
     marginBottom: 12,
   },
+  color: {
+    color: Blue[600],
+    cursor: 'pointer'
+  }
 
 });
 
-const EmailInputAdornment: FunctionComponent<{}> = props => {
+export const EmailInputAdornment: FunctionComponent<{}> = props => {
   return (
     <InputAdornment position = 'end'>
       <IconButton disabled>
@@ -106,7 +114,7 @@ const EmailInputAdornment: FunctionComponent<{}> = props => {
   );
 };
 
-const PasswordInputAdornment: FunctionComponent<IPasswordInput> = props => {
+export const PasswordInputAdornment: FunctionComponent<IPasswordInput> = props => {
   return (
     <InputAdornment position = 'end'>
       <IconButton onClick = {() => props.handle(!props.isShown)}>
@@ -126,6 +134,7 @@ const LoginForm: FunctionComponent<IProps> = props => {
           handleBlur,
           handleSubmit,
           isSubmitting,
+          handleSignUpAnimation
         } = props;
 
   const [showPassWord, setShowPassWord] = useState<boolean>(false);
@@ -141,7 +150,7 @@ const LoginForm: FunctionComponent<IProps> = props => {
   };
 
   return (
-    <div>
+    <Fragment>
       <Modal
         open = {props.animation.isLoginFormOpen}
         onClose = {handleModalClose}
@@ -150,7 +159,7 @@ const LoginForm: FunctionComponent<IProps> = props => {
         <Zoom in = {props.animation.isLoginFormOpen}>
           <Paper className = {classes.modal} elevation = {10} square>
             <Typography variant = 'h5'>
-              Log in to continue
+              Đăng nhập
             </Typography>
             {/*Error if information incorrect*/}
             {errors.loginIncorrect &&
@@ -181,7 +190,7 @@ const LoginForm: FunctionComponent<IProps> = props => {
               </FormControl>
               <FormControl fullWidth className = {classes.spaceTop}
                            error = {!!(errors.account_password && touched.account_password)}>
-                <InputLabel htmlFor = 'password'>Password</InputLabel>
+                <InputLabel htmlFor = 'password'>Mật khẩu</InputLabel>
                 <Input
                   type = {showPassWord ? 'text' : 'password'}
                   name = 'account_password'
@@ -204,7 +213,7 @@ const LoginForm: FunctionComponent<IProps> = props => {
                       onChange = {handleChange}
                     />
                   }
-                  label = 'Remember me' />
+                  label = 'Nhớ mật khẩu' />
               </FormControl>
               <div>
                 <Button
@@ -212,14 +221,21 @@ const LoginForm: FunctionComponent<IProps> = props => {
                   color = 'primary'
                   type = 'submit'
                   disabled = {isSubmitting}
-                  fullWidth>{isSubmitting ? <CircularProgress className = {classes.spinner} /> : 'Log in'}</Button>
+                  fullWidth>{isSubmitting ? <CircularProgress className = {classes.spinner} /> : 'Đăng nhập'}</Button>
               </div>
             </form>
-            <h5 className = {borderC['text-line-center']}>or login with</h5>
+            <h5 className = {borderC['text-line-center']}>hoặc đăng nhập với</h5>
+            {/*<Divider className={classes.spaceTop}/>*/}
+            <Typography className={AlignS.textCenter}>
+              Chưa có tài khoản?
+              <b className={classes.color}
+                 onClick={() => handleSignUpAnimation(true)}
+              > Đăng ký ngay</b>
+            </Typography>
           </Paper>
         </Zoom>
       </Modal>
-    </div>
+    </Fragment>
   );
 };
 
@@ -292,6 +308,10 @@ const mapDispatchToProps = (dispatch: Dispatch<LoginInfoAction | AnimationAction
   return {
     handleLoginButton: (status: boolean) => dispatch({
       type: animation.LOGIN_BUTTON_CLICK,
+      status: status,
+    }),
+    handleSignUpAnimation: (status: boolean) => dispatch({
+      type: animation.SIGN_UP_BUTTON_CLICK,
       status: status,
     }),
     saveDraftLoginInfo: (obj: any) => dispatch({

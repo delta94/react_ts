@@ -1,4 +1,4 @@
-import {AxiosResponse} from 'axios';
+import {AxiosResponse, AxiosRequestConfig} from 'axios';
 import {isArray} from 'util';
 
 export interface BaseResponse<T = any> {
@@ -24,6 +24,13 @@ export interface ErrorValidate<E = any, T = Array<any>> {
   errors: PartialType<E, T>;
   error: string;
   exception: string;
+}
+
+export interface AxiosErrorCustom<T = any> extends Error {
+  config: AxiosRequestConfig;
+  code?: string;
+  request?: any;
+  response?: AxiosRes<T>;
 }
 
 /**

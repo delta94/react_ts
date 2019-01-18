@@ -162,11 +162,13 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
             key = {room.id}
             id = {`room-${room.id}`}
             item xs = {12}
-            onClick = {() => focusRoomLocation(room)}
             onMouseEnter = {() => hoverAction(room.id)}
             onMouseLeave = {() => hoverAction(0)}
           >
-            <RoomCardMap room = {room} isHover = {hoverId === room.id} />
+            <RoomCardMap
+              room = {room}
+              isHover = {hoverId === room.id}
+              focus={focusRoomLocation} />
           </Grid>
         )) : <SimpleLoader height = {200} width = {200} />}
         <Grid container item xs = {12} justify = 'flex-end'>
@@ -187,11 +189,14 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
               key = {room.id}
               id = {`room-${room.id}`}
               item xs = {12}
-              onClick = {() => focusRoomLocation(room)}
               onMouseEnter = {() => hoverAction(room.id)}
               onMouseLeave = {() => hoverAction(0)}
             >
-              <RoomCardMap room = {room} isHover = {hoverId === room.id} />
+              <RoomCardMap
+                room = {room}
+                isHover = {hoverId === room.id}
+                focus={focusRoomLocation}
+              />
             </Grid>
           )) : <SimpleLoader height = {100} width = {200} />}
         </Slider>

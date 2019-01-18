@@ -46,12 +46,13 @@ interface IFormikValues {
   additionalServices: Array<number>;
 }
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   classes?: any;
   state: BookingFormState;
 }
 
-interface ILocalProps extends IProps, FormikProps<IFormikValues> {
+
+interface ILocalProps extends IProps, FormikProps<IFormikValues>, RouteComponentProps {
 
 }
 
@@ -395,22 +396,22 @@ const FormMilk = withFormik({
     };
   },
 
-  handleSubmit: (values: IFormikValues, bags: FormikBag<IProps, IFormikValues>) => {
+  handleSubmit: (values: IFormikValues, bags: FormikBag<ILocalProps, IFormikValues>) => {
     const {state, history} = bags.props;
 
-    const {room} = state;
+    const {room, price} = state;
 
     const data: BookingCreateReq = {
       name: `${values.lastName} ${values.firstName}`,
       email: values.email,
       name_received: values.guestName,
-      room_id: room.room_id,
+      room_id: price!.room_id,
       coupon: state.coupon,
-      checkin: moment.unix(room.checkin).format(DEFAULT_DATE_FORMAT),
-      checkout: moment.unix(room.checkout).format(DEFAULT_DATE_FORMAT),
-      booking_type: room.booking_type,
+      checkin: moment.unix(price!.checkin).format(DEFAULT_DATE_FORMAT),
+      checkout: moment.unix(price!.checkout).format(DEFAULT_DATE_FORMAT),
+      booking_type: price!.booking_type,
       phone: values.phone.replace(/\s/g, ''),
-      number_of_guests: room.number_of_guests,
+      number_of_guests: price!.number_of_guests,
       note: values.additionalNote,
       payment_method: INTERNET_BANKING,
       payment_status: PENDING,

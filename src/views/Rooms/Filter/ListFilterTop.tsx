@@ -54,16 +54,16 @@ const ListFilterTop: ComponentType<IProps> = (props: IProps) => {
     <Fragment>
       <Paper square elevation = {1}>
         <Tabs
-          fullWidth
+          variant='fullWidth'
           value = {tabFocus}
           indicatorColor = 'primary'
           textColor = 'primary'
           onChange = {(e, value) => tabFocusChange(value)}
         >
-          <Tab label = 'Best Match' />
-          <Tab label = 'Lowest Price' />
-          <Tab label = 'Most Review' />
-          <Tab label = 'Deal Hot' />
+          <Tab label = 'Phù hợp nhất' />
+          <Tab label = 'Giá thấp nhất' />
+          <Tab label = 'Nhiều đánh giá' />
+          <Tab label = 'Khuyến mãi' />
         </Tabs>
       </Paper>
     </Fragment>

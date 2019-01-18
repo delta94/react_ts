@@ -30,7 +30,7 @@ const SearchProperty: ComponentType<IProps> = (props: IProps) => {
         <TextField
           id='property-keyword-search'
           variant='outlined'
-          placeholder='Property name or keyword'
+          placeholder='Tên phòng hoặc từ khóa'
           inputProps={{
             className: classes.inputSearch
           }}

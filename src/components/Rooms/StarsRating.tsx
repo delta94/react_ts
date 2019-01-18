@@ -48,12 +48,12 @@ const StarsRatingRoomIndex: ComponentType<IProps> = (props: IProps) => {
   return (
     <Grid container spacing = {8}>
       <Grid item sm = {12}>
-        <Typography variant = 'subtitle2'>Star rating</Typography>
+        <Typography variant = 'subtitle2'>Chất lượng</Typography>
       </Grid>
-      {_.map(rateList, (obj) => {
+      {_.map(rateList, (o) => {
         return (
-          <Grid key = {obj.id} item sm = {12}>
-            <RatingBar id = {obj.id} totalRate = {obj.value} />
+          <Grid key = {o.id} item sm = {12}>
+            <RatingBar id = {o.id} totalRate = {o.value} />
           </Grid>
         );
       })}

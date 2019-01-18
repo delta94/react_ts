@@ -1,3 +1,5 @@
+import {useMemo} from 'react';
+
 /**
  * Merge `new object` to `old object`
  * @param {T} oldObject

@@ -19,6 +19,7 @@ import React, {Fragment, useRef, useState, Dispatch, ComponentType, MouseEvent, 
 import Loadable from 'react-loadable';
 import {compose} from 'recompose';
 import {BookingFormContext, IBookingFormContext} from '@/store/context/Booking/BookingFormContext';
+import InfoHeader from '@/components/Bookings/InfoHeader';
 
 export interface IProps {
   classes?: any;
@@ -31,7 +32,7 @@ const SimpleLoading = Loadable({
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   paperCustom: {
-    padding: 20,
+    padding: '1rem',
   },
   card: {
     display: 'flex',
@@ -61,6 +62,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   flexCenter: {
     display: 'flex',
   },
+  fontLow: {
+    fontSize: '0.9rem',
+  },
+  spaceTop: {
+    marginTop: 8,
+  },
 });
 
 const BookingInfoDetail: ComponentType<IProps> = props => {
@@ -70,7 +77,7 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
 
   const {state, dispatch} = useContext<IBookingFormContext>(BookingFormContext);
 
-  const {room} = state;
+  const {room, price} = state;
 
   const [isCouponPanelOpen, setCouponPanelStatus] = useState<boolean>(false);
   const couponRef                                 = useRef(null);
@@ -84,8 +91,8 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
   const removeCoupon = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     dispatch({
-      type: 'removeCoupon'
-    })
+      type: 'removeCoupon',
+    });
   };
 
   return (
@@ -93,115 +100,74 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
       <Grid container spacing = {24} className = {classes.gridInfo}>
         <Grid item xs = {12}>
           <Paper className = {classes.paperCustom} square>
-            <Grid container spacing = {24}>
-              <Grid container item xs = {8} justify = 'flex-start'>
-                <Typography variant = 'h6' style = {{fontSize: '1rem'}}>
-                  {room
-                    ? room.details.name
-                    : <SimpleLoading />}
-                </Typography>
-                <Typography variant = 'subtitle2' color = 'textSecondary'>
-                  {room
-                    ? room.details.address
-                    : <SimpleLoading />}
-                </Typography>
-              </Grid>
-              <Grid container item xs = {4} justify = 'flex-end'>
-                <img src = {BG} className = {classes.cover} alt = 'Cover' />
-              </Grid>
+            <Grid container spacing = {16}>
+              {room ? (
+                <InfoHeader room = {room} />
+              ) : ''}
             </Grid>
             <Divider className = {classes.dividerMargin} />
-            <Grid container spacing = {16}>
-              <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
-                <People />&nbsp;
-                <span>{room
-                  ? room.number_of_guests + ` ${(room.number_of_guests > 1) ? 'guests' : 'guest'}`
-                  : <SimpleLoading />}</span>
+            {!!price ? (
+              <Grid container spacing = {16}>
+                <Grid item xs = {12}>
+                  <Grid container spacing = {16}>
+                    <Grid container item xs = {12}>
+                      <Grid item xs = {6} className = {classes.fontLow}>Ngày nhận phòng</Grid>
+                      <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                        moment.unix(price!.checkin).format('Y/MM/DD')
+                      }</Grid>
+                    </Grid>
+                    <Grid container item xs = {12}>
+                      <Grid item xs = {6} className = {classes.fontLow}>Ngày trả phòng</Grid>
+                      <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
+                        moment.unix(price!.checkout).format('Y/MM/DD')
+                      }</Grid>
+                    </Grid>
+                    <Grid container item xs = {12}>
+                      <Grid item xs = {6} className = {classes.fontLow}>Số khách</Grid>
+                      <Grid container item xs = {6} className = {classes.fontLow}
+                            justify = 'flex-end'>{price!.number_of_guests} người</Grid>
+                    </Grid>
+                  </Grid>
+                  <Divider className = {classes.spaceTop} />
+                  <Grid container spacing = {16} className = {classes.spaceTop}>
+                    <Grid container item xs = {12}>
+                      <Grid item xs = {6} className = {classes.fontLow}>Giá</Grid>
+                      <Grid container item xs = {6} className = {classes.fontLow}
+                            justify = 'flex-end'>{`${formatMoney(price!.price_original)}đ`}</Grid>
+                    </Grid>
+                    <Grid container item xs = {12}>
+                      <Grid item xs = {6} className = {classes.fontLow}>Phí dịch vụ</Grid>
+                      <Grid container item xs = {6} className = {classes.fontLow}
+                            justify = 'flex-end'>{`${formatMoney(price!.additional_fee)}đ`}</Grid>
+                    </Grid>
+                    {price!.price_discount > 0 ? (
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Giảm giá</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow}
+                              justify = 'flex-end'>{`${formatMoney(price!.price_discount)}đ`}</Grid>
+                      </Grid>
+                    ) : ''}
+                  </Grid>
+                  <Divider className = {classes.spaceTop} />
+                  <Grid container spacing = {16} className = {classes.spaceTop}>
+                    <Grid container item xs = {12}>
+                      <Grid item xs = {6} className = {classes.fontLow}>
+                        <Typography variant = 'h6'>Tổng cộng:</Typography>
+                      </Grid>
+                      <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>
+                        <Typography variant = 'h6'>{`${formatMoney(price!.total_fee)}đ`}</Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
-                <Calendar />&nbsp;
-                {room
-                  ? (
-                    <Fragment>
-                      <span>{moment.unix(room.checkin).format('ddd, D/M/Y')}&emsp;</span>
-                      <Arrow />
-                      <span>&emsp;{moment.unix(room.checkout).format('ddd, D/M/Y')}</span>
-                    </Fragment>
-                  ) : <SimpleLoading />}
-              </Grid>
-            </Grid>
+            ) : ''}
             <Divider className = {classes.dividerMargin} />
             <Grid container spacing = {16}>
-              <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
-                <Grid item xs = {6}>
-                  Night(s) / Hours(s)
-                </Grid>
-                <Grid container item xs = {6} justify = 'flex-end'>
-                  {room
-                    ? `${room.days || 0} ${room.days > 1 ? 'Nights' : 'Night'} /
-                      ${room.hours || 0} ${room.hours > 1 ? 'Hours' : 'Hour'}`
-                    : <SimpleLoading />}
-                </Grid>
-              </Grid>
-              <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
-                <Grid item xs = {6}>
-                  Original Prices
-                </Grid>
-                <Grid container item xs = {6} justify = 'flex-end'>
-                  {room
-                    ? `${formatMoney(room.price_original, 0)}đ`
-                    : <SimpleLoading />}
-                </Grid>
-              </Grid>
-              <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
-                <Grid item xs = {6}>
-                  Services fee
-                </Grid>
-                <Grid container item xs = {6} justify = 'flex-end'>
-                  {room
-                    ? `${formatMoney(room.service_fee, 0)}đ`
-                    : <SimpleLoading />}
-                </Grid>
-              </Grid>
-              <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
-                <Grid item xs = {6}>
-                  Cleaning fee
-                </Grid>
-                <Grid container item xs = {6} justify = 'flex-end'>
-                  {room
-                    ? `${formatMoney(room.service_fee, 0)}đ`
-                    : <SimpleLoading />}
-                </Grid>
-              </Grid>
-              {state.coupon &&
-               <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
-                 <Grid item xs = {6}>
-                   Discount ({state.coupon})
-                 </Grid>
-                 <Grid container item xs = {6} justify = 'flex-end'>
-                   {room
-                     ? `${formatMoney(state.discount, 0)}đ`
-                     : <SimpleLoading />}
-                 </Grid>
-               </Grid>
-              }
-            </Grid>
-            <Divider className = {classes.dividerMargin} />
-            <Grid container spacing = {16}>
-              <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
-                <Grid item xs = {6}>
-                  Total fee
-                </Grid>
-                <Grid container item xs = {6} justify = 'flex-end'>
-                  {room
-                    ? `${formatMoney(room.total_fee - (state.discount ? state.discount : 0), 0)}đ`
-                    : <SimpleLoading />}
-                </Grid>
-              </Grid>
               <Grid container item xs = {12} alignContent = 'center' alignItems = 'center'>
                 {/*Coupon Section*/}
                 <Grid container item xs = {12} justify = 'flex-end'>
-                  {room
+                  {price
                     ? (!state.coupon
                         ? <button onClick = {couponHandle} ref = {couponRef}>Have a coupon?</button>
                         : <button onClick = {removeCoupon}>Remove coupon</button>
@@ -221,7 +187,7 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
                             transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
                           }}
                         >
-                          {room ? <CouponForm {...props} openHandle = {setCouponPanelStatus} /> : ''}
+                          {price ? <CouponForm {...props} openHandle = {setCouponPanelStatus} /> : ''}
                         </Grow>
                       </ClickAwayListener>
                     )}
