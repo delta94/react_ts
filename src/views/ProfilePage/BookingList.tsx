@@ -18,20 +18,18 @@ import _ from 'lodash';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import moment from 'moment';
 import {formatMoney} from "@/utils/mixins";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import {Slide, DialogContent} from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from "@material-ui/core/IconButton";
-import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
+import DialogBookingDetails from '@/views/ProfilePage/DialogBookingDetails';
+
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   boxBooking: {
-    margin: '20px auto',
+    margin: '10px auto',
     padding: 8,
   },
   imageRoom: {
     width: '100%',
+    height: 180,
+    objectFit: 'cover',
   },
   txtAddress: {
     color: '#008489',
@@ -42,7 +40,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     fontSize: 20,
   },
   rowMargin: {
-    marginBottom: 8,
+    marginBottom: 4,
   },
   spanViews: {
     fontSize: 10,
@@ -67,23 +65,19 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     fontSize: 13,
   },
   typoTotal: {
-    padding: '55px 5px 0 0',
+    alignContent: 'flex-end',
+    alignItems: 'flex-end',
+    display: 'flex',
+    flexFlow: 'row-reverse',
   },
   bookAgain: {
     padding: 8,
   },
   button: {
-    padding: '8px 14px',
+    padding: '6px 14px',
   },
   rowBottom: {
     paddingTop: 8,
-  },
-  dialogTitle: {
-    textAlign: 'right',
-    padding: 0,
-  },
-  dialogContent: {
-    padding: 0,
   },
 });
 
@@ -92,18 +86,14 @@ interface IBookingList {
   status?: number
 }
 
-const Transition = (props: IBookingList) => {
-  return <Slide direction = 'up' {...props} />;
-};
 
 const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   const {classes} = props;
   const {state} = useContext<IProfileContext>(ProfileContext);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const {width} = useContext<IGlobalContext>(GlobalContext);
+  const [openDialog, setOpenDialog] = useState<number>(0);
 
-  const handleClick = () => {
-    setOpenDialog(!openDialog);
+  const handleClick = (id: number) => {
+    setOpenDialog(id);
   };
 
   const {bookings} = state;
@@ -116,16 +106,14 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
     if (i.status == props.status) {
       return (
         <GridContainer xs = {11} key = {i.id}>
-          <Paper square className = {classes.boxBooking}>
+          <Paper className = {classes.boxBooking}>
             <Grid container spacing = {16} direction = 'row' justify = 'center'>
               <Grid item sm = {3}>
                 <img alt = 'image room' src = {`http://westay.org/storage/rooms/${room.media.data[0].image}`}
                      className = {classes.imageRoom} />
               </Grid>
-              <Grid item sm = {6}>
-                <Grid container direction = 'column'
-                      justify = 'center'
-                      alignItems = 'flex-start'>
+              <Grid item sm = {6} container direction = 'column' justify = 'space-between' alignItems = 'flex-start'>
+                <Grid container direction = 'column'>
                   <Grid item>
                     <Typography variant = 'h6'>{room!.details.data[0].name}</Typography>
                   </Grid>
@@ -139,11 +127,13 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
                     <span className = {classes.spanViews}>{room!.total_review} views</span>
                   </Grid>
                   <Grid item className = {classes.rowMargin}>
-                      <span className = {classes.txtAddress}>
-                        <Location className = {classes.iconLocation} />
-                        {room!.details.data[0].address}
-                      </span>
+                        <span className = {classes.txtAddress}>
+                          <Location className = {classes.iconLocation} />
+                          {room!.details.data[0].address}
+                        </span>
                   </Grid>
+                </Grid>
+                <Grid container direction = 'column'>
                   <Grid item>
                     <img alt = 'fb social' src = {fb} className = {classes.imgSocial} />
                     <img alt = 'gg social' src = {gg} className = {classes.imgSocial} />
@@ -171,7 +161,8 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
                         <Typography className = {classes.fontTime}>{moment(i.checkin).format('dddd')}</Typography>
                         <Typography className = {classes.fontTime}>
                           <span>{moment(i.checkin).format('MMM')}</span>
-                          <span> {moment(i.checkin).format('YYYY')}</span></Typography>
+                          <span> {moment(i.checkin).format('YYYY')}</span>
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -194,8 +185,8 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item sm = {12}>
-                  <Typography variant = 'h6' align = 'right' className = {classes.typoTotal}>
+                <Grid item sm = {12} className = {classes.typoTotal}>
+                  <Typography variant = 'h6' align = 'right'>
                     <span>Total :</span><span> {formatMoney(i.total_fee)} </span><span>VND</span>
                   </Typography>
                 </Grid>
@@ -215,33 +206,13 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
               </Grid>
               <Grid item container justify = 'flex-end' sm = {3}>
                 <div className = {classes.rowBottom}>
-                  <Button variant = 'contained' color = 'primary' onClick = {handleClick}>
+                  <Button variant = 'contained' color = 'primary' onClick = {() => handleClick(i.id)}>
                     Details
                   </Button>
                 </div>
               </Grid>
             </Grid>
           </Paper>
-
-          <Dialog
-            aria-labelledby = 'customized-dialog-title'
-            TransitionComponent = {Transition}
-            keepMounted
-            scroll = 'body'
-            fullScreen = {width === 'xs'}
-            maxWidth = 'sm'
-            open = {openDialog}
-            onClose = {handleClick}
-          >
-            <DialogTitle classes = {{root: classes.dialogTitle}}>
-              <IconButton aria-label = 'Close' onClick = {handleClick}>
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent classes = {{root: classes.dialogContent}}>
-              <div>a</div>
-            </DialogContent>
-          </Dialog>
         </GridContainer>
       )
     }
@@ -250,7 +221,7 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   return (
     <Fragment>
       {mapBookings}
-
+      <DialogBookingDetails stateOpen = {openDialog} setStateOpen = {setOpenDialog} dataBooking = {bookings} />
     </Fragment>
   );
 };

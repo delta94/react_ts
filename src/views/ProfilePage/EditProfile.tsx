@@ -222,14 +222,14 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         required
                         error = {!!errors.name}
                       >
-                        <InputLabel htmlFor = 'Full Name'>Name</InputLabel>
+                        <InputLabel htmlFor = 'name'>Name</InputLabel>
                         <Input
                           value = {values.name}
                           onChange = {handleChange}
                           onBlur = {handleBlur}
                           name = 'name'
                           inputProps = {{
-                            'aria-label': 'Name',
+                            'aria-label': 'Full Name',
                           }}
                         />
                         {touched.name && <FormHelperText>{errors.name}</FormHelperText>}
