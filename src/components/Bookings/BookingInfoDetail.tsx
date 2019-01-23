@@ -1,4 +1,3 @@
-import BG from '@/assets/agriculture-alone-barn-259618.jpg';
 import CouponForm from '@/components/Bookings/BookingCouponForm';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import {ThemeCustom} from '@/components/Theme/Theme';
@@ -11,11 +10,8 @@ import Grow from '@material-ui/core/Grow/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper/Popper';
 import Typography from '@material-ui/core/Typography';
-import Arrow from '@material-ui/icons/ArrowForward';
-import Calendar from '@material-ui/icons/CalendarToday';
-import People from '@material-ui/icons/People';
 import moment from 'moment';
-import React, {Fragment, useRef, useState, Dispatch, ComponentType, MouseEvent, useContext} from 'react';
+import React, {Fragment, useRef, useState, ComponentType, MouseEvent, useContext} from 'react';
 import Loadable from 'react-loadable';
 import {compose} from 'recompose';
 import {BookingFormContext, IBookingFormContext} from '@/store/context/Booking/BookingFormContext';
@@ -77,7 +73,7 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
 
   const {state, dispatch} = useContext<IBookingFormContext>(BookingFormContext);
 
-  const {room, price} = state;
+  const {room, price, discount, coupon} = state;
 
   const [isCouponPanelOpen, setCouponPanelStatus] = useState<boolean>(false);
   const couponRef                                 = useRef(null);
@@ -132,21 +128,32 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
                   <Grid container spacing = {16} className = {classes.spaceTop}>
                     <Grid container item xs = {12}>
                       <Grid item xs = {6} className = {classes.fontLow}>Giá</Grid>
-                      <Grid container item xs = {6} className = {classes.fontLow}
-                            justify = 'flex-end'>{`${formatMoney(price!.price_original)}đ`}</Grid>
+                      <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>
+                        {`${formatMoney(price!.price_original)}đ`}
+                      </Grid>
                     </Grid>
                     <Grid container item xs = {12}>
                       <Grid item xs = {6} className = {classes.fontLow}>Phí dịch vụ</Grid>
-                      <Grid container item xs = {6} className = {classes.fontLow}
-                            justify = 'flex-end'>{`${formatMoney(price!.additional_fee)}đ`}</Grid>
+                      <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>
+                        {`${formatMoney(price!.additional_fee)}đ`}
+                      </Grid>
                     </Grid>
                     {price!.price_discount > 0 ? (
                       <Grid container item xs = {12}>
                         <Grid item xs = {6} className = {classes.fontLow}>Giảm giá</Grid>
-                        <Grid container item xs = {6} className = {classes.fontLow}
-                              justify = 'flex-end'>{`${formatMoney(price!.price_discount)}đ`}</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>
+                          {`${formatMoney(price!.price_discount)}đ`}
+                        </Grid>
                       </Grid>
                     ) : ''}
+                    {!!coupon ? (
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>Mã giảm giá ({coupon})</Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>
+                          {`${formatMoney(discount)}đ`}
+                        </Grid>
+                      </Grid>
+                    ): ''}
                   </Grid>
                   <Divider className = {classes.spaceTop} />
                   <Grid container spacing = {16} className = {classes.spaceTop}>
@@ -155,7 +162,7 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
                         <Typography variant = 'h6'>Tổng cộng:</Typography>
                       </Grid>
                       <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>
-                        <Typography variant = 'h6'>{`${formatMoney(price!.total_fee)}đ`}</Typography>
+                        <Typography variant = 'h6'>{`${formatMoney(price!.total_fee - discount)}đ`}</Typography>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -169,8 +176,8 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
                 <Grid container item xs = {12} justify = 'flex-end'>
                   {price
                     ? (!state.coupon
-                        ? <button onClick = {couponHandle} ref = {couponRef}>Have a coupon?</button>
-                        : <button onClick = {removeCoupon}>Remove coupon</button>
+                        ? <button onClick = {couponHandle} ref = {couponRef}>Mã khuyến mãi</button>
+                        : <button onClick = {removeCoupon}>Xóa mã</button>
                     )
                     : <SimpleLoader />
                   }

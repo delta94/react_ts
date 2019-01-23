@@ -22,7 +22,7 @@ const LocationHomeMap: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
-  const {rooms} = state;
+  const {room} = state;
 
   return (
     <Fragment>
@@ -33,7 +33,7 @@ const LocationHomeMap: ComponentType<IProps> = (props: IProps) => {
         defaultCenter={props.center}
         defaultZoom={props.zoom}
       >
-        <MarkerMap lat={rooms ? rooms!.latitude : 0} lng={rooms ? rooms!.longitude : 0} text={'Home'}/>
+        <MarkerMap lat={room ? room!.latitude : 0} lng={room ? room!.longitude : 0} text={'Home'}/>
       </GoogleMapReact>
     </Fragment>
   );

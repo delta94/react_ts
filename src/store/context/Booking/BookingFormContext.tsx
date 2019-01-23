@@ -37,8 +37,8 @@ export interface IBookingFormParams {
   checkout: string;
   checkin_hour: number;
   checkout_hour: number;
-  checkout_minute: number;
-  checkin_minute: number;
+  checkout_minute?: number;
+  checkin_minute?: number;
   hosting_id: number;
   number_guests: number;
   booking_type: number;
@@ -93,7 +93,7 @@ export const priceCalculator = async (params: IBookingFormParams, state: Booking
 
 };
 
-export const priceCaculate = async (params: IBookingFormParams) => {
+export const priceCalculate = async (params: IBookingFormParams) => {
   let additional_fee = 0;
   let discount       = 0;
   let CI             = '';

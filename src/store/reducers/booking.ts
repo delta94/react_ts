@@ -1,6 +1,6 @@
 import {Moment} from 'moment';
 import {Reducer} from 'redux';
-import {DEFAULT_DATE_FORMAT} from '@/utils/store/global';
+import {DEFAULT_DATE_TIME_FORMAT} from '@/utils/store/global';
 import {updateObject} from '@/store/utility';
 import * as act from '@/store/actions/actionTypes';
 
@@ -41,10 +41,10 @@ const init: BookingState = {
 const changeDate = (state: BookingState, action: BookingAction) => {
   const {date} = action;
 
-  let startDate = date!.startDate!.format(DEFAULT_DATE_FORMAT);
+  let startDate = date!.startDate!.format(DEFAULT_DATE_TIME_FORMAT);
   let endDate   = date!.endDate
-    ? date!.endDate!.format(DEFAULT_DATE_FORMAT)
-    : date!.startDate!.clone().add(1, 'days').format(DEFAULT_DATE_FORMAT);
+    ? date!.endDate!.format(DEFAULT_DATE_TIME_FORMAT)
+    : date!.startDate!.clone().add(1, 'days').format(DEFAULT_DATE_TIME_FORMAT);
 
   return updateObject(state, {
     startDate,

@@ -53,9 +53,6 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     flexGrow: 1,
     marginLeft: '20px',
   },
-  middle: {
-    flexGrow: 5,
-  },
   button: {
     height: theme!.palette!.button.nav,
     borderRadius: '0px',

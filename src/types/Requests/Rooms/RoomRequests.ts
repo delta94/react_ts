@@ -1,6 +1,6 @@
 import {BaseGetRequestParams} from '@/types/Requests/RequestTemplate';
 
-export interface RoomIndexGetParams extends BaseGetRequestParams {
+export interface RoomIndexGetParams extends BaseGetRequestParams, Partial<MapCoords> {
   name?: string
   city?: string
   district?: string
@@ -33,6 +33,14 @@ export interface RoomIndexGetParams extends BaseGetRequestParams {
   page?: number,
   standard_point?: string
   type_room?: string
+
+}
+
+export interface MapCoords {
+  lat_min: number
+  lat_max: number
+  long_min: number
+  long_max: number
 }
 
 export interface RoomUrlParams {

@@ -37,7 +37,7 @@ const BottomNav = Loadable({
 const styles: any = (theme: ThemeCustom) => createStyles({});
 
 const RoomIndex: FunctionComponent<IProps> = props => {
-  const [state, dispatch] = useReducer<RoomIndexState, RoomIndexAction>(RoomIndexReducer, RoomIndexStateInit);
+  const [state, dispatch]       = useReducer<RoomIndexState, RoomIndexAction>(RoomIndexReducer, RoomIndexStateInit);
   const [mapState, mapDispatch] = useReducer<RoomMapState, RoomMapAction>(RoomMapReducer, RoomMapStateInit);
 
   return (
@@ -46,16 +46,16 @@ const RoomIndex: FunctionComponent<IProps> = props => {
         state: mapState,
         dispatch: mapDispatch,
       }}>
-      <NavTop />
-      <GridContainer lg = {10} xs = {11} sm = {11}>
-        <Hidden smDown>
-          <TopBarFilter />
+        <NavTop />
+        <GridContainer lg = {10} xs = {11} sm = {11}>
+          <Hidden smDown>
+            <TopBarFilter />
+          </Hidden>
+          <RoomListing />
+        </GridContainer>
+        <Hidden mdUp>
+          <BottomNav />
         </Hidden>
-        <RoomListing />
-      </GridContainer>
-      <Hidden mdUp>
-        <BottomNav />
-      </Hidden>
       </RoomMapContext.Provider>
     </RoomIndexContext.Provider>
   );

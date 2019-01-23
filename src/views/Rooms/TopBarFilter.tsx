@@ -6,7 +6,7 @@ import {createStyles, withStyles} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid/Grid';
 import Paper from '@material-ui/core/Paper/Paper';
 import classNames from 'classnames';
-import React, {ComponentType, Fragment, useState, MouseEvent, TouchEvent} from 'react';
+import React, {ComponentType, Fragment, useState, MouseEvent, TouchEvent, memo} from 'react';
 import {compose} from 'recompose';
 
 interface IProps {
@@ -25,6 +25,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     }),
     maxHeight: 400,
     overflow: 'hidden',
+  },
+  notOverflow: {
+    overflow: 'visible'
   },
   rating: {
     maxHeight: 116,
@@ -71,7 +74,7 @@ const TopBarFilter: ComponentType<IProps> = (props: IProps) => {
         </Grid>
         <Grid item xs = {4}>
           <Paper elevation = {1} className = {classNames(
-            classes.paperPadding, classes.syncHeight,
+            classes.paperPadding, classes.syncHeight, classes.notOverflow
           )} square>
             <SearchProperty />
           </Paper>
@@ -83,4 +86,5 @@ const TopBarFilter: ComponentType<IProps> = (props: IProps) => {
 
 export default compose(
   withStyles(styles),
+  memo
 )(TopBarFilter);

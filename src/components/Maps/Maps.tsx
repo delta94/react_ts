@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useContext, useEffect, useState} from 'react';
+import React, {ComponentType, Fragment, useContext, useEffect, useState, memo} from 'react';
 import {compose} from 'recompose';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -12,19 +12,15 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton/IconButton';
 import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 import Grid from '@material-ui/core/Grid/Grid';
-import GoogleMapReact, {MapOptions, Coords} from 'google-map-react';
-import _ from 'lodash';
-import SimpleLoader from '@/components/Loading/SimpleLoader';
-import RoomCardMap from '@/components/Rooms/RoomCardMap';
-import MapMarker from '@/components/Rooms/MapMarker';
+import {Coords} from 'google-map-react';
 import {RoomMapContext, IRoomMapContext} from '@/store/context/Room/RoomMapContext';
-import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {animateScroll as scroll} from 'react-scroll';
 import {ReactScrollLinkProps} from 'react-scroll/modules/components/Link';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
-import Slider, {Settings} from 'react-slick';
+import MapDetail from '@/components/Maps/MapDetail';
+import MapRooms from '@/components/Maps/MapRooms';
 
 interface IProps {
   classes?: any
@@ -63,18 +59,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       minHeight: '46vh',
     },
   },
-  roomList: {
-    [theme!.breakpoints!.only!('xs')]: {
-      maxWidth: 'calc(93vw - 4px)',
-    },
-  },
 });
 
 // @ts-ignore
 const Maps: ComponentType<IProps> = (props: IProps) => {
   const {classes}                   = props;
   const [page, setPage]             = useState<number>(1);
-  const [hoverId, setHoverId]       = useState<number>(0);
+  const [hoverId, setHoverId]       = useState<number>(-1);
   const [roomChunks, setRoomChunks] = useState<RoomIndexRes[]>([]);
   const [center, setCenter]         = useState<Coords>({
     lat: 0,
@@ -82,25 +73,12 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
   });
 
   const {location, width}                        = useContext<IGlobalContext>(GlobalContext);
-  const {state, dispatch}                        = useContext<IRoomIndexContext>(RoomIndexContext);
+  const {state}                                  = useContext<IRoomIndexContext>(RoomIndexContext);
   const {state: mapState, dispatch: mapDispatch} = useContext<IRoomMapContext>(RoomMapContext);
 
-  const {rooms, meta} = state;
-  const {isMapOpen}   = mapState;
-  const xsMode        = width === 'xs';
-
-  const settings: Settings = {
-    speed: 300,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    lazyLoad: 'ondemand',
-    arrows: false,
-  };
-
-  const mapOptions: MapOptions = {
-    gestureHandling: 'greedy',
-    zoomControl: !xsMode,
-  };
+  const {rooms}             = state;
+  const {isMapOpen, coords} = mapState;
+  const xsMode              = width === 'xs';
 
   const pageChange = (current: number, pageSize: number) => {
     setPage(current);
@@ -133,76 +111,34 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
   };
 
   useEffect(() => {
-    if (rooms.length > 0) {
-      setCenter({
-        lat: parseFloat(rooms[0].latitude),
-        lng: parseFloat(rooms[0].longitude),
-      });
+    if (rooms.length > 0 && isMapOpen) {
+      let lat   = parseFloat(rooms[0].latitude);
+      let lng   = parseFloat(rooms[0].longitude);
+      let valid = (lat < 90 && lat > 90 && lng < 180 && lng > -180);
+
+      let coords: Coords = {
+        lat: valid ? lat : 21.02,
+        lng: valid ? lng : 105.83,
+      };
+
+      setCenter(coords);
     }
-  }, [rooms.length > 0]);
+  }, [rooms.length > 0, isMapOpen]);
 
   useEffect(() => {
     if (isMapOpen) {
-      setRoomChunks([]);
-      getRooms(location, page).then(res => {
+      // setRoomChunks([]);
+      getRooms(location, page, coords).then(res => {
         const rooms = res.data;
         setRoomChunks(rooms);
+        setHoverId(0);
       });
     }
-  }, [page, isMapOpen]);
+  }, [page, isMapOpen, coords]);
 
   /**
    * Room List switch between mobile and desktop mode
    */
-  const RoomList = () => (
-    !xsMode ? (
-      <Fragment>
-        {roomChunks.length > 0 ? _.map(roomChunks, room => (
-          <Grid
-            key = {room.id}
-            id = {`room-${room.id}`}
-            item xs = {12}
-            onMouseEnter = {() => hoverAction(room.id)}
-            onMouseLeave = {() => hoverAction(0)}
-          >
-            <RoomCardMap
-              room = {room}
-              isHover = {hoverId === room.id}
-              focus={focusRoomLocation} />
-          </Grid>
-        )) : <SimpleLoader height = {200} width = {200} />}
-        <Grid container item xs = {12} justify = 'flex-end'>
-          {roomChunks.length > 0 ? (
-            <Pagination
-              total = {meta ? meta!.pagination.total : 0}
-              current = {page}
-              onChange = {pageChange}
-            />
-          ) : ''}
-        </Grid>
-      </Fragment>
-    ) : (
-      <Grid item xs = {12} className = {classes.roomList}>
-        <Slider {...settings}>
-          {roomChunks.length > 0 ? _.map(roomChunks, room => (
-            <Grid
-              key = {room.id}
-              id = {`room-${room.id}`}
-              item xs = {12}
-              onMouseEnter = {() => hoverAction(room.id)}
-              onMouseLeave = {() => hoverAction(0)}
-            >
-              <RoomCardMap
-                room = {room}
-                isHover = {hoverId === room.id}
-                focus={focusRoomLocation}
-              />
-            </Grid>
-          )) : <SimpleLoader height = {100} width = {200} />}
-        </Slider>
-      </Grid>
-    )
-  );
 
   return (
     <Fragment>
@@ -226,31 +162,22 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
             <Grid container item xs = {12} lg = {5} spacing = {xsMode ? 0 : 16} className = {classes.list}
                   id = 'room-map-list'
                   justify = 'center'>
-              <RoomList />
+              <MapRooms
+                page = {page}
+                pageChange = {pageChange}
+                hoverId = {hoverId}
+                hoverAction = {hoverAction}
+                focusRoomLocation = {focusRoomLocation}
+                rooms = {roomChunks} />
             </Grid>
             <Grid item xs = {12} lg = {7} className = {classes.mapContainer}>
-              <GoogleMapReact
-                options = {mapOptions}
-                bootstrapURLKeys = {{
-                  key: process.env.REACT_APP_GOOGLE_MAP_KEY || '',
-                }}
-                defaultCenter = {{lat: 21.02, lng: 105.83}}
+              <MapDetail
+                hoverId = {hoverId}
                 center = {center}
-                defaultZoom = {10}
-                hoverDistance = {40}
-                onChildMouseEnter = {h => hoverAction(parseInt(h))}
-                onChildMouseLeave = {h => hoverAction(0)}
-              >
-                {_.map(roomChunks, room => (
-                  <MapMarker
-                    isHover = {hoverId === room.id}
-                    room = {room}
-                    key = {room.id}
-                    lat = {room.latitude}
-                    lng = {room.longitude}
-                  />
-                ))}
-              </GoogleMapReact>
+                hoverAction = {hoverAction}
+                rooms = {roomChunks}
+                setRooms = {setRoomChunks}
+              />
             </Grid>
           </Grid>
         </DialogContent>
@@ -261,4 +188,5 @@ const Maps: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo,
 )(Maps);

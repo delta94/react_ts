@@ -42,13 +42,13 @@ const GuestSelect: FunctionComponent<IProps> = props => {
         <Grid container spacing = {8} justify = 'center'>
           <Grid item xs = {12}>
             <CountBar
-              divider={true}
-              singular = 'Guest'
-              plural = 'Guests'
+              divider
+              singular = 'Khách'
+              plural = 'Khách'
               p-classes = {classes} />
             <CountBar
-              singular = 'Room'
-              plural = 'Rooms'
+              singular = 'Phòng'
+              plural = 'Phòng'
               p-classes = {classes} />
           </Grid>
         </Grid>

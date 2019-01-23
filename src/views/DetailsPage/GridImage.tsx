@@ -4,16 +4,11 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import Hidden from '@material-ui/core/Hidden';
 import React, {ComponentType, Dispatch, Fragment, MouseEvent, SetStateAction, useContext, useState} from 'react';
 import {compose} from 'recompose';
-import imgRoomDemo from '@/assets/room_demo.jpeg';
-import imgRoomDemo2 from '@/assets/room_demo2.jpeg';
-import imgRoomDemo4 from '@/assets/room_demo4.jpeg';
-import imgRoomDemo5 from '@/assets/room_demo5.jpeg';
-import imgRoomDemo6 from '@/assets/room_demo6.jpeg';
 import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 import _ from 'lodash';
 // @ts-ignore
 import Lightbox from 'react-images';
-import SimpleLoader from "@/views/DetailsPage/BoxReviews";
+import SimpleLoader from '@/views/DetailsPage/BoxReviews';
 
 interface IProps {
   classes?: any,
@@ -36,7 +31,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       width: '100%',
     },
     height: 'auto',
-    minHeight:440,
+    minHeight: 440,
     maxHeight: '100%',
     MozBoxSizing: 'border-box',
     boxSizing: 'border-box',
@@ -90,16 +85,16 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 });
 
 const GridImage: ComponentType<IProps> = (props: IProps) => {
-  const {classes} = props;
+  const {classes}                       = props;
   const [currentImage, setCurrentImage] = useState<number>(0);
-  const {state} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  const {state}                         = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
-  const {rooms} = state;
-  if (rooms == null) {
-    return <SimpleLoader />
+  const {room} = state;
+  if (room == null) {
+    return <SimpleLoader />;
   }
 
-  const openLightbox = (event: MouseEvent<HTMLImageElement>, index: number) => {
+  const openLightbox  = (event: MouseEvent<HTMLImageElement>, index: number) => {
     event.preventDefault();
     props.setIsOpen(true);
     setCurrentImage(index);
@@ -109,7 +104,7 @@ const GridImage: ComponentType<IProps> = (props: IProps) => {
     props.setIsOpen(false);
   };
 
-  const ROOM_IMAGES = rooms ? _.map(rooms.media.data, o => {
+  const ROOM_IMAGES = room ? _.map(room.media.data, o => {
     return {
       src: `http://westay.org/storage/rooms/${o.image}`,
     };
@@ -118,18 +113,18 @@ const GridImage: ComponentType<IProps> = (props: IProps) => {
   return (
     <Fragment>
       <div className = {classes.imageBig}>
-        <img src = {`http://westay.org/storage/rooms/${rooms.media.data[0].image}`} alt = 'Living Room'
+        <img src = {`http://westay.org/storage/rooms/${room.media.data[0].image}`} alt = 'Living Room'
              className = {classes.imageProp}
              onClick = {e => openLightbox(e, 0)} />
       </div>
       <Hidden xsDown>
         <div className = {classes.boxImgSmall}>
           <div className = {classes.imageSmall}>
-            <img src = {`http://westay.org/storage/rooms/${rooms.media.data[1].image}`} className = {classes.imageProp}
+            <img src = {`http://westay.org/storage/rooms/${room.media.data[1].image}`} className = {classes.imageProp}
                  onClick = {e => openLightbox(e, 1)} />
           </div>
           <div className = {classes.imageSmall}>
-            <img src = {`http://westay.org/storage/rooms/${rooms.media.data[2].image}`} className = {classes.imageProp}
+            <img src = {`http://westay.org/storage/rooms/${room.media.data[2].image}`} className = {classes.imageProp}
                  onClick = {e => openLightbox(e, 2)} />
           </div>
         </div>
@@ -137,11 +132,11 @@ const GridImage: ComponentType<IProps> = (props: IProps) => {
       <Hidden smDown>
         <div className = {classes.boxImgSmall}>
           <div className = {classes.imageSmall}>
-            <img src = {`http://westay.org/storage/rooms/${rooms.media.data[3].image}`} className = {classes.imageProp}
+            <img src = {`http://westay.org/storage/rooms/${room.media.data[3].image}`} className = {classes.imageProp}
                  onClick = {e => openLightbox(e, 3)} />
           </div>
           <div className = {classes.imageSmall}>
-            <img src = {`http://westay.org/storage/rooms/${rooms.media.data[4].image}`} className = {classes.imageProp}
+            <img src = {`http://westay.org/storage/rooms/${room.media.data[4].image}`} className = {classes.imageProp}
                  onClick = {e => openLightbox(e, 4)} />
           </div>
         </div>

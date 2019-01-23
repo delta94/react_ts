@@ -232,9 +232,9 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
   const [arrowRef] = useState<any>(null);
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
-  const {rooms} = state;
+  const {room} = state;
 
-  if (rooms == null) {return <SimpleLoader/>}
+  if (room == null) {return <SimpleLoader/>}
 
   return (
     <Fragment>
@@ -244,21 +244,21 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 justify = 'center'
                 alignItems = 'flex-start'>
             <Grid item>
-              <Typography className = {classes.roomName}>{rooms!.details.data[0].name}</Typography>
+              <Typography className = {classes.roomName}>{room!.details.data[0].name}</Typography>
             </Grid>
             <Grid item className = {classes.rowMargin}>
               <StarRatings
-                rating = {rooms !== null ? rooms.avg_rating : 0} //index rating
+                rating = {room !== null ? room.avg_rating : 0} //index rating
                 starDimension = '20px'
                 starSpacing = '1px'
                 starRatedColor = '#46afcc'
               />
-              <span className = {classes.spanViews}>{rooms!.total_review} views</span>
+              <span className = {classes.spanViews}>{room!.total_review} views</span>
             </Grid>
             <Grid item className = {classes.rowMargin}>
               <span className = {classes.txtAddress}>
                 <Location className = {classes.iconLocation} />
-                {rooms.details.data[0].address}
+                {room.details.data[0].address}
               </span>
             </Grid>
           </Grid>
@@ -272,7 +272,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 title = {
                   <Fragment>
                     <div>
-                      <Typography variant = {'subtitle2'} align = {'center'}>{rooms!.user.data.name}</Typography>
+                      <Typography variant = {'subtitle2'} align = {'center'}>{room!.user.data.name}</Typography>
                       <Grid container>
                         <Grid item xs = {4}>
                           <div className = {classes.info}>
@@ -319,7 +319,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 }}
               >
                 <div className = {classes.avatar}>
-                  <img alt = 'Avatar' src = {rooms!.user.data.avatar_url} className = {classes.imgAvatar} />
+                  <img alt = 'Avatar' src = {room!.user.data.avatar_url} className = {classes.imgAvatar} />
                   <div className = {classes.infoHost}>
                     <img src = {medalCertified} className={classes.imgCertified} />
                   </div>
@@ -334,25 +334,25 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
         <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <Home className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>{rooms!.room_type_txt}</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{room!.room_type_txt}</span></div>
           </div>
         </Grid>
         <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <People className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>{rooms!.max_guest} guests</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{room!.max_guest} guests</span></div>
           </div>
         </Grid>
         <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <MeetingRoom className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>{rooms!.number_room} rooms</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{room!.number_room} rooms</span></div>
           </div>
         </Grid>
         <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <LocalHotel className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>{rooms!.number_bed} beds</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{room!.number_bed} beds</span></div>
           </div>
         </Grid>
       </Grid>

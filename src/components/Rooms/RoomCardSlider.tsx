@@ -86,7 +86,7 @@ const RoomCardSlider: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
-  const {rooms} = state;
+  const {room} = state;
 
   const settings: Settings = {
     dots: false,
@@ -102,7 +102,7 @@ const RoomCardSlider: ComponentType<IProps> = (props: IProps) => {
     touchMove:false,
   };
 
-  if (rooms == null) {return <SimpleLoader/>}
+  if (room == null) {return <SimpleLoader/>}
 
   return (
     <Fragment>

@@ -54,8 +54,8 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       border: `1px solid ${Grey[700]}`,
     },
     [theme!.breakpoints!.only!('xs')]: {
-      width: 50
-    }
+      width: 50,
+    },
   },
   bankImgFocus: {
     border: `1px solid ${Grey[700]}`,
@@ -81,9 +81,9 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
   const [bankId, setBankId]                 = useState<number>(0);
   const [paymentPending, setPaymentPending] = useState<boolean>(false);
   const {state}                             = useContext<IPaymentContext>(PaymentContext);
-  const {width} = useContext<IGlobalContext>(GlobalContext);
+  const {width}                             = useContext<IGlobalContext>(GlobalContext);
 
-  const xsMode = width === 'xs'
+  const xsMode = width === 'xs';
 
   const {payment_methods, lists} = state;
 
@@ -98,7 +98,7 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
         const url = res.data;
         window.location.replace(url);
       }).catch(err => {
-
+        setPaymentPending(false);
       });
     }
   };
@@ -117,12 +117,12 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
     <Fragment>
       <Paper className = {classes.root}>
         <Grid container spacing = {16}>
-          <Grid item md = {12} xs={12}>
+          <Grid item md = {12} xs = {12}>
             <Typography variant = 'h6'>THÔNG TIN THANH TOÁN</Typography>
             <Divider className = {classes.divider} />
           </Grid>
-          <Grid item md = {12} xs={12}>
-            <ExpansionPanel elevation = {0} defaultExpanded={!xsMode}>
+          <Grid item md = {12} xs = {12}>
+            <ExpansionPanel elevation = {0} defaultExpanded = {!xsMode}>
               <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />} classes = {{
                 content: classes.alignCenter,
               }}>
@@ -133,20 +133,20 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className = {classes.details}>
                 <Grid container spacing = {8}>
-                  <Grid item md = {12} xs={12}>
+                  <Grid item md = {12} xs = {12}>
                     <Typography variant = 'subtitle2'>Thanh toán qua thẻ ATM nội địa</Typography>
                   </Grid>
-                  <Grid item md = {12} xs={12}>
+                  <Grid item md = {12} xs = {12}>
                     <i className = {classes.caption}
                     >Là hình thức thanh toán trực tuyến an toàn và bảo mật qua các thẻ
                      nội địa do các ngân hàng phát hành (cổng thanh toán Bảo Kim). Dịch
                      vụ được kích hoạt tự động ngay sau khi thanh toán, đơn giản và
                      thuận tiện hơn cho khách hàng.</i>
                   </Grid>
-                  <Grid item md = {12} xs={12}>
+                  <Grid item md = {12} xs = {12}>
                     <Typography variant = 'subtitle2'>Quý khách hàng lưu ý:</Typography>
                   </Grid>
-                  <Grid item md = {12} xs={12}>
+                  <Grid item md = {12} xs = {12}>
                     <i className = {classes.caption}
                     >- Để thanh toán bằng thẻ ATM, thẻ của Quý khách phải được đăng ký
                      và kích hoạt chức năng thanh toán trực tuyến với ngân hàng
@@ -155,7 +155,7 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
                     >- Các thông tin thẻ tín dụng của Quý khách sẽ được bảo mật và được
                      xác nhận với ngân hàng phát hành thẻ.</i>
                   </Grid>
-                  <Grid item md = {12} xs={12}>
+                  <Grid item md = {12} xs = {12}>
                     <ul className = {classes.ulBank}>
                       {listBank.length > 0 ? _.map(listBank, bank => (
                         <li
@@ -177,7 +177,7 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
               </ExpansionPanelDetails>
             </ExpansionPanel>
             <Divider />
-            <ExpansionPanel elevation = {0} defaultExpanded={!xsMode}>
+            <ExpansionPanel elevation = {0} defaultExpanded = {!xsMode}>
               <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />} classes = {{
                 content: classes.alignCenter,
               }}>
@@ -188,7 +188,7 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className = {classes.details}>
                 <Grid container spacing = {8}>
-                  <Grid item md = {12} xs={12}>
+                  <Grid item md = {12} xs = {12}>
                     <ul className = {classes.ulBank}>
                       {visa.length > 0 ? _.map(visa, bank => (
                         <li
@@ -210,7 +210,7 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Grid>
-          <Grid item md = {12} xs={12}>
+          <Grid item md = {12} xs = {12}>
             <Button
               variant = 'contained'
               color = 'primary'
@@ -218,7 +218,7 @@ const BankList: ComponentType<IProps> = (props: IProps) => {
               disabled = {lists === null || paymentPending}
               onClick = {triggerPayment}
             >
-              Thanh toán
+              {paymentPending ? <SimpleLoader /> : 'Thanh toán'}
             </Button>
           </Grid>
         </Grid>

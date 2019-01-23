@@ -1,20 +1,23 @@
-import {createContext, Dispatch, useEffect} from 'react';
+import {createContext, Dispatch} from 'react';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {LocationDescriptorObject} from 'history';
 import qs from 'query-string';
 import {AxiosRes, Pagination, BaseResponse, TypeSelect} from '@/types/Requests/ResponseTemplate';
 import {axios} from '@/utils/axiosInstance';
 import {updateObject} from '@/store/utility';
-import {RoomIndexGetParams, RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
+import {RoomIndexGetParams, RoomUrlParams, MapCoords} from '@/types/Requests/Rooms/RoomRequests';
 import {Range} from 'react-input-range';
 import _ from 'lodash';
 import {ComfortIndexGetParams} from '@/types/Requests/Comforts/ComfortRequests';
 import {ComfortIndexRes} from '@/types/Requests/Comforts/ComfortResponses';
 import {AxiosResponse} from 'axios';
+import {makeRequestSingle} from '@/store/context/searchSuggestion';
 
 export const MIN_PRICE  = 0;
 export const MAX_PRICE  = 10000000;
 export const STEP_PRICE = 10000;
+
+const get = makeRequestSingle();
 
 export const RoomIndexContext = createContext<IRoomIndexContext | any>(null);
 
@@ -120,12 +123,13 @@ export const RoomIndexReducer = (state: RoomIndexState, action: RoomIndexAction)
  * Get list of rooms
  * @param {LocationDescriptorObject} location
  * @param {number} page
+ * @param {MapCoords} coords
  * @returns {Promise<BaseResponse<RoomIndexRes[]>>}
  */
-export const getRooms = async (location: LocationDescriptorObject, page?: number): Promise<BaseResponse<RoomIndexRes[]>> => {
+export const getRooms = async (location: LocationDescriptorObject, page?: number, coords?: MapCoords): Promise<BaseResponse<RoomIndexRes[]>> => {
   const params: RoomUrlParams = qs.parse(location.search!);
 
-  const query: Partial<RoomIndexGetParams> = {
+  let query: Partial<RoomIndexGetParams> = {
     include: 'details,media,city,district,comforts',
     name: params.name,
     rent_type: params.rent_type,
@@ -135,7 +139,7 @@ export const getRooms = async (location: LocationDescriptorObject, page?: number
     most_popular: params.most_popular,
     price_day_from: params.price_day_from,
     price_day_to: params.price_day_to,
-    manager: (typeof params.instant !== 'undefined') ? 1 : 0,
+    manager: (typeof params.instant !== 'undefined') ? 1 : undefined,
     sort_price_day: (params.lowest_price === null) ? 0 : 1,
     standard_point: (params.rating) ? _.split(params.rating, ',')[0] : undefined,
     comfort_lists: (params.amenities) ? params.amenities : undefined,
@@ -143,7 +147,12 @@ export const getRooms = async (location: LocationDescriptorObject, page?: number
     page,
   };
 
-  const url = `rooms?${qs.stringify(query)}`;
+  if (coords) {
+    query = updateObject(query, coords);
+  }
+
+  const signature = coords ? 'rooms/room-lat-long' : 'rooms';
+  const url       = `${signature}?${qs.stringify(query)}`;
 
   return fetchRoom(url);
 };
@@ -156,7 +165,7 @@ export const newRoomLocation = (params: RoomUrlParams): LocationDescriptorObject
 };
 
 export const fetchRoom = async (url: string) => {
-  const res: AxiosRes<RoomIndexRes[]> = await axios.get(url);
+  const res: AxiosRes<RoomIndexRes[]> = await get(url);
   return res.data;
 };
 
@@ -197,7 +206,7 @@ export const loadFilter = (dispatch: Dispatch<RoomIndexAction>) => {
     });
   }).catch(err => {
 
-  })
+  });
 };
 
 /**

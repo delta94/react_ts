@@ -3,13 +3,6 @@ import BookingInfoDetail from '@/components/Bookings/BookingInfoDetail';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import NavTop from '@/components/ToolBar/NavTop';
 import GridContainer from '@/layouts/Grid/Container';
-import {updateObject} from '@/store/utility';
-import {BookingPriceCalculatorReq} from '@/types/Requests/Booking/BookingRequests';
-import {BookingPriceCalculatorRes} from '@/types/Requests/Booking/BookingResponses';
-import {AxiosRes} from '@/types/Requests/ResponseTemplate';
-import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
-import {axios} from '@/utils/axiosInstance';
-import {formatTime} from '@/utils/mixins';
 import {createStyles, withStyles} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid/Grid';
 import qs from 'query-string';
@@ -20,9 +13,14 @@ import {
   BookingFormContext,
   BookingFormState,
   BookingFormAction,
-  BookingFormReducer, BookingFormStateInit, priceCalculator, IBookingFormParams, priceCaculate, getRoomBookingForm,
+  BookingFormReducer,
+  BookingFormStateInit,
+  IBookingFormParams,
+  priceCalculate,
+  getRoomBookingForm,
 } from '@/store/context/Booking/BookingFormContext';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
+import Grey from '@material-ui/core/colors/grey';
 
 interface IProps extends RouteProps, RouterProps {
   classes: any;
@@ -32,6 +30,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   marginContainer: {
     marginTop: 20,
   },
+  container: {
+    minHeight: '100vh',
+    backgroundColor: Grey[200],
+  }
 });
 
 const Form: FunctionComponent<IProps> = props => {
@@ -47,7 +49,7 @@ const Form: FunctionComponent<IProps> = props => {
   useEffect(() => {
 
     Promise.all([
-      priceCaculate(params),
+      priceCalculate(params),
       getRoomBookingForm(params),
     ]).then(res => {
       const [price, room] = res;
@@ -59,7 +61,7 @@ const Form: FunctionComponent<IProps> = props => {
       });
 
     }).catch(err => {
-      history.push('/404');
+      // history.push('/404');
     });
 
   }, [location]);
@@ -68,7 +70,7 @@ const Form: FunctionComponent<IProps> = props => {
     <Fragment>
       <NavTop />
       <BookingFormContext.Provider value = {{state, dispatch}}>
-        <GridContainer xs = {10} sm = {11} xl = {6}>
+        <GridContainer xs = {10} sm = {11} xl = {6} className={classes.container}>
           <Grid container spacing = {16} className = {classes.marginContainer}>
             <Grid item lg = {8} md = {6} xs = {12}>
               <BookingForm state = {state} />

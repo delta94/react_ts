@@ -3,7 +3,7 @@ import {FormikProps} from '@/types/Interface/Formik';
 import {BookingCreateReq} from '@/types/Requests/Booking/BookingRequests';
 import {axios} from '@/utils/axiosInstance';
 import {scrollDefault} from '@/utils/elementInteraction';
-import {AVAILABLE, DEFAULT_DATE_FORMAT, INTERNET_BANKING, PENDING, WEBSITE_SRC, ONLINE} from '@/utils/store/global';
+import {AVAILABLE, DEFAULT_DATE_TIME_FORMAT, INTERNET_BANKING, PENDING, WEBSITE_SRC, ONLINE} from '@/utils/store/global';
 import {withStyles, createStyles} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -407,8 +407,8 @@ const FormMilk = withFormik({
       name_received: values.guestName,
       room_id: price!.room_id,
       coupon: state.coupon,
-      checkin: moment.unix(price!.checkin).format(DEFAULT_DATE_FORMAT),
-      checkout: moment.unix(price!.checkout).format(DEFAULT_DATE_FORMAT),
+      checkin: moment.unix(price!.checkin).format(DEFAULT_DATE_TIME_FORMAT),
+      checkout: moment.unix(price!.checkout).format(DEFAULT_DATE_TIME_FORMAT),
       booking_type: price!.booking_type,
       phone: values.phone.replace(/\s/g, ''),
       number_of_guests: price!.number_of_guests,

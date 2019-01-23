@@ -8,17 +8,17 @@ import React, {ChangeEvent, ComponentType, Fragment, useState} from 'react';
 import {compose} from 'recompose';
 import SearchIcon from '@material-ui/icons/Search';
 import Grid from '@material-ui/core/Grid';
-import GridContainer from "@/layouts/Grid/Container";
-import Paper from "@material-ui/core/Paper";
-import classNames from "classnames";
+import GridContainer from '@/layouts/Grid/Container';
+import Paper from '@material-ui/core/Paper';
+import classNames from 'classnames';
 import appC from '@/styles/App.module.scss';
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import FormControl from "@material-ui/core/FormControl";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import Loadable from "react-loadable";
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import Loadable from 'react-loadable';
 import '@/styles/date-picker.scss';
 import '@/styles/Airbnb/date-picker-NavSearch.scss';
 
@@ -31,11 +31,10 @@ const DatePicker = Loadable({
   loading: () => null,
 });
 
-
 const styles: any = (theme: ThemeCustom) => createStyles({
   barSearch: {
     backgroundColor: 'rgba(39, 55, 64, 1)',
-    zIndex: 999,
+    zIndex: 10,
   },
   inputSearch: {
     height: '30px',
@@ -71,12 +70,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     fontSize: '28px',
     width: '28px',
     height: '28px',
-  }
+  },
 });
 
 const NavSearch: ComponentType<IProps> = (props: IProps) => {
-  const {classes} = props;
-  const [time, setTime] = useState<string>("");
+  const {classes}       = props;
+  const [time, setTime] = useState<string>('');
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setTime(event.target.value);
@@ -116,10 +115,10 @@ const NavSearch: ComponentType<IProps> = (props: IProps) => {
                     }
                   >
                     <MenuItem value = '' disabled>
-                      <Typography className = {classes.dayHour} color = 'textSecondary'>Day/Hour</Typography>
+                      <Typography className = {classes.dayHour} color = 'textSecondary'>Theo ngày/giờ</Typography>
                     </MenuItem>
-                    <MenuItem value = {"Day"}>Day</MenuItem>
-                    <MenuItem value = {"Hour"}>Hours</MenuItem>
+                    <MenuItem value = 'Day'>Theo ngày</MenuItem>
+                    <MenuItem value = 'Hour'>Theo giờ</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -131,12 +130,12 @@ const NavSearch: ComponentType<IProps> = (props: IProps) => {
                 </Paper>
               </Grid>
               <Grid item xs = {1} sm = {1} md = {2}>
-                <Button variant = {'contained'} color = {'primary'} fullWidth className = {classes.btSearch}>
+                <Button variant = 'contained' color = 'primary' fullWidth className = {classes.btSearch}>
                   <Hidden mdUp>
                     <SearchIcon className = {classes.searchIcon} />
                   </Hidden>
                   <Hidden smDown>
-                    Search
+                    Tìm kiếm
                   </Hidden>
                 </Button>
               </Grid>

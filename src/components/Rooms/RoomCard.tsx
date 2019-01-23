@@ -5,7 +5,7 @@ import {ClockFast} from 'mdi-material-ui';
 import mapMarker from '@/assets/SvgIcon/map-marker.svg';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useState, useContext} from 'react';
+import React, {ComponentType, Fragment, useState, useContext, memo} from 'react';
 import {compose} from 'recompose';
 import Grid from '@material-ui/core/Grid/Grid';
 import Slider, {Settings} from 'react-slick';
@@ -239,7 +239,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                                     classes = {{
                                       tooltip: classes.tooltip,
                                     }}
-                                    title = {`${totalComfort} additional room amenities and facilities available`}
+                                    title = {`${totalComfort} tiện nghi phòng khác`}
                                     placement = 'top'>
                                     <li><SvgCustom borderClass = {classes.borderBlue} text = {`+${totalComfort}`} />
                                     </li>
@@ -299,7 +299,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                           <Tooltip
                             classes = {{tooltip: classes.tooltip}}
                             enterTouchDelay = {300}
-                            title = 'Book this property without waiting for host confirmation'
+                            title = 'Đặt phòng nhanh'
                             placement = 'top'>
                             <ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />
                           </Tooltip>
@@ -342,13 +342,13 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                       </Grid>
                     </Grid>
                     <Grid container item lg = {12} sm = {12} justify = 'center' alignItems = 'flex-end'>
-                      {/*<Grid item lg = {12} sm = {12} className = {align.textCenter}>*/}
-                        {/*<Button*/}
-                          {/*color = 'primary'*/}
-                          {/*variant = 'contained'*/}
-                          {/*size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}*/}
-                        {/*>Book now</Button>*/}
-                      {/*</Grid>*/}
+                      <Grid item lg = {12} sm = {12} className = {align.textCenter}>
+                        <Button
+                          color = 'primary'
+                          variant = 'contained'
+                          size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
+                        >Đặt phòng</Button>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -363,4 +363,5 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo
 )(RoomCard);

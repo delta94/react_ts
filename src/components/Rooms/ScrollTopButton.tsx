@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useState, useEffect, useContext} from 'react';
+import React, {ComponentType, Fragment, useState, useEffect, useContext, memo} from 'react';
 import {compose} from 'recompose';
 import Fab from '@material-ui/core/Fab/Fab';
 import UpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -74,4 +74,5 @@ const ScrollTopButton: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo
 )(ScrollTopButton);

@@ -207,6 +207,7 @@ const RegisterForm: ComponentType<IProps> = (props: RegisterLocalProps) => {
                 const data    = res.data;
                 const cookies = new Cookies();
 
+                setOpenSnack(true);
                 cookies.set('_token', data.access_token, {
                   path: '/',
                   maxAge: data.expires_in,
@@ -321,7 +322,6 @@ const RegisterForm: ComponentType<IProps> = (props: RegisterLocalProps) => {
                     color = 'primary'
                     type = 'submit'
                     disabled = {isSubmitting}
-                    onClick = {() => setOpenSnack(true)}
                     fullWidth>
                     {isSubmitting ? <CircularProgress className = {classes.spinner} /> : 'Đăng ký'}</Button>
                 </form>
@@ -354,7 +354,7 @@ const RegisterForm: ComponentType<IProps> = (props: RegisterLocalProps) => {
           aria-describedby = 'client-snackbar'
           message = {
             <span id = 'client-snackbar' className = {classes.message}>
-              <CheckCircleIcon />
+              <CheckCircleIcon />&nbsp;
               Đăng ký thành công
             </span>
           }

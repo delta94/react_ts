@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useContext, useState, useEffect} from 'react';
+import React, {ComponentType, Fragment, useContext, useState, useEffect, memo} from 'react';
 import {compose} from 'recompose';
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
@@ -65,8 +65,7 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
 
   const params: RoomUrlParams = qs.parse(location.search!);
 
-  const [star, setStar]     = useState<number>(5);
-
+  const [star, setStar] = useState<number>(5);
 
   const {ratingLists, roomTypes} = state;
 
@@ -76,9 +75,9 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
   });
 
   const updateLocation = () => {
-    let rateList = star.toString();
-    const newParams  = updateObject(params, {
-      rating: rateList
+    let rateList    = star.toString();
+    const newParams = updateObject(params, {
+      rating: rateList,
     });
 
     const locationTo = newRoomLocation(newParams);
@@ -89,12 +88,12 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
     });
 
     history.push(locationTo);
-  }
+  };
 
   const applyFilter = () => {
     setIndex(TAB_LIST);
     priceFilterChange(price, location, history, dispatch);
-    updateLocation()
+    updateLocation();
   };
 
   const changeRating = (rate: number) => {
@@ -104,7 +103,7 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
   useEffect(() => {
     if (roomTypes.length === 0) loadFilter(dispatch);
 
-    if (ratingLists.length > 0) setStar(ratingLists[0])
+    if (ratingLists.length > 0) setStar(ratingLists[0]);
   }, []);
 
   usePriceEffect(price, setPrice, state);
@@ -176,4 +175,5 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo
 )(FilterDrawerM);

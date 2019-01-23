@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useState, useContext} from 'react';
+import React, {ComponentType, Fragment, useState, useContext, memo} from 'react';
 import {compose} from 'recompose';
 import Tabs from '@material-ui/core/Tabs/Tabs';
 import Tab from '@material-ui/core/Tab/Tab';
@@ -72,4 +72,5 @@ const ListFilterTop: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo
 )(ListFilterTop);

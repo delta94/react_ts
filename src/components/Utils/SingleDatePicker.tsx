@@ -13,7 +13,7 @@ import {SearchFilterAction, SearchFilterState} from '@/store/reducers/searchFilt
 import * as act from '@/store/actions/actionTypes';
 import moment, {Moment} from 'moment';
 import {connect} from 'react-redux';
-import {DEFAULT_DATE_FORMAT} from '@/utils/store/global';
+import {DEFAULT_DATE_TIME_FORMAT} from '@/utils/store/global';
 
 interface IProps {
   classes?: any
@@ -42,7 +42,7 @@ const SingleDatePicker1: ComponentType<IProps> = (props: LocalProps) => {
   const ed = endDate ? moment(endDate) : null;
 
   const changeDate = (date: Moment | null) => {
-    let dateString = !!date ? date.format(DEFAULT_DATE_FORMAT) : date;
+    let dateString = !!date ? date.format(DEFAULT_DATE_TIME_FORMAT) : date;
     if (isStartDate) {
       changeStartDate(dateString);
     } else {

@@ -44,9 +44,10 @@ export interface BookingPayment {
   hosting_id: number | null;
   checkin: string;
   checkout: string;
-  checkin_hour: string;
-  checkout_hour: string;
-  checkout_minute: string;
+  checkin_hour: number;
+  checkout_hour: number;
+  checkin_minute?: number;
+  checkout_minute?: number;
   number_guests: number;
   booking_type: number;
 }
