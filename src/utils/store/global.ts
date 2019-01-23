@@ -29,7 +29,6 @@ export const BOOKING_CANCEL: number   = 5;
 export const BOOKING_TYPE_HOUR: number = 1; // Hour
 export const BOOKING_TYPE_DAY: number  = 2; // Day
 
-
 //
 export const OFFLINE: number = 1;
 export const ONLINE: number  = 2;
@@ -57,4 +56,5 @@ export const BOOKING_CANCEL_UNAVAILABLE: number = 1;
 export const BOOKING_CANCEL_LEVEL: number       = 4;
 
 // Datetime
-export const DEFAULT_DATE_FORMAT: string = 'YYYY-MM-DD HH:mm:ss';
+export const DEFAULT_DATE_TIME_FORMAT: string = 'YYYY-MM-DD HH:mm:ss';
+export const DEFAULT_DATE_FORMAT              = 'YYYY-MM-DD';

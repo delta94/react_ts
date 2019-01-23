@@ -50,7 +50,7 @@ const DatePickerHomeXsOnly: ComponentType<IProps> = (props: LocalProps) => {
             onClick = {() => setOpen(true)}>
         <Grid container item xs = {6} spacing = {8}>
           <Grid container item xs = {12} justify = 'center'>
-            <Typography variant = 'caption'>Check in</Typography>
+            <Typography variant = 'caption'>Ngày đặt</Typography>
           </Grid>
           <Grid container item xs = {12} justify = 'center'>
             <input
@@ -62,7 +62,7 @@ const DatePickerHomeXsOnly: ComponentType<IProps> = (props: LocalProps) => {
         </Grid>
         <Grid container item xs = {6} spacing = {8}>
           <Grid container item xs = {12} justify = 'center'>
-            <Typography variant = 'caption'>Check out</Typography>
+            <Typography variant = 'caption'>Ngày trả</Typography>
           </Grid>
           <Grid container item xs = {12} justify = 'center'>
             <input

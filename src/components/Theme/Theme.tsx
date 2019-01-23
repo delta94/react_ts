@@ -3,6 +3,7 @@ import {createMuiTheme} from '@material-ui/core/styles';
 import {PaletteOptions} from '@material-ui/core/styles/createPalette';
 import {FontStyleOptions, TypographyOptions} from '@material-ui/core/styles/createTypography';
 import Blue from '@material-ui/core/colors/blue';
+import Red from '@material-ui/core/colors/red';
 
 interface PaletteExtra extends PaletteOptions {
   button: any;
@@ -24,6 +25,9 @@ const options: ThemeCustom = {
     },
     secondary: {
       main: '#fff',
+    },
+    error: {
+      main: Red[600],
     },
     button: {
       nav: '64px',

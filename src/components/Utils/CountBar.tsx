@@ -70,7 +70,6 @@ const CountBar: ComponentType<IProps> = (props: IPropsLocal) => {
           <Divider />
         </Grid>
         : ''}
-
     </Grid>
   );
 };

@@ -1,6 +1,7 @@
 import axiosBase, {AxiosInstance} from 'axios';
 import Cookies from 'universal-cookie';
-import {Headers} from 'request';
+
+export type AxiosRequestType = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
 const PRODUCTION_URL = 'https://api.westay.org/';
 
@@ -14,7 +15,7 @@ const cookies = new Cookies();
 const headers = {
   Accept: 'application/json',
   Authorization: 'Bearer ' + cookies.get('_token'),
-  'Content-Language': 'en-EN'
+  'Content-Language': 'en-EN',
 };
 
 const instance: AxiosInstance = axiosBase.create({

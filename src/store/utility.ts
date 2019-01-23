@@ -1,4 +1,8 @@
-import {useMemo} from 'react';
+import moment from 'moment';
+import {extendMoment} from 'moment-range';
+
+// @ts-ignore
+export const momentRange = extendMoment(moment);
 
 /**
  * Merge `new object` to `old object`
@@ -12,3 +16,4 @@ export const updateObject = <T, N extends T = T>(oldObject: T, newObject: Partia
     ...newObject,
   };
 };
+

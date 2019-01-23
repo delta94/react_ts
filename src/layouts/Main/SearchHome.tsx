@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import Gray from '@material-ui/core/colors/grey';
 import Grid from '@material-ui/core/Grid';
-import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
 import {createStyles, withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -18,7 +17,7 @@ import classNames from 'classnames';
 import {Formik, FormikActions} from 'formik';
 import {LocationDescriptorObject} from 'history';
 import qs from 'query-string';
-import React, {FunctionComponent, useState} from 'react';
+import React, {FunctionComponent, useState, memo} from 'react';
 import Loadable from 'react-loadable';
 import {connect} from 'react-redux';
 import {RouterProps} from 'react-router';
@@ -29,7 +28,13 @@ import * as Yup from 'yup';
 import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import DatePickerHomeXsOnly from '@/views/Homepage/DatePicker/DatePickerHomeXsOnly';
-
+import AsyncSelect from 'react-select/lib/Async';
+import {InputActionMeta} from 'react-select/lib/types';
+import {StylesConfig} from 'react-select/lib/styles';
+import MenuItemSelectWithIcon from '@/components/Custom/MenuItemSelectWithIcon';
+import {searchSuggest} from '@/store/context/searchSuggestion';
+import {SearchSuggestRes} from '@/types/Requests/Search/SearchResponse';
+import axiosBase from 'axios';
 
 const DatePicker = Loadable({
   loader: (): Promise<any> => import('@/components/Utils/DateRange'),
@@ -50,8 +55,7 @@ const FormikInit: FormikValues = {
 };
 
 const FormValidationSchema = Yup.object().shape({
-  name: Yup.string()
-    .required('Please enter name'),
+  name: Yup.string(),
 });
 
 const styles: any = (theme: ThemeCustom) => createStyles({
@@ -73,9 +77,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   inputSearch: {
     [theme!.breakpoints!.only!('xs')]: {
-      width: '64%',
+      width: '75%',
     },
-    height: '30px',
+    // height: '30px',
     width: '85%',
     border: 'none',
     fontSize: '1.2em',
@@ -105,23 +109,83 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
 });
 
+const colourOptions = [
+  {value: 'ocean1', label: 'Ocean', color: '#00B8D9', isFixed: true},
+  {value: 'blue1', label: 'Blue', color: '#0052CC', disabled: true},
+  {value: 'purple1', label: 'Purple', color: '#5243AA'},
+  {value: 'red1q', label: 'Red', color: '#FF5630', isFixed: true},
+  {value: 'orange1', label: 'Orange', color: '#FF8B00'},
+  {value: 'yellow1', label: 'Yellow', color: '#FFC400'},
+  {value: 'green1', label: 'Green', color: '#36B37E'},
+  {value: 'forest1', label: 'Forest', color: '#00875A'},
+  {value: 'slate1', label: 'Slate', color: '#253858'},
+  {value: 'silver1', label: 'Silver', color: '#666666'},
+];
+
+const searchStylesHome: StylesConfig = {
+  control: (styles) => ({
+    ...styles,
+    border: 'none',
+    boxShadow: 'none',
+    cursor: 'pointer',
+  }),
+  container: (styles) => ({
+    ...styles,
+    padding: 0,
+  }),
+  indicatorSeparator: (styles) => ({
+    display: 'none',
+  }),
+  valueContainer: (styles) => ({
+    ...styles,
+    padding: 0,
+  }),
+  placeholder: (styles) => ({
+    ...styles,
+    color: 'black',
+  }),
+  menu: (styles) => ({
+    ...styles,
+    width: 'calc(100% + 5vw)',
+    left: '-5vw',
+  }),
+};
+
 const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
-  const {
-          classes,
-          filter,
-          history,
-        }
-                                      = props;
-  const [type, setType]               = useState<number>(3);
-  const [modalStatus, setModalStatus] = useState<boolean>(false);
+  const {classes, filter, history}  = props;
+  const [type, setType]             = useState<number>(3);
+  const [searchText, setSearchText] = useState('');
+
+  const suggestEvent = (value: string, cb: (result: any[]) => void) => {
+
+    searchSuggest(value).then(data => {
+      cb(data);
+    }).catch(err => {
+      if (!axiosBase.isCancel(err)) {
+        cb([{
+          error: 'Có lỗi xảy ra. Vui lòng thử lại',
+        }]);
+      }
+    });
+  };
+
+  const onSearch = (value: string, meta: InputActionMeta) => {
+    let {action} = meta;
+    if (action === 'menu-close' || action === 'input-blur') return;
+
+    setSearchText(value);
+    return value;
+  };
+
+  const optionSearchLabel = (option: SearchSuggestRes) => option.name;
 
   return (
     <Grid item lg = {6} md = {7} xs = {12}>
       <Typography variant = 'h4' className = {classes.heading} color = 'secondary' gutterBottom>
-        Best homestay for you
+        Homestay tốt nhất
       </Typography>
       <Typography variant = 'subtitle1' color = 'secondary' className = {classes.fontSize}>
-        Get the best prices for your trip
+        Giá luôn luôn tốt
       </Typography>
       <Formik
         initialValues = {FormikInit}
@@ -155,11 +219,13 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
             handleBlur,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }: FormikProps<FormikValues>) => {
           // Open modal if search field is empty
-          if (errors.name && !modalStatus && isSubmitting) {
-            setModalStatus(true);
-          }
+          const setSearchValue = (value: SearchSuggestRes | any) => {
+            let name = value.name;
+            setFieldValue('name', name);
+          };
 
           return (
             <form onSubmit = {handleSubmit}>
@@ -167,15 +233,24 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
                 <Grid item md = {12} xs = {12}>
                   <Paper elevation = {4} className = {classes.paperSize} square>
                     <SearchIcon className = {classes.marginSearch} fontSize = 'large' />
-                    <input type = 'text'
-                           name = 'name'
-                           onChange = {handleChange}
-                           onBlur = {handleBlur}
-                           value = {values.name}
-                           className = {
-                             classNames(classes.inputSearch, appC['ml-20'])
-                           }
-                           placeholder = 'Enter a destination or property' />
+                    <AsyncSelect
+                      name = 'name'
+                      components = {{Option: MenuItemSelectWithIcon}}
+                      cacheOptions
+                      defaultOptions
+                      getOptionLabel = {optionSearchLabel}
+                      getOptionValue = {optionSearchLabel}
+                      inputValue = {searchText}
+                      loadOptions = {suggestEvent}
+                      onInputChange = {onSearch}
+                      classNamePrefix = 'nat'
+                      placeholder = 'Tìm kiếm'
+                      className = {
+                        classNames(classes.inputSearch, appC['ml-20'])
+                      }
+                      onChange = {setSearchValue}
+                      styles = {searchStylesHome}
+                    />
                   </Paper>
                 </Grid>
                 <Grid item md = {12} xs = {12}>
@@ -198,10 +273,10 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
                         <div className = {appC['ml-20']}>
                           <Typography variant = 'body2'>
                             <span>{filter.guestsCount}</span>&nbsp;
-                            <span>guest{(filter.guestsCount > 1) ? 's' : ''}</span>
+                            <span>khách</span>
                           </Typography>
                           <Typography variant = 'body2' className = {classes.grayLighten1}>
-                            {(type === 2) ? 'By days' : 'By hours'}
+                            {(type === 2) ? 'Theo ngày' : 'Theo giờ'}
                           </Typography>
                         </div>
                       </Grid>
@@ -212,25 +287,15 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
                   <Paper elevation = {4} className = {classes.paperSize}>
                     <Button variant = 'contained'
                             color = 'primary'
+                            name = 'search'
                             className = {classes.searchButton}
                             disabled = {isSubmitting}
                             type = 'submit'>
-                      {isSubmitting ? <CircularProgress className = {classes.spinner} /> : 'Search'}
+                      {isSubmitting ? <CircularProgress className = {classes.spinner} /> : 'Tìm kiếm'}
                     </Button>
                   </Paper>
                 </Grid>
                 <GuestSelect />
-                <Modal
-                  disableAutoFocus
-                  open = {modalStatus}
-                  onClose = {() => setModalStatus(false)}
-                >
-                  <Paper className = {classes.modal} elevation = {10} square>
-                    <Typography variant = 'h6' id = 'modal-title'>
-                      {errors.name}
-                    </Typography>
-                  </Paper>
-                </Modal>
               </Grid>
             </form>
           );
@@ -254,6 +319,7 @@ export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles),
+  memo,
 )(SearchHome);
 
 export const style = styles;

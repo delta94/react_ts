@@ -183,7 +183,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
     speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    lazyLoad: 'progressive',
+    lazyLoad: 'ondemand',
     draggable: !xsMode,
     autoplay: xsMode,
     autoplaySpeed: 5000,

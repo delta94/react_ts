@@ -1,25 +1,28 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
-const focus = (init: string, lostFocusTitle: string) => {
+const useFocusTitle = (init: string, lostFocusTitle: string, factor?: any) => {
+  const [title, setTitle] = useState<string>(init);
 
   useEffect(() => {
-      document.title = init;
-  }, []);
+    setTitle(`${init} - Westay.org`);
+    document.title = title;
+  }, [factor, title]);
 
   useEffect(() => {
     window.onblur  = () => {
       document.title = lostFocusTitle;
     };
     window.onfocus = () => {
-      document.title = init;
+      document.title = title;
     };
 
     return () => {
-      window.onblur = () => false;
+      window.onblur  = () => false;
       window.onfocus = () => false;
+      document.title = title;
     };
-  }, []);
+  }, [factor, title]);
 
 };
 
-export default focus;
+export default useFocusTitle;

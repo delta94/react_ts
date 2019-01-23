@@ -9,7 +9,7 @@ import SliderSuggest from '@/views/DetailsPage/SliderSuggest';
 import NavBottomBook from '@/views/DetailsPage/NavBottomBook';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useContext, useEffect, useReducer, useState} from 'react';
+import React, {ComponentType, useContext, useEffect, useReducer, useState, useMemo} from 'react';
 import {compose} from 'recompose';
 import Button from '@material-ui/core/Button/Button';
 import GridContainer from '@/layouts/Grid/Container';
@@ -29,6 +29,8 @@ import {match, RouteChildrenProps} from 'react-router';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import Typography from '@material-ui/core/Typography/Typography';
 import DatePickerRoomDetail from '@/components/Utils/DatePickerRoomDetail';
+import {BOOKING_TYPE_DAY} from '@/utils/store/global';
+import useFocusTitle from '@/utils/focusState';
 
 interface IProps extends RouteChildrenProps {
   classes?: any,
@@ -92,15 +94,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   divider: {
     margin: '8px 0',
   },
-  paperDetail:{
-    border:'1px solid #e4e4e4',
+  paperDetail: {
+    border: '1px solid #e4e4e4',
     [theme!.breakpoints!.down!('xs')]: {
       border: 'none',
     },
   },
-  PaperBooking:{
+  PaperBooking: {
     // border:'1px solid #e4e4e4',
-    position:'sticky',
+    position: 'sticky',
     top: '10%',
     left: 'auto',
     right: 0,
@@ -113,10 +115,18 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
   const [state, dispatch]   = useReducer<RoomDetailsState, RoomDetailsAction>(RoomDetailsReducer, RoomDetailsStateInit);
   const {history}           = useContext<IGlobalContext>(GlobalContext);
 
+  const {bookingType, room} = state;
+
+  const roomTitle = useMemo(() => {
+    return (room !== null) ? room!.details.data[0].name : document.title;
+  }, [room]);
+
   useEffect(() => {
     let id = parseInt(match.params.id);
     getData(id, dispatch, history);
   }, []); // phu thuoc
+
+  useFocusTitle(roomTitle, 'Đặt phòng ngay', room);
 
   return (
     <RoomDetailsContext.Provider value = {{state, dispatch}}>
@@ -128,32 +138,36 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
         <div className = {classes.boxGridImage}>
           <GridImage isOpen = {isOpen} setIsOpen = {setIsOpen} />
           <div className = {classes.div_btnMore}>
-            <Button className = {classes.btnMore} variant = {'outlined'}
-                    size = {'small'} color = 'secondary' onClick = {() => setIsOpen(true)}>Show
-                                                                                           more</Button>
+            <Button className = {classes.btnMore} variant = 'outlined'
+                    size = 'small' color = 'secondary' onClick = {() => setIsOpen(true)}
+            >Show more</Button>
           </div>
         </div>
         <div className = {classes.boxDetails}>
           <GridContainer xs = {12} sm = {12} md = {11} lg = {11}>
             <Grid container justify = 'center'>
-              <Grid item sm = {12} md = {11} lg = {8} className={classes.boxPadding}>
+              <Grid item sm = {12} md = {11} lg = {8} className = {classes.boxPadding}>
                 <Paper elevation = {0}>
                   <div className = {classes.boxPadding}>
                     <BoxDetails />
-                    <DatePickerRoomDetail />
+                    {room ? (
+                      <DatePickerRoomDetail
+                        minNights = {bookingType === BOOKING_TYPE_DAY ? 1 : 0}
+                      />
+                    ): ''}
                     <BoxReviews />
                   </div>
                 </Paper>
               </Grid>
               <Hidden mdDown>
-                <Grid item sm = {12} md = {11} lg = {4} className={classes.boxPadding}>
+                <Grid item sm = {12} md = {11} lg = {4} className = {classes.boxPadding}>
                   <Paper elevation = {2} className = {classes.PaperBooking}>
                     <BoxBooking />
                   </Paper>
                 </Grid>
               </Hidden>
             </Grid>
-            <Grid container className={classes.boxPadding}>
+            <Grid container className = {classes.boxPadding}>
               <Grid item xs = {12}>
                 <div className = {classes.boxSuggest}>
                   <div>
@@ -169,7 +183,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
           </GridContainer>
         </div>
         <Hidden lgUp>
-          <NavBottomBook/>
+          <NavBottomBook />
         </Hidden>
       </div>
     </RoomDetailsContext.Provider>

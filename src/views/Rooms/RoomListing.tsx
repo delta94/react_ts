@@ -82,7 +82,7 @@ const RoomListing: ComponentType<IProps> = (props: IProps) => {
               <Button
                 variant = 'text'
                 fullWidth
-              >View map</Button>
+              >Xem bản đồ</Button>
             </Paper>
             <Paper elevation = {1} className = {classNames(
               classes.margin15, classes.filterLeft,

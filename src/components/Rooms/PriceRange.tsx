@@ -67,6 +67,7 @@ export const priceFilterChange = (
       price: value,
     });
 
+
     dispatch({
       type: 'setRooms',
       rooms: [],

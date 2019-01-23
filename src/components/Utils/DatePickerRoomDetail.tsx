@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import createStyles from '@material-ui/core/styles/createStyles';
 import {SearchFilterState, SearchFilterAction, DateRange} from '@/store/reducers/searchFilter';
 import moment, {Moment} from 'moment';
-import React, {useState, useEffect, ComponentType, Fragment, useContext} from 'react';
+import React, {useState, useEffect, ComponentType, Fragment, useContext, memo, useMemo} from 'react';
 import {FocusedInputShape, DayPickerRangeController} from 'react-dates';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
@@ -15,12 +15,84 @@ import 'react-dates/initialize';
 import '@/styles/date-picker.scss';
 import '@/styles/Airbnb/date-picker-homepage.scss';
 import _ from 'lodash';
-import {RoomDetailsContext, IRoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
-import Button from "@material-ui/core/Button";
+import {RoomDetailsContext, IRoomDetailsContext, RoomDetailsState} from '@/store/context/Room/RoomDetailsContext';
+import Button from '@material-ui/core/Button';
+import {DEFAULT_DATE_FORMAT} from '@/utils/store/global';
+import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 
 interface IProps {
   classes?: any
+  minNights?: number
+  month?: number
 }
+
+interface LocalProps extends IProps {
+  filter: SearchFilterState
+
+  updateDate(date: DateRange): any
+}
+
+export const useDatePickerHook = (props: LocalProps, state: RoomDetailsState, focus: FocusedInputShape | null) => {
+  const {filter, updateDate, minNights} = props;
+  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | any>(focus);
+  const [maxDate, setMaxDate]           = useState<string | undefined>(undefined);
+  const [now]                           = useState<Moment>(moment());
+
+  const {startDate, endDate} = filter;
+
+  const {schedule} = state;
+
+  const sd = startDate ? moment(startDate) : null;
+  const ed = endDate ? moment(endDate) : null;
+
+  const onDateChange = (startDate: Moment | null, endDate: Moment | null) => {
+    if (focusedInput === 'startDate') {
+      endDate = null;
+    }
+    updateDate({startDate, endDate});
+  };
+
+  const blockingDate   = (day: Moment) => {
+    let isBlocked     = _.indexOf(schedule, day.format(DEFAULT_DATE_FORMAT)) !== -1;
+    let isBookingHour = (minNights === 0);
+
+    if (focusedInput === 'endDate' && !!sd) {
+      let checkOnlyOneDay = day.format(DEFAULT_DATE_FORMAT) !== sd.format(DEFAULT_DATE_FORMAT);
+
+      let onlyOneDay     = (isBookingHour && checkOnlyOneDay);
+      let pastDayBlocked = day.diff(sd, 'days') < 0;
+      let chainBlocked   = maxDate ? day.diff(moment(maxDate), 'days') > 0 : false;
+      return pastDayBlocked || isBlocked || chainBlocked || onlyOneDay;
+    }
+    return isBlocked;
+  };
+  const isOutSideRange = (day: Moment) => day.diff(now, 'days') < 0;
+
+  // useEffect(() => {
+  //   let checkFilter = !filter.startDate && !filter.endDate;
+  //   let oldDate     = moment(filter.startDate) < moment();
+  //
+  //   if (checkFilter || oldDate) {
+  //     updateDate({
+  //       startDate: moment(),
+  //       endDate: moment().add(7, 'days'),
+  //     });
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    let date = _.find(schedule, block => moment(block).diff(sd!) > 0);
+
+    setMaxDate(date);
+  }, [filter]);
+
+  return {
+    onDateChange, blockingDate, sd, ed,
+    focusedInput, setFocusedInput,
+    maxDate,
+    now, isOutSideRange,
+  };
+};
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   rowMargin: {
@@ -36,74 +108,31 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     fontWeight: 600,
     lineHeight: '1.375em',
     color: '#484848',
-    display: 'inline-block'
+    display: 'inline-block',
   },
   btClear: {
-    float: 'right'
+    float: 'right',
   },
   boxCalendar: {
     textAlign: 'center',
     justifyContent: 'center',
     paddingTop: 20,
-  }
+  },
 });
-interface LocalProps extends IProps {
-  filter: SearchFilterState
-
-  updateDate(date: DateRange): any
-}
 
 // @ts-ignore
 const DatePickerRoomDetail: ComponentType<IProps> = (props: LocalProps) => {
-  const {classes, filter, updateDate} = props;
+  const {classes, minNights} = props;
+  const {state}              = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  const {width}              = useContext<IGlobalContext>(GlobalContext);
 
-  const [focusedInput, setFocusedInput] = useState<FocusedInputShape>('startDate');
-  const [maxDate, setMaxDate]           = useState<string | undefined>(undefined);
-  const [now]                           = useState<Moment>(moment());
+  const isWide: boolean = useMemo(() => {
+    return width === 'xl' || width === 'lg' || width === 'md' || width === 'sm';
+  }, [width]);
 
-  const {state}    = useContext<IRoomDetailsContext>(RoomDetailsContext);
-  const {schedule} = state;
-
-  const {startDate, endDate} = filter;
-
-  const sd = startDate ? moment(startDate) : null;
-  const ed = endDate ? moment(endDate) : null;
-
-  const onDateChange = (startDate: Moment | null, endDate: Moment | null) => {
-    if (focusedInput === 'startDate') {
-      endDate = null;
-    }
-    updateDate({startDate, endDate});
-  };
-
-  const blockingDate = (day: Moment) => {
-    let isBlocked = _.indexOf(schedule, day.format('YYYY-MM-DD')) !== -1;
-
-    if (focusedInput === 'endDate' && !!sd) {
-      let pastDayBlocked = day.diff(sd, 'days') < 0;
-      let chainBlocked   = maxDate ? day.diff(moment(maxDate), 'days') > 0 : false;
-      return pastDayBlocked || isBlocked || chainBlocked;
-    }
-    return isBlocked;
-  };
-
-  useEffect(() => {
-    let checkFilter = !filter.startDate && !filter.endDate;
-    let oldDate     = moment(filter.startDate) < moment();
-
-    if (checkFilter || oldDate) {
-      updateDate({
-        startDate: moment(),
-        endDate: moment().add(7, 'days'),
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    let date = _.find(schedule, block => moment(block).diff(sd!) > 0);
-
-    setMaxDate(date);
-  }, [filter]);
+  const {
+          setFocusedInput, onDateChange, sd, ed, focusedInput, blockingDate, isOutSideRange,
+        } = useDatePickerHook(props, state, 'startDate');
 
   return (
     <Fragment>
@@ -115,6 +144,7 @@ const DatePickerRoomDetail: ComponentType<IProps> = (props: LocalProps) => {
                 onClick = {() => setFocusedInput('startDate')}>Clear</Button>
         <div className = {classes.boxCalendar}>
           <DayPickerRangeController
+            minimumNights = {!!minNights ? minNights : 1}
             startDate = {sd}
             endDate = {ed}
             onDatesChange = {({startDate, endDate}) => {
@@ -124,12 +154,12 @@ const DatePickerRoomDetail: ComponentType<IProps> = (props: LocalProps) => {
             onFocusChange = {focusedInput => {
               setFocusedInput(!!focusedInput ? focusedInput : 'startDate');
             }}
-            numberOfMonths = {2}
+            numberOfMonths = {isWide ? 2 : 1}
             // verticalHeight = {400}
             noBorder
             enableOutsideDays = {false}
             isDayBlocked = {blockingDate}
-            isOutsideRange = {(day: Moment) => day.diff(now, 'days') < 0}
+            isOutsideRange = {isOutSideRange}
             hideKeyboardShortcutsPanel
             initialVisibleMonth = {() => moment()}
           />
@@ -157,4 +187,5 @@ const mapDispatchToProps = (dispatch: Dispatch<SearchFilterAction>) => {
 export default compose<IProps, any>(
   connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles),
+  memo,
 )(DatePickerRoomDetail);

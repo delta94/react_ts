@@ -5,7 +5,7 @@ import {CouponDiscountCalculateReq} from '@/types/Requests/Coupons/CouponRequest
 import {CouponDiscountCalculateRes} from '@/types/Requests/Coupons/CouponResponses';
 import {AxiosValidateError, AxiosRes} from '@/types/Requests/ResponseTemplate';
 import {axios} from '@/utils/axiosInstance';
-import {DEFAULT_DATE_FORMAT} from '@/utils/store/global';
+import {DEFAULT_DATE_TIME_FORMAT} from '@/utils/store/global';
 import Button from '@material-ui/core/Button/Button';
 import FormControl from '@material-ui/core/FormControl/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText/FormHelperText';
@@ -36,7 +36,7 @@ const SimpleLoading = Loadable({
 
 const FormValidationSchema = Yup.object().shape({
   coupon: Yup.string()
-    .required('Coupon is required'),
+    .required('Vui lòng nhập mã giảm giá'),
 });
 
 const formikInit: IFormikValues = {
@@ -62,8 +62,8 @@ const BookingCouponForm: ComponentType<IProps> = props => {
           coupon: values.coupon,
           price_original: price!.price_original,
           room_id: room!.id,
-          checkin: moment.unix(price!.checkin).format(DEFAULT_DATE_FORMAT),
-          checkout: moment.unix(price!.checkout).format(DEFAULT_DATE_FORMAT),
+          checkin: moment.unix(price!.checkin).format(DEFAULT_DATE_TIME_FORMAT),
+          checkout: moment.unix(price!.checkout).format(DEFAULT_DATE_TIME_FORMAT),
           booking_type: price!.booking_type,
           merchant_id: room!.merchant_id,
           room_type: room!.rent_type,

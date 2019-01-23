@@ -2,51 +2,45 @@ import * as act from '@/store/actions/actionTypes';
 import {ReducersType} from '@/store/reducers';
 import {BookingState, BookingAction, DateRange} from '@/store/reducers/booking';
 import moment from 'moment';
-import React, {useState, useEffect, ComponentType} from 'react';
+import React, {useState, useEffect, ComponentType, useContext} from 'react';
 import {DateRangePicker, FocusedInputShape} from 'react-dates';
 import 'react-dates/initialize';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
 import {Dispatch} from 'redux';
+import {SearchFilterState} from '@/store/reducers/searchFilter';
+import {useDatePickerHook} from '@/components/Utils/DatePickerRoomDetail';
+import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 
 interface IProps {
-  book: BookingState
+  filter: SearchFilterState
 
   updateDate(date: DateRange): any
 }
 
 const DateRangeSingle: ComponentType<IProps> = (props: IProps) => {
-  const {book, updateDate} = props;
+  const {state}                       = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
-  useEffect(() => {
-    let checkbook = !book.startDate && !book.endDate;
-    let oldDate     = moment(book.startDate) < moment();
+  const {
+          setFocusedInput, onDateChange, sd, ed, focusedInput, blockingDate, isOutSideRange
+        } = useDatePickerHook(props, state, null);
 
-    if (checkbook || oldDate) {
-      updateDate({
-        startDate: moment(),
-        endDate: moment().add(7, 'days'),
-      });
-
-    }
-
-  }, []);
-
-  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
   return (
     <DateRangePicker
       numberOfMonths={1}
       startDateId = 'startDate'
       endDateId = 'endDate'
-      startDate = {book.startDate ? moment(book.startDate) : null}
-      endDate = {book.endDate ? moment(book.endDate) : null}
+      startDate = {sd}
+      endDate = {ed}
       onDatesChange = {({startDate, endDate}) => {
-        updateDate({startDate, endDate});
+        onDateChange(startDate, endDate);
       }}
       focusedInput = {focusedInput}
       onFocusChange = {focusedInput => {
         setFocusedInput(focusedInput);
       }}
+      isDayBlocked = {blockingDate}
+      isOutsideRange = {isOutSideRange}
       minimumNights = {0}
       noBorder = {true}
       displayFormat = 'ddd, DD/MM/YYYY'
@@ -57,7 +51,7 @@ const DateRangeSingle: ComponentType<IProps> = (props: IProps) => {
 
 const mapStateToProps = (state: ReducersType) => {
   return {
-    book: state.bookingReq,
+    filter: state.searchFilter,
   };
 };
 

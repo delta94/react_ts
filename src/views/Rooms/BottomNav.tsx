@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useState, useContext, useEffect} from 'react';
+import React, {ComponentType, Fragment, useState, useContext, useEffect, memo} from 'react';
 import {compose} from 'recompose';
 import BottomNavigation from '@material-ui/core/BottomNavigation/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction/BottomNavigationAction';
@@ -90,5 +90,6 @@ const BottomNav: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo
 )(BottomNav);
 

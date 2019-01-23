@@ -93,6 +93,13 @@ const PaymentInfo: ComponentType<IProps> = (props: IProps) => {
                         <Grid container item xs = {6} className = {classes.fontLow}
                               justify = 'flex-end'>{`${formatMoney(lists!.additional_fee)}đ`}</Grid>
                       </Grid>
+                      {lists!.coupon ? (
+                        <Grid container item xs = {12}>
+                          <Grid item xs = {6} className = {classes.fontLow}>Mã khuyến mãi ({lists!.coupon})</Grid>
+                          <Grid container item xs = {6} className = {classes.fontLow}
+                                justify = 'flex-end'>{`${formatMoney(lists!.coupon_discount)}đ`}</Grid>
+                        </Grid>
+                      ) : ''}
                       {lists!.price_discount > 0 ? (
                         <Grid container item xs = {12}>
                           <Grid item xs = {6} className = {classes.fontLow}>Giảm giá</Grid>

@@ -163,8 +163,8 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
   const {width} = useContext<IGlobalContext>(GlobalContext);
 
-  const {rooms} = state;
-  if (rooms == null){return <SimpleLoader/>}
+  const {room} = state;
+  if (room == null){return <SimpleLoader/>}
 
   const indexOfLast = currentPage * pageSize;
   const indexOfFirst = indexOfLast - pageSize;
@@ -205,7 +205,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
             <div className = {classes.rowMargin2}>
               <div style = {{textAlign: 'center'}}>
                 <StarRatings
-                  rating = {rooms!.avg_rating} //index rating
+                  rating = {room!.avg_rating} //index rating
                   starDimension = '24px'
                   starSpacing = '1px'
                   starRatedColor = '#46afcc'
@@ -214,12 +214,12 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
               <div className = {classes.boxMark}>
                 <div className = {classes.Mark}>
                   <Typography variant = {"h5"} className = {classes.TypoMark}>
-                    {rooms!.standard_point}
+                    {room!.standard_point}
                   </Typography>
                 </div>
               </div>
               <Typography variant = {"h5"} className = {classes.status}>
-                {rooms!.avg_rating_txt}
+                {room!.avg_rating_txt}
               </Typography>
             </div>
           </Grid>
@@ -293,7 +293,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
       </div>
       <div className = {classes.rowMargin}>
         <Typography className = {classes.titleHighlight}>
-          {rooms!.total_review} Reviews
+          {room!.total_review} Reviews
         </Typography>
         {renderListComment}
         <div className={classes.boxPagination}>
@@ -309,7 +309,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
           Map
         </Typography>
         <div className = {classes.boxMap}>
-            <LocationHomeMap zoom={14} center={{lat: parseFloat(rooms!.latitude), lng: parseFloat(rooms!.longitude)}}/>
+            <LocationHomeMap zoom={14} center={{lat: parseFloat(room!.latitude), lng: parseFloat(room!.longitude)}}/>
         </div>
       </div>
     </Fragment>
