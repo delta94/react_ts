@@ -23,6 +23,7 @@ import {compose} from 'recompose';
 import Grow from '@material-ui/core/Grow';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {IProfileContext, ProfileContext} from '@/store/context/Profile/ProfileContext';
+import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   bg_menu: {
@@ -105,7 +106,7 @@ interface IMenuProfile {
 
 const TabContainer: ComponentType<ITabContainer> = (props: ITabContainer) => {
   return (
-    <GridContainer xs = {10}>
+    <GridContainer xs = {12} sm = {12} md = {11} lg = {10}>
       {props.children}
     </GridContainer>
   );
@@ -113,10 +114,9 @@ const TabContainer: ComponentType<ITabContainer> = (props: ITabContainer) => {
 
 const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
   const {classes} = props;
-
+  const {width} = useContext<IGlobalContext>(GlobalContext);
   const [value, setValue] = useState<number>(0);
-  const [show, setShow]   = useState<boolean>(false);
-
+  const [show, setShow] = useState<boolean>(false);
   const {state, dispatch} = useContext<IProfileContext>(ProfileContext);
 
   const {profile} = state;
@@ -151,11 +151,11 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
         </div>
       </div>
       <div className = {classes.menuProfile}>
-        <GridContainer xs = {10}>
+        <GridContainer xs = {12} sm = {12} md = {11} lg = {10}>
           <Grid container>
             <AppBar position = 'static' className = {classes.tabMenu}>
-              <Tabs value = {value} onChange = {handleChange} fullWidth indicatorColor = 'primary'
-                    textColor = 'primary'>
+              <Tabs value = {value} onChange = {handleChange} variant = {width == 'xs' ? "scrollable" : "fullWidth"}
+                    indicatorColor = 'primary' textColor = 'primary' scrollButtons = 'off'>
                 <Tab icon = {<Person />} label = 'My Profile' />
                 <Tab icon = {<Bookmarks />} label = 'My Booking' />
                 <Tab icon = {<Favorite />} label = 'My Wishlist' />

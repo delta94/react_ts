@@ -16,6 +16,7 @@ import Lock from '@material-ui/icons/LockOutlined';
 import React, {ComponentType, useContext, useMemo} from 'react';
 import {compose} from 'recompose';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import Hidden from '@material-ui/core/Hidden';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {ProfileContext, IProfileContext} from '@/store/context/Profile/ProfileContext';
 import {Formik, FormikActions} from 'formik';
@@ -24,6 +25,7 @@ import * as Yup from 'yup';
 import moment from 'moment';
 import {ProfileInfoReq} from '@/types/Requests/Profile/ProfileReq';
 import {axios} from "@/utils/axiosInstance";
+import GridContainer from "@/layouts/Grid/Container";
 
 
 const styles: any = (theme: ThemeCustom) => createStyles({
@@ -33,27 +35,45 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   formControl: {
     minWidth: 120,
+    [theme!.breakpoints!.down!('xs')]: {
+      minWidth: 0,
+    },
     width: '100%',
     textAlign: 'center',
   },
   editRequired: {
     paddingTop: 20,
-    width: '90%',
     margin: '0 auto',
   },
   rowInputs: {
     margin: '5px 0 5px',
+    [theme!.breakpoints!.down!('sm')]: {
+      width: '100%',
+    },
   },
   typoTitle: {
+    paddingTop: 20,
+    [theme!.breakpoints!.down!('xs')]: {
+      display: 'none',
+    },
+  },
+  typoTitleOptional: {
     paddingTop: 20,
   },
   typoBigTitle: {
     padding: '10px 0',
     textTransform: 'uppercase',
     color: '#2196F3',
+    [theme!.breakpoints!.down!('sm')]: {
+      padding: 2,
+    },
+    [theme!.breakpoints!.down!('xs')]: {
+      fontSize: 20,
+    },
   },
   rowButton: {
     padding: '40px 0',
+    textAlign: 'right',
   },
   avatarNational: {
     width: 20,
@@ -66,6 +86,18 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     boxShadow: theme.shadows![1],
     fontSize: 11,
   },
+  boxPadding: {
+    padding: 16,
+    [theme!.breakpoints!.down!('md')]: {
+      padding: 8,
+    },
+  },
+  lockIcon: {
+    padding: '25px 0 0 10px',
+    [theme!.breakpoints!.down!('md')]: {
+      padding: '25px 0 0 0',
+    },
+  }
 });
 
 interface FormikProfileValues {
@@ -87,8 +119,8 @@ interface IEditProfile {
 const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
   const {classes} = props;
   const {state} = useContext<IProfileContext>(ProfileContext);
-
   const {profile} = state;
+
   let birthday: any = null;
   if (profile == null) {
     birthday = '';
@@ -109,7 +141,6 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
     }
     return arr;
   };
-
 
   const formikInit = useMemo<FormikProfileValues>(() => {
     return {
@@ -166,11 +197,9 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
 
           axios.put('profile', data)
             .then(res => {
-              console.log("thanh cong " + res.data.data);
               actions.setSubmitting(false);
             })
             .catch(error => {
-              console.log("that bai" + error);
               actions.setSubmitting(false);
             });
         }}
@@ -187,17 +216,16 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
           }: FormikProps<FormikProfileValues>) => {
           return (
             <form onSubmit = {handleSubmit}>
-              <Paper square>
-                <div className = {classes.editRequired}>
+              <Paper square className = {classes.boxPadding}>
+                <GridContainer xs = {12} sm = {12} md = {11} lg = {11} className = {classes.editRequired}>
                   <Typography variant = 'h5' className = {classes.typoBigTitle}>Required</Typography>
-
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>I
                                                                                                     am </Typography>
                     </Grid>
-                    <Grid item xs = {2}>
+                    <Grid item xs = {4} sm = {3} md = {2} lg = {2}>
                       <FormControl className = {classes.formControl}>
                         <InputLabel htmlFor = 'Gender'>Gender</InputLabel>
                         <Select
@@ -217,40 +245,40 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs = {5}>
+                    <Grid item xs = {8} sm = {5} md = {6} lg = {5}>
                       <FormControl
                         className = {classes.formControl}
                         fullWidth
                         required
                         error = {!!errors.name}
                       >
-                        <InputLabel htmlFor = 'Full Name'>Name</InputLabel>
+                        <InputLabel htmlFor = 'name'>Name</InputLabel>
                         <Input
                           value = {values.name}
                           onChange = {handleChange}
                           onBlur = {handleBlur}
                           name = 'name'
                           inputProps = {{
-                            'aria-label': 'Name',
+                            'aria-label': 'Full Name',
                           }}
                         />
                         {touched.name && <FormHelperText>{errors.name}</FormHelperText>}
                       </FormControl>
                     </Grid>
                   </Grid>
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
                         Phone Number
                       </Typography>
                     </Grid>
-                    <Grid item xs = {2}>
+                    <Grid item xs = {4} sm = {3} md = {2} lg = {2}>
                       <FormControl required className = {classes.formControl}>
                         <InputLabel htmlFor = 'arenaCode'>arena code</InputLabel>
                         <Select
-                          value = {1}
-                          // onChange = {handleChange}
+                          value = {0}
+                          onChange = {handleChange}
                           inputProps = {{
                             name: 'arenaCode',
                             id: 'arena-Code',
@@ -267,7 +295,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs = {5}>
+                    <Grid item xs = {8} sm = {5} md = {6} lg = {5}>
                       <Tooltip title = 'Private' placement = 'right-start'
                                classes = {{tooltip: classes.lightTooltip}}>
                         <FormControl
@@ -301,14 +329,14 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                       </Tooltip>
                     </Grid>
                   </Grid>
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
                         Email Address
                       </Typography>
                     </Grid>
-                    <Grid item xs = {7}>
+                    <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <Tooltip title = 'Private' placement = 'right-start'
                                classes = {{tooltip: classes.lightTooltip}}>
                         <FormControl
@@ -338,14 +366,14 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                       </Tooltip>
                     </Grid>
                   </Grid>
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
                         Date of birth
                       </Typography>
                     </Grid>
-                    <Grid item xs = {2}>
+                    <Grid item xs = {3} sm = {2} md = {2} lg = {2}>
                       <Tooltip title = 'Private' placement = 'right-start'
                                classes = {{tooltip: classes.lightTooltip}}>
                         <TextField
@@ -367,7 +395,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         </TextField>
                       </Tooltip>
                     </Grid>
-                    <Grid item xs = {2}>
+                    <Grid item xs = {3} sm = {3} md = {3} lg = {2}>
                       <Tooltip title = 'Private' placement = 'right-start'
                                classes = {{tooltip: classes.lightTooltip}}>
                         <TextField
@@ -390,9 +418,9 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         </TextField>
                       </Tooltip>
                     </Grid>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {6} sm = {3} md = {3} lg = {3}>
                       <Grid container direction = 'row' spacing = {8} justify = 'space-between'>
-                        <Grid item xs = {10}>
+                        <Grid item xs = {10} sm = {10}>
                           <Tooltip title = 'Private' placement = 'right-start'
                                    classes = {{tooltip: classes.lightTooltip}}>
                             <TextField
@@ -415,19 +443,19 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                             </TextField>
                           </Tooltip>
                         </Grid>
-                        <Grid item xs = {2}>
-                          <Lock color = 'error' style = {{padding: '25px 0 0 10px'}} />
+                        <Grid item xs = {2} sm = {2}>
+                          <Lock color = 'error' className = {classes.lockIcon} />
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left'
                                   className = {classes.typoTitle}>Address </Typography>
                     </Grid>
-                    <Grid item xs = {7}>
+                    <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <FormControl
                         className = {classes.formControl}
                         aria-describedby = 'address-helper-text'
@@ -445,13 +473,13 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                       </FormControl>
                     </Grid>
                   </Grid>
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Describe
                                                                                                     Yourself </Typography>
                     </Grid>
-                    <Grid item xs = {7}>
+                    <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <TextField
                         id = 'desYourSelf'
                         label = 'Help people to get to know you.'
@@ -464,17 +492,16 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                       />
                     </Grid>
                   </Grid>
-                </div>
-                <div className = {classes.editRequired}>
+                </GridContainer>
+                <GridContainer xs = {12} sm = {12} md = {11} lg = {11} className = {classes.editRequired}>
                   <Typography variant = 'h5' className = {classes.typoBigTitle}>Optional</Typography>
-
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left'
-                                  className = {classes.typoTitle}>School </Typography>
+                                  className = {classes.typoTitleOptional}>School </Typography>
                     </Grid>
-                    <Grid item xs = {7}>
+                    <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <Tooltip title = 'Private' placement = 'right-start'
                                classes = {{tooltip: classes.lightTooltip}}>
                         <FormControl
@@ -493,13 +520,13 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                       </Tooltip>
                     </Grid>
                   </Grid>
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left'
-                                  className = {classes.typoTitle}>Work </Typography>
+                                  className = {classes.typoTitleOptional}>Work </Typography>
                     </Grid>
-                    <Grid item xs = {7}>
+                    <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <Tooltip title = 'Private' placement = 'right-start'
                                classes = {{tooltip: classes.lightTooltip}}>
                         <FormControl
@@ -518,13 +545,13 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                       </Tooltip>
                     </Grid>
                   </Grid>
-                  <Grid container spacing = {32} direction = 'row' justify = 'center'
+                  <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
-                    <Grid item xs = {3}>
-                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Emergency
+                    <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitleOptional}>Emergency
                                                                                                     Contact </Typography>
                     </Grid>
-                    <Grid item xs = {7}>
+                    <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <Tooltip title = 'Private' placement = 'right-start'
                                classes = {{tooltip: classes.lightTooltip}}>
                         <FormControl
@@ -548,14 +575,16 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                       </Tooltip>
                     </Grid>
                   </Grid>
-                  <Grid container spacing = {0} direction = 'row' justify = 'flex-end' alignItems = 'center'
+                </GridContainer>
+                <GridContainer xs = {12} sm = {11} md = {10} lg = {9} className = {classes.editRequired}>
+                  <Grid container spacing = {0} direction = 'row' justify = 'flex-end' alignItems = 'flex-end'
                         className = {classes.rowButton}>
-                    <Grid item xs = {2}>
+                    <Grid item xs = {4} sm = {2}>
                       <Button variant = 'contained' size = 'large' onClick = {handleReset}>
                         Reset
                       </Button>
                     </Grid>
-                    <Grid item xs = {2}>
+                    <Grid item xs = {4} sm = {2}>
                       <Button variant = 'contained' color = 'primary' size = 'large' type = 'submit'
                               disabled = {isSubmitting}
                       >
@@ -563,7 +592,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                       </Button>
                     </Grid>
                   </Grid>
-                </div>
+                </GridContainer>
               </Paper>
             </form>
           );
