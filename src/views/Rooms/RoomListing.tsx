@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid/Grid';
 import Paper from '@material-ui/core/Paper/Paper';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useContext} from 'react';
+import React, {ComponentType, Fragment, useContext, useEffect} from 'react';
 import {compose} from 'recompose';
 import FilterLeftBar from '@/components/Rooms/FilterLeftBar';
 import Hidden from '@material-ui/core/Hidden/Hidden';
@@ -16,6 +16,8 @@ import Button from '@material-ui/core/Button/Button';
 import Maps from '@/components/Maps/Maps';
 import {RoomMapContext, IRoomMapContext} from '@/store/context/Room/RoomMapContext';
 import ScrollTopButton from '@/components/Rooms/ScrollTopButton';
+import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
+import qs from 'query-string';
 
 interface IProps {
   classes?: any
@@ -45,7 +47,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   mapPaper: {
     cursor: 'pointer',
-  }
+  },
 });
 
 // @ts-ignore
@@ -61,9 +63,11 @@ const RoomListing: ComponentType<IProps> = (props: IProps) => {
     });
   };
 
+
+
   return (
     <Fragment>
-      <ScrollTopButton/>
+      <ScrollTopButton />
       <Maps />
       <Hidden smDown>
         <Grid container spacing = {0} className = {classes.root}>

@@ -38,7 +38,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     verticalAlign: 'middle',
     [theme!.breakpoints!.down!('lg')]: {
       height: 250,
-      maxWidth: 300,
+    },
+    [theme!.breakpoints!.only!('xl')]: {
+      height: 260
     },
     [theme!.breakpoints!.only!('sm')]: {
       height: 240,
@@ -224,7 +226,10 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                             <img src = {mapMarker} className = {classNames(
                               classes.mapMarker, classes.verticalMid,
                             )} />&nbsp;
-                              <a className = {classes.address}>{room.details.data[0].address}</a>
+                              <a className = {classes.address}>{`
+                              ${room.district.data.name},
+                              ${room.city.data.name}
+                              `}</a>
                           </span>
                           </Grid>
                           <Hidden xsDown>

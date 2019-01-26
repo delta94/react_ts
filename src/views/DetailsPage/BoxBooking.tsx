@@ -10,7 +10,6 @@ import Checkbox from '@material-ui/core/Checkbox/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup/FormGroup';
 import Divider from '@material-ui/core/Divider/Divider';
 import Typography from '@material-ui/core/Typography';
-import Loadable from 'react-loadable';
 import '@/styles/date-picker.scss';
 import Select from '@material-ui/core/Select/Select';
 import OutlinedInput from '@material-ui/core/OutlinedInput/OutlinedInput';
@@ -34,7 +33,6 @@ import moment from 'moment';
 import {momentRange} from '@/store/utility';
 import _ from 'lodash';
 import {BOOKING_TYPE_HOUR, BOOKING_TYPE_DAY, DEFAULT_DATE_FORMAT} from '@/utils/store/global';
-// @ts-ignore
 import TimePicker, {TimeRange} from 'material-ui-time-picker';
 import SnackbarContent from '@material-ui/core/SnackbarContent/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
@@ -42,16 +40,12 @@ import Snackbar from '@material-ui/core/Snackbar/Snackbar';
 import Red from '@material-ui/core/colors/red';
 import {IBookingFormParams, priceCalculate} from '@/store/context/Booking/BookingFormContext';
 import {formatMoney} from '@/utils/mixins';
+import DateRangeSingle from '@/components/Utils/DateRangeSingle';
 
 interface IProps {
   classes?: any,
   filter?: SearchFilterState
 }
-
-const DatePicker = Loadable({
-  loader: (): Promise<any> => import('@/components/Utils/DateRangeSingle'),
-  loading: () => null,
-});
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   boxPadding: {
@@ -249,15 +243,11 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
     setGuest(parseInt(event.target.value));
   };
 
-  const formatNumber = (x: number) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  };
-
   const arrMenuItem = (x: number) => {
     let i   = 1;
     let arr = [];
     while (i <= x) {
-      arr.push(<MenuItem key = {i} value = {i}>{i} guest</MenuItem>);
+      arr.push(<MenuItem key = {i} value = {i}>{i} khách</MenuItem>);
       i++;
     }
     return arr;
@@ -298,14 +288,14 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
         <Grid container className = {classes.rowMargin}>
           <Grid item xs = {6}>
             <div className = {classes.pricePerDay}>
-              <span className = {classes.price}>{formatNumber(room!.price_day)} <sup>&#8363;</sup></span>
+              <span className = {classes.price}>{formatMoney(room!.price_day)} <sup>&#8363;</sup></span>
               <sub className = {classes.perTime}>/day</sub>
             </div>
           </Grid>
           <Grid item xs = {6}>
             {room!.price_hour > 0 ? (
               <div className = {classes.pricePerHour}>
-                <span className = {classes.price}>{formatNumber(room!.price_hour)} <sup>&#8363;</sup></span>
+                <span className = {classes.price}>{formatMoney(room!.price_hour)} <sup>&#8363;</sup></span>
                 <sub className = {classes.perTime}>/4h</sub>
               </div>
             ) : ''}
@@ -314,7 +304,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
         <Divider />
         <Grid container>
           <Grid item xs = {12}>
-            <FormGroup>
+            {room!.price_hour ? (<FormGroup>
               <FormControlLabel
                 control = {
                   <Checkbox
@@ -323,12 +313,11 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                     onChange = {changeBookingType}
                     value = 'setHour'
                     color = 'primary'
-                    disabled = {room!.price_hour === 0}
                   />
                 }
-                label = 'Set by the hour'
+                label = 'Đặt theo giờ'
               />
-            </FormGroup>
+            </FormGroup>) : ''}
           </Grid>
         </Grid>
         <Grid container>
@@ -337,12 +326,19 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
               Ngày đặt phòng
             </Typography>
             <Paper square elevation = {0} className = {classes.PaperDatePick}>
-              <DatePicker />
+              <DateRangeSingle minNights = {bookingType === BOOKING_TYPE_DAY ? 1 : 0} />
             </Paper>
+            {!isDateValid ? (
+              <Typography color = 'error'>
+                Ngày đã chọn không hợp lệ
+              </Typography>
+            ) : ''}
             {bookingType === BOOKING_TYPE_HOUR ? (
               <Grid container className = {classes.marginTop}>
                 <Grid item xs = {6}>
                   <TimePicker
+                    okLabel = 'Xong'
+                    cancelLabel = 'Hủy'
                     value = {time.start}
                     mode = '24h'
                     onChange = {onPickTimeStart}
@@ -350,6 +346,8 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                 </Grid>
                 <Grid item xs = {6}>
                   <TimePicker
+                    okLabel = 'Xong'
+                    cancelLabel = 'Hủy'
                     value = {time.end}
                     mode = '24h'
                     onChange = {onPickTimeEnd}
@@ -357,15 +355,10 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                 </Grid>
               </Grid>
             ) : ''}
-            {!isDateValid ? (
-              <Typography color = 'error'>
-                Ngày đã chọn không hợp lệ
-              </Typography>
-            ) : ''}
           </Grid>
           <Grid item xs = {12} className = {classes.rowMargin}>
             <Typography className = {classes.title}>
-              Guests
+              Khách
             </Typography>
             <Paper square elevation = {0} className = {classes.PaperDatePick}>
               <FormControl variant = 'outlined' className = {classes.formControl}>
@@ -437,7 +430,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                       </Grid>
                     </Grid>
                   </Fragment>
-                ): <SimpleLoader/>}
+                ) : <SimpleLoader />}
               </Grid>
             </Fragment>
           ) : <SimpleLoader />}
@@ -445,7 +438,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
             <Button variant = {'contained'} color = {'primary'}
                     fullWidth className = {classes.btSearch} size = {'large'}
                     onClick = {handleBooking}>
-              Request to Book
+              Đặt phòng
             </Button>
           </Grid>
         </Grid>

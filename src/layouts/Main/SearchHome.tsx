@@ -15,8 +15,6 @@ import People from '@material-ui/icons/People';
 import SearchIcon from '@material-ui/icons/Search';
 import classNames from 'classnames';
 import {Formik, FormikActions} from 'formik';
-import {LocationDescriptorObject} from 'history';
-import qs from 'query-string';
 import React, {FunctionComponent, useState, memo} from 'react';
 import Loadable from 'react-loadable';
 import {connect} from 'react-redux';
@@ -35,6 +33,7 @@ import MenuItemSelectWithIcon from '@/components/Custom/MenuItemSelectWithIcon';
 import {searchSuggest} from '@/store/context/searchSuggestion';
 import {SearchSuggestRes} from '@/types/Requests/Search/SearchResponse';
 import axiosBase from 'axios';
+import {newRoomLocation} from '@/store/context/Room/RoomIndexContext';
 
 const DatePicker = Loadable({
   loader: (): Promise<any> => import('@/components/Utils/DateRange'),
@@ -109,20 +108,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
 });
 
-const colourOptions = [
-  {value: 'ocean1', label: 'Ocean', color: '#00B8D9', isFixed: true},
-  {value: 'blue1', label: 'Blue', color: '#0052CC', disabled: true},
-  {value: 'purple1', label: 'Purple', color: '#5243AA'},
-  {value: 'red1q', label: 'Red', color: '#FF5630', isFixed: true},
-  {value: 'orange1', label: 'Orange', color: '#FF8B00'},
-  {value: 'yellow1', label: 'Yellow', color: '#FFC400'},
-  {value: 'green1', label: 'Green', color: '#36B37E'},
-  {value: 'forest1', label: 'Forest', color: '#00875A'},
-  {value: 'slate1', label: 'Slate', color: '#253858'},
-  {value: 'silver1', label: 'Silver', color: '#666666'},
-];
-
-const searchStylesHome: StylesConfig = {
+export const searchStylesHome: StylesConfig = {
   control: (styles) => ({
     ...styles,
     border: 'none',
@@ -151,13 +137,11 @@ const searchStylesHome: StylesConfig = {
   }),
 };
 
-const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
-  const {classes, filter, history}  = props;
-  const [type, setType]             = useState<number>(3);
+export const useSearchHomeSuggestionHook = () => {
   const [searchText, setSearchText] = useState('');
 
   const suggestEvent = (value: string, cb: (result: any[]) => void) => {
-
+    if (!value) cb([]);
     searchSuggest(value).then(data => {
       cb(data);
     }).catch(err => {
@@ -178,6 +162,15 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
   };
 
   const optionSearchLabel = (option: SearchSuggestRes) => option.name;
+
+  return {inputText: searchText, suggestEvent, onSearch, optionSearchLabel};
+};
+
+const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
+  const {classes, filter, history} = props;
+  const {bookingType}              = filter;
+
+  const {inputText, onSearch, optionSearchLabel, suggestEvent} = useSearchHomeSuggestionHook();
 
   return (
     <Grid item lg = {6} md = {7} xs = {12}>
@@ -201,13 +194,10 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
             check_out: filter.endDate,
             number_of_guests: filter.guestsCount,
             most_popular: null,
-            // rent_type: type,
+            rent_type: bookingType !== 0 ? bookingType : undefined,
           };
 
-          const location: LocationDescriptorObject = {
-            pathname: 'rooms',
-            search: `?${qs.stringify(pushQuery)}`,
-          };
+          const location = newRoomLocation(pushQuery);
           history.push(location);
         }}
       >
@@ -240,10 +230,9 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
                       defaultOptions
                       getOptionLabel = {optionSearchLabel}
                       getOptionValue = {optionSearchLabel}
-                      inputValue = {searchText}
+                      inputValue = {inputText}
                       loadOptions = {suggestEvent}
                       onInputChange = {onSearch}
-                      classNamePrefix = 'nat'
                       placeholder = 'Tìm kiếm'
                       className = {
                         classNames(classes.inputSearch, appC['ml-20'])
@@ -276,7 +265,9 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
                             <span>khách</span>
                           </Typography>
                           <Typography variant = 'body2' className = {classes.grayLighten1}>
-                            {(type === 2) ? 'Theo ngày' : 'Theo giờ'}
+                            {(bookingType === 2) ? 'Theo ngày' : (
+                              bookingType === 1 ? 'Theo giờ' : 'Theo ngày và giờ'
+                            )}
                           </Typography>
                         </div>
                       </Grid>

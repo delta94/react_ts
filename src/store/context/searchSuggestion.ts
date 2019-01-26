@@ -1,14 +1,12 @@
 import {axios, AxiosRequestType} from '@/utils/axiosInstance';
-import {AxiosRes, BaseResponse} from '@/types/Requests/ResponseTemplate';
+import {AxiosRes} from '@/types/Requests/ResponseTemplate';
 import {SearchSuggestRes} from '@/types/Requests/Search/SearchResponse';
 import axiosBase, {CancelTokenSource} from 'axios';
 import {LocationDescriptorObject} from 'history';
-import {MapCoords, RoomUrlParams, RoomIndexGetParams} from '@/types/Requests/Rooms/RoomRequests';
+import {RoomUrlParams, RoomIndexGetParams} from '@/types/Requests/Rooms/RoomRequests';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import qs from 'query-string';
 import _ from 'lodash';
-import {updateObject} from '@/store/utility';
-import {fetchRoom} from '@/store/context/Room/RoomIndexContext';
 
 export const makeRequestSingle = (method: AxiosRequestType = 'GET') => {
   let call: CancelTokenSource;
@@ -59,5 +57,5 @@ export const getRoomSearch = async (location: LocationDescriptorObject, input: s
   const url       = `${signature}?${qs.stringify(query)}`;
 
   const res: AxiosRes<RoomIndexRes[]> = await get(url);
-  return res.data
+  return res.data;
 };

@@ -142,8 +142,8 @@ export const getRooms = async (location: LocationDescriptorObject, page?: number
     manager: (typeof params.instant !== 'undefined') ? 1 : undefined,
     sort_price_day: (params.lowest_price === null) ? 0 : 1,
     standard_point: (params.rating) ? _.split(params.rating, ',')[0] : undefined,
-    comfort_lists: (params.amenities) ? params.amenities : undefined,
-    type_room: params.room_type ? params.room_type : undefined,
+    comfort_lists: !!params.amenities ? params.amenities : undefined,
+    type_room: !!params.room_type ? params.room_type : undefined,
     page,
   };
 
@@ -159,7 +159,7 @@ export const getRooms = async (location: LocationDescriptorObject, page?: number
 
 export const newRoomLocation = (params: RoomUrlParams): LocationDescriptorObject => {
   return {
-    pathname: 'rooms',
+    pathname: '/rooms',
     search: `?${qs.stringify(params)}`,
   };
 };
@@ -231,7 +231,7 @@ export const loadMoreRooms = (state: RoomIndexState, dispatch: Dispatch<RoomInde
           meta: meta,
         });
       }).catch(err => {
-        console.log(err);
+
       });
     } else {
       dispatch({

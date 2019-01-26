@@ -3,6 +3,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
 import React, {ComponentType} from 'react';
 import {compose} from 'recompose';
+import {Link} from 'react-router-dom';
 
 interface IProps {
   classes?: any
@@ -24,9 +25,9 @@ const Logo: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
 
   return (
-    <a href = '/'>
+    <Link to = '/'>
       <img src = 'http://westay.org/images/Logo-westay.png' className = {classes.img} alt = 'Logo' />
-    </a>
+    </Link>
   );
 };
 

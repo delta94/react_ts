@@ -1,3 +1,4 @@
-export interface CityResponse {
-
+export interface CityRes {
+  id: number
+  name: string
 }

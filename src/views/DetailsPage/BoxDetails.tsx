@@ -24,9 +24,7 @@ import medalCertified from '@/assets/medalCertified.svg';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 // @ts-ignore
 import StarRatings from 'react-star-ratings';
-import {
-  IRoomDetailsContext, RoomDetailsContext,
-} from '@/store/context/Room/RoomDetailsContext';
+import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 
 interface IProps {
@@ -45,10 +43,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     color: 'grey',
     paddingLeft: 5,
   },
-  boxName:{
-    paddingRight:20,
+  boxName: {
+    paddingRight: 20,
   },
-  roomName:{
+  roomName: {
     fontSize: 28,
     [theme!.breakpoints!.down!('sm')]: {
       fontSize: 22,
@@ -56,7 +54,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     [theme!.breakpoints!.down!('xs')]: {
       fontSize: 20,
     },
-    fontWeight: 700 ,
+    fontWeight: 700,
     lineHeight: '1.125em',
     color: '#484848',
   },
@@ -104,7 +102,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     objectFit: 'cover',
     borderRadius: '50%',
   },
-  imgCertified:{
+  imgCertified: {
     width: 32,
     height: 32,
     [theme!.breakpoints!.down!('xs')]: {
@@ -207,7 +205,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     lineHeight: '1.375em',
     color: '#484848',
   },
-  expansionPanelSummary:{
+  expansionPanelSummary: {
     [theme!.breakpoints!.down!('xs')]: {
       display: 'block',
     },
@@ -228,13 +226,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 });
 
 const BoxDetails: ComponentType<IProps> = (props: IProps) => {
-  const {classes} = props;
-  const [arrowRef] = useState<any>(null);
+  const {classes}         = props;
+  const [arrowRef]        = useState<any>(null);
   const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
   const {room} = state;
 
-  if (room == null) {return <SimpleLoader/>}
+  if (room == null) {
+    return <SimpleLoader />;
+  }
 
   return (
     <Fragment>
@@ -244,21 +244,23 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 justify = 'center'
                 alignItems = 'flex-start'>
             <Grid item>
-              <Typography className = {classes.roomName}>{room!.details.data[0].name}</Typography>
+              <Typography className = {classes.roomName}>
+                {room!.details.data[0].name}
+              </Typography>
             </Grid>
             <Grid item className = {classes.rowMargin}>
               <StarRatings
-                rating = {room !== null ? room.avg_rating : 0} //index rating
+                rating = {room !== null ? room!.avg_rating : 0} //index rating
                 starDimension = '20px'
                 starSpacing = '1px'
                 starRatedColor = '#46afcc'
               />
-              <span className = {classes.spanViews}>{room!.total_review} views</span>
+              <span className = {classes.spanViews}>{room!.total_review} lượt xem</span>
             </Grid>
             <Grid item className = {classes.rowMargin}>
               <span className = {classes.txtAddress}>
                 <Location className = {classes.iconLocation} />
-                {room.details.data[0].address}
+                {`${room!.district.data.name}, ${room!.city.data.name}`}
               </span>
             </Grid>
           </Grid>
@@ -321,7 +323,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 <div className = {classes.avatar}>
                   <img alt = 'Avatar' src = {room!.user.data.avatar_url} className = {classes.imgAvatar} />
                   <div className = {classes.infoHost}>
-                    <img src = {medalCertified} className={classes.imgCertified} />
+                    <img src = {medalCertified} className = {classes.imgCertified} />
                   </div>
                 </div>
               </Tooltip>
@@ -377,7 +379,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
       </Grid>
       <Grid container className = {classes.rowMargin20}>
         <ExpansionPanel classes = {{root: classes.expansionPanel}}>
-          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />} classes={{content:classes.expansionPanelSummary}}>
+          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />} classes = {{content: classes.expansionPanelSummary}}>
             <Typography className = {classNames(classes.titleHighlight, classes.headingPanel)}>
               About homestay
             </Typography>
@@ -404,7 +406,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
               </Grid>
               <Grid item xs = {8}>
                 <Typography variant = {'body2'}> - Guests have access to the entire property with the exception of the
-                                                main house that the owner occupies.</Typography>
+                                                 main house that the owner occupies.</Typography>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
@@ -464,7 +466,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
               <Grid item xs = {4}>
                 <Typography variant = {'subtitle2'}>&#9679; TV: </Typography>
               </Grid>
-              <Grid item xs = {8}></Grid>
+              <Grid item xs = {8} />
             </Grid>
             <Grid container className = {classes.rowMargin}>
               <Grid item xs = {4}>

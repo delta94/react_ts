@@ -1,16 +1,14 @@
-import * as act from '@/store/actions/actionTypes';
 import {ReducersType} from '@/store/reducers';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import createStyles from '@material-ui/core/styles/createStyles';
-import {SearchFilterState, SearchFilterAction, DateRange} from '@/store/reducers/searchFilter';
+import {SearchFilterState, DateRange, SearchFilterAction} from '@/store/reducers/searchFilter';
 import moment, {Moment} from 'moment';
-import React, {useState, useEffect, ComponentType, Fragment, useContext, memo, useMemo} from 'react';
+import React, {useState, useEffect, ComponentType, Fragment, useContext, memo, useMemo, Dispatch} from 'react';
 import {FocusedInputShape, DayPickerRangeController} from 'react-dates';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
-import {Dispatch} from 'redux';
 import 'react-dates/initialize';
 import '@/styles/date-picker.scss';
 import '@/styles/Airbnb/date-picker-homepage.scss';
@@ -178,7 +176,7 @@ const mapStateToProps = (state: ReducersType) => {
 const mapDispatchToProps = (dispatch: Dispatch<SearchFilterAction>) => {
   return {
     updateDate: (date: DateRange) => dispatch({
-      type: act.CHANGE_DATE,
+      type: 'CHANGE_DATE',
       date: date,
     }),
   };

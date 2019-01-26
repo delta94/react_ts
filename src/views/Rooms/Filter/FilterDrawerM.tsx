@@ -1,11 +1,10 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, useContext, useState, useEffect, memo} from 'react';
+import React, {ComponentType, Fragment, useContext, useState, useEffect, memo, ChangeEvent} from 'react';
 import {compose} from 'recompose';
 import Grid from '@material-ui/core/Grid/Grid';
 import Typography from '@material-ui/core/Typography/Typography';
-import TextField from '@material-ui/core/TextField/TextField';
 import Button from '@material-ui/core/Button/Button';
 import InputRange, {Range} from 'react-input-range';
 import {
@@ -14,7 +13,8 @@ import {
   RoomIndexContext,
   IRoomIndexContext,
   STEP_PRICE,
-  loadFilter, newRoomLocation,
+  loadFilter,
+  newRoomLocation,
 } from '@/store/context/Room/RoomIndexContext';
 import {usePriceEffect, priceFilterChange} from '@/components/Rooms/PriceRange';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
@@ -26,9 +26,19 @@ import CloseIcon from '@material-ui/icons/Close';
 import {TAB_LIST} from '@/views/Rooms/BottomNav';
 import StarRatings from 'react-star-ratings';
 import {updateObject} from '@/store/utility';
-import _ from 'lodash';
 import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import qs from 'query-string';
+import SearchProperty from '@/components/Rooms/SearchProperty';
+import _ from 'lodash';
+import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox/Checkbox';
+import {ComfortIndexRes} from '@/types/Requests/Comforts/ComfortResponses';
+import Paper from '@material-ui/core/Paper/Paper';
+import Grey from '@material-ui/core/colors/grey';
+import Blue from '@material-ui/core/colors/blue';
+import {TypeSelect} from '@/types/Requests/ResponseTemplate';
+import {useExpandableList} from '@/store/hooks/filterHooks';
+import {arrayFilterCheckBoxEvent} from '@/utils/mixins';
 
 interface IProps {
   classes?: any
@@ -37,7 +47,17 @@ interface IProps {
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   sortMargin: {
-    marginTop: 10,
+    marginTop: 12,
+  },
+  ul: {
+    listStyleType: 'none',
+    marginBlockStart: '0px',
+    paddingInlineStart: '0.4rem',
+    paddingBlockStart: '0.5rem',
+    marginBlockEnd: 0,
+  },
+  checkboxRoot: {
+    padding: 5,
   },
   buttonHeight: {
     height: '100%',
@@ -55,35 +75,54 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       padding: '0 20px',
     },
   },
+  apply: {
+    width: '100%',
+  },
+  showMore: {
+    textAlign: 'center',
+    padding: 5,
+    backgroundColor: Grey[200],
+    color: Blue[400],
+  },
 });
 
 // @ts-ignore
 const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
   const {classes, setIndex} = props;
+
   const {location, history} = useContext<IGlobalContext>(GlobalContext);
   const {state, dispatch}   = useContext<IRoomIndexContext>(RoomIndexContext);
 
-  const params: RoomUrlParams = qs.parse(location.search!);
+  const {ratingLists, roomTypes, comforts, amenities, roomTypesFilter} = state;
 
-  const [star, setStar] = useState<number>(5);
-
-  const {ratingLists, roomTypes} = state;
+  const [star, setStar]                     = useState<number>(5);
+  const [roomTypeLocal, setRoomTypeLocal]   = useState<number[]>(roomTypesFilter);
+  const [comfortTypeLocal, setComfortLocal] = useState<number[]>(amenities);
 
   const [price, setPrice] = useState<Range>({
     min: state.price.min,
     max: state.price.max,
   });
 
+  const [comfortChunks, isComfortExpand, setComfortExpand]    = useExpandableList<ComfortIndexRes>(comforts);
+  const [roomTypeChunks, isRoomTypeExpand, setRoomTypeExpand] = useExpandableList<TypeSelect>(roomTypes);
+
+  const params: RoomUrlParams = qs.parse(location.search!);
+
   const updateLocation = () => {
     let rateList    = star.toString();
     const newParams = updateObject(params, {
       rating: rateList,
+      room_type: _.join(roomTypeLocal, ','),
+      amenities: _.join(comfortTypeLocal, ','),
     });
 
     const locationTo = newRoomLocation(newParams);
 
     dispatch({
       type: 'setFilter',
+      roomTypesFilter: roomTypeLocal,
+      amenities: comfortTypeLocal,
       ratingLists: [star],
     });
 
@@ -100,6 +139,20 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
     setStar(rate);
   };
 
+  const comfortEvent = (e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    let listComforts = arrayFilterCheckBoxEvent(comfortTypeLocal, e, checked);
+    listComforts     = _.sortBy(listComforts);
+
+    setComfortLocal(listComforts)
+  };
+
+  const roomTypeEvent = (e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    let roomTypeLists = arrayFilterCheckBoxEvent(roomTypeLocal, e, checked);
+    roomTypeLists     = _.sortBy(roomTypeLists);
+
+    setRoomTypeLocal(roomTypeLists)
+  };
+
   useEffect(() => {
     if (roomTypes.length === 0) loadFilter(dispatch);
 
@@ -111,7 +164,7 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
   return (
     <Fragment>
       <DialogTitle disableTypography>
-        <Typography variant = 'h6' className = {classes.center}>Filter</Typography>
+        <Typography variant = 'h6' className = {classes.center}>Bộ lọc phòng</Typography>
         <IconButton
           className = {classes.closeButton}
           onClick = {() => setIndex(TAB_LIST)}>
@@ -121,27 +174,10 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
       <DialogContent className = {classes.dialog}>
         <Grid item xs = {12} container className = {classes.sortMargin} spacing = {0}>
           <Grid item xs = {12} container spacing = {8}>
-            <Grid item sm = {10} xs = {9}>
-              <TextField
-                id = 'search-property'
-                label = 'Search property'
-                variant = 'outlined'
-                fullWidth
-              />
-            </Grid>
-            <Grid item sm = {2} xs = {3}>
-              <Button
-                color = 'primary'
-                variant = 'contained'
-                fullWidth
-                classes = {{
-                  root: classes.buttonHeight,
-                }}>Search</Button>
-            </Grid>
+            <SearchProperty />
           </Grid>
-          {/*TODO: Star Rating Mobile Version*/}
           <Grid item xs = {12} className = {classes.sortMargin}>
-            <Typography variant = 'subtitle2'>Star rating</Typography><br />
+            <Typography variant = 'subtitle2'>Đánh giá</Typography>
             <StarRatings
               numberOfStars = {5}
               rating = {star}
@@ -152,7 +188,7 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
             />
           </Grid>
           <Grid item xs = {12} className = {classes.sortMargin}>
-            <Typography variant = 'subtitle2'>Price per night</Typography><br />
+            <Typography variant = 'subtitle2'>Khoảng giá</Typography><br />
             <InputRange
               allowSameValues = {false}
               minValue = {MIN_PRICE}
@@ -162,11 +198,77 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
               value = {price} />
             <Typography variant = 'subtitle2'>{`đ ${price.min} - đ ${price.max}`}</Typography>
           </Grid>
+          <Grid item xs = {12} className = {classes.sortMargin}>
+            <Typography variant = 'subtitle2'>Loại phòng</Typography>
+            {roomTypes.length > 0 ? (
+              <Fragment>
+                <ul className = {classes.ul}>
+                  {_.map(roomTypeChunks, (o) => (
+                    <li key = {o.id}>
+                      <FormControlLabel
+                        control = {<Checkbox
+                          name = {o.id.toString()}
+                          color = 'primary'
+                          onChange = {roomTypeEvent}
+                          value = {o.id.toString()}
+                          checked = {_.indexOf(roomTypeLocal, o.id) !== -1}
+                          classes = {{
+                            root: classes.checkboxRoot,
+                          }}
+                        />}
+                        label = {o.value}
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <Paper
+                  elevation = {0} className = {classes.showMore}
+                  onClick = {() => setRoomTypeExpand(!isRoomTypeExpand)}
+                >
+                  {isRoomTypeExpand ? 'Thu gọn' : 'Mở rộng'}
+                </Paper>
+              </Fragment>
+            ) : ''}
+          </Grid>
+          <Grid item xs = {12} className = {classes.sortMargin}>
+            <Typography variant = 'subtitle2'>Tiện nghi phòng</Typography>
+            {comfortChunks.length > 0 ? (
+              <Fragment>
+                <ul className = {classes.ul}>
+                  {_.map(comfortChunks, (o) => (
+                    <li key = {o.id}>
+                      <FormControlLabel
+                        control = {<Checkbox
+                          name = {o.id.toString()}
+                          color = 'primary'
+                          onChange = {comfortEvent}
+                          value = {o.id.toString()}
+                          checked = {_.indexOf(comfortTypeLocal, o.id) !== -1}
+                          classes = {{
+                            root: classes.checkboxRoot,
+                          }}
+                        />}
+                        label = {`${o.details.data[0].name}`}
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <Paper
+                  elevation = {0} className = {classes.showMore}
+                  onClick = {() => setComfortExpand(!isComfortExpand)}
+                >
+                  {isComfortExpand ? 'Thu gọn' : 'Mở rộng'}
+                </Paper>
+              </Fragment>
+            ) : ''}
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button color = 'primary' variant = 'contained' onClick = {applyFilter}>
-          Apply
+        <Button color = 'primary' variant = 'contained' onClick = {applyFilter} classes = {{
+          root: classes.apply,
+        }}>
+          Lọc kết quả
         </Button>
       </DialogActions>
     </Fragment>
@@ -175,5 +277,5 @@ const FilterDrawerM: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
-  memo
+  memo,
 )(FilterDrawerM);

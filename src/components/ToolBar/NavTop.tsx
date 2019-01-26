@@ -17,7 +17,6 @@ import Popper from '@material-ui/core/Popper';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import React, {Fragment, FunctionComponent, MouseEvent, useRef, useState} from 'react';
 import {withCookies} from 'react-cookie';
 import Loadable from 'react-loadable';
@@ -30,8 +29,8 @@ import IconButton from '@material-ui/core/IconButton/IconButton';
 import {Menu} from '@material-ui/icons';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import {ISideDrawerProps} from '@/components/ToolBar/SideDrawer';
-import {Simulate} from 'react-dom/test-utils';
 import Logo from '@/components/ToolBar/Logo';
+import People from '@material-ui/icons/People';
 
 interface IProps {
   classes: any,
@@ -114,7 +113,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
     window.location.reload();
     cookies.remove('_token', {
       path: '/',
-    })
+    });
   };
 
   const loginButtonClick = (e: MouseEvent<HTMLElement>) => {
@@ -132,24 +131,27 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
       <AppBar position = 'static' color = 'secondary'>
         <Toolbar>
           <Hidden smDown>
-            <Logo/>
+            <Logo />
             <div className = {classes.grow}>
-              {/*<Button color = 'inherit' className = {classes.link}>Rooms</Button>*/}
               <Button color = 'inherit' className = {classes.link}>Trở thành chủ nhà</Button>
             </div>
-            <Button color = 'inherit'
-                    className = {classes.button}>
+            <Button
+              name = 'support'
+              color = 'inherit'
+              className = {classes.button}>
               Trợ giúp
             </Button>
             {cookies.get('_token')
               ? <Fragment>
                 <Button
+                  name = 'avatar'
                   buttonRef = {userRefButton}
                   color = 'inherit'
                   className = {classes.button}
                   onClick = {() => setMenuStatus(!menuStatus)}
                   style = {{backgroundColor: 'transparent'}}
-                ><Avatar>HR</Avatar></Button>
+                ><Avatar><People/></Avatar>
+                </Button>
                 <Popper open = {menuStatus} anchorEl = {userRefButton.current} transition>
                   {({TransitionProps, placement}) => (
                     <Grow
@@ -162,13 +164,14 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
                       <Paper square elevation = {1}>
                         <ClickAwayListener onClickAway = {closeMenu}>
                           <MenuList>
-                            <MenuItem onClick = {closeMenu} {...to('/profile')}>Thông tin cá nhân</MenuItem>
+                            <MenuItem
+                              name = 'profile'
+                              onClick = {closeMenu}
+                              {...to('/profile')}>
+                              Thông tin cá nhân
+                            </MenuItem>
                             <Divider />
-                            {/*<MenuItem onClick = {closeMenu}>Account Settings</MenuItem>*/}
-                            {/*<Divider />*/}
-                            {/*<MenuItem onClick = {closeMenu}>My Guidebook</MenuItem>*/}
-                            {/*<Divider />*/}
-                            <MenuItem onClick = {logoutTrigger}>Đăng xuất</MenuItem>
+                            <MenuItem name = 'sign-out' onClick = {logoutTrigger}>Đăng xuất</MenuItem>
                             {/*<Divider />*/}
                           </MenuList>
                         </ClickAwayListener>
@@ -179,12 +182,14 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
               </Fragment>
               : <Fragment>
                 <Button
+                  name = 'sign-in'
                   color = 'inherit'
                   className = {classes.button}
                   onClick = {loginButtonClick}
                   onMouseOver = {() => LoginForm.preload()}
                 >Đăng nhập</Button>
                 <Button
+                  name = 'sign-up'
                   color = 'inherit'
                   className = {classes.button}
                   onClick = {signUpButtonClick}
@@ -196,7 +201,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
           <Hidden mdUp>
             <div className = {classes.grow}>
               <IconButton className = {classes.menuButton} onClick = {() => setOpenDrawer(!openDrawer)}>
-                <Menu/>
+                <Menu />
                 <SwipeableDrawer
                   disableSwipeToOpen
                   open = {openDrawer}
@@ -213,7 +218,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
                 </SwipeableDrawer>
               </IconButton>
             </div>
-            <Logo/>
+            <Logo />
           </Hidden>
         </Toolbar>
       </AppBar>

@@ -43,7 +43,7 @@ const ScrollTopButton: ComponentType<IProps> = (props: IProps) => {
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', e => {
+    const buttonToTop = () => {
       let isOverTop = (window.scrollY > window.innerHeight) && !toTop;
 
       if (isOverTop) {
@@ -51,11 +51,10 @@ const ScrollTopButton: ComponentType<IProps> = (props: IProps) => {
       } else if (!isOverTop) {
         setToTop(false);
       }
-
-    });
+    };
+    window.addEventListener('scroll', buttonToTop);
     return () => {
-      window.removeEventListener('scroll', e => {
-      });
+      window.removeEventListener('scroll', buttonToTop);
     };
   }, []);
 
@@ -74,5 +73,5 @@ const ScrollTopButton: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
-  memo
+  memo,
 )(ScrollTopButton);

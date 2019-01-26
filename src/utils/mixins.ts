@@ -3,15 +3,6 @@ import {ChangeEvent, useMemo} from 'react';
 import _ from 'lodash';
 import {PromiseCallBack} from '@/types/Requests/RequestTemplate';
 
-export const promiseAll = async (...tasks: PromiseCallBack[]) => {
-  const listCallBack = _.map(tasks, task => {
-    let {params, callback} = task;
-    return () => callback(...params);
-  });
-
-  return await Promise.all(_.map(listCallBack, cb => cb()));
-};
-
 /**
  * Format money to user friendly
  * @param amount Money amount

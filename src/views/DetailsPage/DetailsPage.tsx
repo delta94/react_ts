@@ -140,7 +140,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
           <div className = {classes.div_btnMore}>
             <Button className = {classes.btnMore} variant = 'outlined'
                     size = 'small' color = 'secondary' onClick = {() => setIsOpen(true)}
-            >Show more</Button>
+            >Xem thêm</Button>
           </div>
         </div>
         <div className = {classes.boxDetails}>

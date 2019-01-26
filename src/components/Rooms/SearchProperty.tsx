@@ -90,10 +90,10 @@ const SearchProperty: ComponentType<IProps> = (props: IProps) => {
 
   return (
     <Grid container spacing = {8}>
-      <Grid item sm = {12}>
+      <Grid item xs = {12}>
         <Typography variant = 'subtitle2'>Tìm kiếm phòng</Typography>
       </Grid>
-      <Grid item sm = {12}>
+      <Grid item xs = {12}>
         <AsyncSelect
           name = 'search-property'
           // components = {{Option: MenuItemSelectWithIcon}}

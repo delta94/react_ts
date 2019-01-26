@@ -11,3 +11,10 @@ export interface RegisterReq {
   password_confirmation: string
   type: number
 }
+
+interface Interface {
+  blocks: [{
+    start: string
+    end: string
+  }]
+}

@@ -17,6 +17,8 @@ import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import qs from 'query-string';
 import {updateObject} from '@/store/utility';
+import {useExpandableList} from '@/store/hooks/filterHooks';
+import {TypeSelect} from '@/types/Requests/ResponseTemplate';
 
 interface IProps {
   classes?: any
@@ -33,7 +35,6 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   checkboxRoot: {
     padding: 5,
   },
-  limitItems: {},
   expandText: {
     fontSize: '0.8rem',
     color: Blue[400],
@@ -55,18 +56,17 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
 
-  const [isExpand, setIsExpand] = useState<boolean>(false);
-  const [list, setList]         = useState<ComfortIndexRes[]>([]);
-
   const {location, history} = useContext<IGlobalContext>(GlobalContext);
   const {state, dispatch}   = useContext<IRoomIndexContext>(RoomIndexContext);
 
   const {comforts, amenities, roomTypes, roomTypesFilter} = state;
 
+  const [comfortChunks, isComfortExpand, setComfortExpand]    = useExpandableList<ComfortIndexRes>(comforts);
+  const [roomTypeChunks, isRoomTypeExpand, setRoomTypeExpand] = useExpandableList<TypeSelect>(roomTypes);
+
   const comfortEvent = (e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     let listComforts = arrayFilterCheckBoxEvent(amenities, e, checked);
-
-    listComforts = _.sortBy(listComforts);
+    listComforts     = _.sortBy(listComforts);
 
     const params: RoomUrlParams = qs.parse(location.search!);
 
@@ -85,7 +85,6 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
 
   const roomTypeEvent = (e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     let roomTypeLists = arrayFilterCheckBoxEvent(roomTypesFilter, e, checked);
-
     roomTypeLists = _.sortBy(roomTypeLists);
 
     const params: RoomUrlParams = qs.parse(location.search!);
@@ -104,13 +103,6 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
   };
 
   useEffect(() => {
-    if (comforts.length > 0) {
-      const newList = isExpand ? comforts : _.slice(comforts, 0, 3);
-      setList(newList);
-    }
-  }, [isExpand, comforts]);
-
-  useEffect(() => {
     loadFilter(dispatch);
   }, []);
 
@@ -121,7 +113,7 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
       {roomTypes.length > 0 ? (
         <Fragment>
           <ul className = {classes.ul}>
-            {_.map(roomTypes, (o) => (
+            {_.map(roomTypeChunks, (o) => (
               <li key = {o.id}>
                 <FormControlLabel
                   control = {<Checkbox
@@ -129,6 +121,7 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
                     color = 'primary'
                     onChange = {roomTypeEvent}
                     value = {o.id.toString()}
+                    checked = {_.indexOf(roomTypesFilter, o.id) !== -1}
                     classes = {{
                       root: classes.checkboxRoot,
                     }}
@@ -138,15 +131,22 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
               </li>
             ))}
           </ul>
+          <p className = {classes.showMore}>
+            <span
+              className = {classes.expandText}
+              onClick = {() => setRoomTypeExpand(!isRoomTypeExpand)}
+            >{isRoomTypeExpand ? 'Thu gọn' : `Xem thêm`}
+            </span>
+          </p>
         </Fragment>
       ) : <SimpleLoader />}
       <Divider className = {classes.divider} />
       {/* Comforts Lists */}
       <Typography variant = 'subtitle2'>Tiện nghi phòng</Typography>
-      {list.length > 0 ? (
+      {comfortChunks.length > 0 ? (
         <Fragment>
           <ul className = {classes.ul}>
-            {_.map(list, (o) => (
+            {_.map(comfortChunks, (o) => (
               <li key = {o.id}>
                 <FormControlLabel
                   control = {<Checkbox
@@ -154,6 +154,7 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
                     color = 'primary'
                     onChange = {comfortEvent}
                     value = {o.id.toString()}
+                    checked = {_.indexOf(amenities, o.id) !== -1}
                     classes = {{
                       root: classes.checkboxRoot,
                     }}
@@ -164,11 +165,11 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
             ))}
           </ul>
           <p className = {classes.showMore}>
-        <span
-          className = {classes.expandText}
-          onClick = {() => setIsExpand(!isExpand)}
-        >Show {isExpand ? 'less' : `${comforts.length - 3} more`}
-        </span>
+            <span
+              className = {classes.expandText}
+              onClick = {() => setComfortExpand(!isComfortExpand)}
+            >{isComfortExpand ? 'Thu gọn' : `Xem thêm`}
+            </span>
           </p>
         </Fragment>
       ) : <SimpleLoader />}
@@ -178,5 +179,5 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
-  memo
+  memo,
 )(FilterLeftBar);

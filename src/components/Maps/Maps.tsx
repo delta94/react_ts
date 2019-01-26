@@ -37,7 +37,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       maxHeight: '83vh',
     },
     [theme!.breakpoints!.between!('sm', 'md')]: {
-      maxHeight: '47vh',
+      maxHeight: '43vh',
       order: 1,
       marginTop: 10,
     },
