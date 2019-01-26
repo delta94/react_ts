@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment, Dispatch} from 'react';
+import React, {ComponentType, Fragment, Dispatch, memo} from 'react';
 import {compose} from 'recompose';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon/ListItemIcon';
@@ -85,7 +85,7 @@ const SideDrawer: ComponentType<ISideDrawerProps> = (props: ILocalProps) => {
         </ListItem>
         {isLogin ? (
           <Fragment>
-            <ListItem button>
+            <ListItem button {...to('/profile')}>
               <ListItemIcon><AccountCircle /></ListItemIcon>
               <ListItemText primary = 'Thông tin cá nhân' classes={{
                 primary: classes.text
@@ -139,4 +139,5 @@ export default compose<ISideDrawerProps, any>(
   connect(mapStateToProps, mapDispatchToProps),
   withCookies,
   withStyles(styles),
+  memo
 )(SideDrawer);

@@ -33,7 +33,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   container: {
     minHeight: '100vh',
     backgroundColor: Grey[200],
-  }
+  },
 });
 
 const Form: FunctionComponent<IProps> = props => {
@@ -44,10 +44,12 @@ const Form: FunctionComponent<IProps> = props => {
 
   const params: IBookingFormParams | any = qs.parse(location!.search);
   const [state, dispatch]                = useReducer<BookingFormState, BookingFormAction>(BookingFormReducer, BookingFormStateInit);
-  const {history}                        = useContext<IGlobalContext>(GlobalContext);
+  const {history, width}                 = useContext<IGlobalContext>(GlobalContext);
+
+  const isWide = width === 'lg' || width === 'xl' || width === 'md';
+  const xsMode = width === 'xs';
 
   useEffect(() => {
-
     Promise.all([
       priceCalculate(params),
       getRoomBookingForm(params),
@@ -61,7 +63,7 @@ const Form: FunctionComponent<IProps> = props => {
       });
 
     }).catch(err => {
-      // history.push('/404');
+      history.push('/404');
     });
 
   }, [location]);
@@ -70,8 +72,13 @@ const Form: FunctionComponent<IProps> = props => {
     <Fragment>
       <NavTop />
       <BookingFormContext.Provider value = {{state, dispatch}}>
-        <GridContainer xs = {10} sm = {11} xl = {6} className={classes.container}>
-          <Grid container spacing = {16} className = {classes.marginContainer}>
+        <GridContainer xs = {11} sm = {11} xl = {6} className = {classes.container} spacing = {0}>
+          <Grid
+            container
+            spacing = {xsMode ? 0 : 8}
+            className = {classes.marginContainer}
+            direction = {isWide ? 'row' : 'column-reverse'}
+          >
             <Grid item lg = {8} md = {6} xs = {12}>
               <BookingForm state = {state} />
             </Grid>

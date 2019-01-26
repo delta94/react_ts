@@ -40,6 +40,10 @@ const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
 
   useEffect(() => {
     setLoading(true);
+    dispatch({
+      type: 'setRooms',
+      rooms: []
+    });
     getRooms(location).then((data) => {
       const roomData   = data.data;
       const pagination = data.meta;
@@ -71,7 +75,7 @@ const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
     <Fragment>
       <InfiniteScroll
         loadMore = {lazyLoadRooms}
-        hasMore = {isLoadMore && !isLoading}
+        hasMore = {isLoadMore && !isLoading && !isEmpty}
         threshold = {1400}
         loader = {<SimpleLoader key = {1} height = {200} width = {300} />}
       >
@@ -85,7 +89,7 @@ const RoomListingDetails: ComponentType<IProps> = (props: IProps) => {
           )) : (!isEmpty ? (
             <SimpleLoader height = {200} width = {300} />
           ) : '')}
-          {isEmpty ? 'No match result found' : ''}
+          {isEmpty ? `Không tìm thấy kết quả nào phù hợp` : ''}
         </Grid>
       </InfiniteScroll>
     </Fragment>

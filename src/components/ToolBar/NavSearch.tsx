@@ -4,7 +4,7 @@ import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Hidden from '@material-ui/core/Hidden';
-import React, {ChangeEvent, ComponentType, Fragment, useState} from 'react';
+import React, {ChangeEvent, ComponentType, Fragment, useState, useContext, useEffect, memo} from 'react';
 import {compose} from 'recompose';
 import SearchIcon from '@material-ui/icons/Search';
 import Grid from '@material-ui/core/Grid';
@@ -21,9 +21,24 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Loadable from 'react-loadable';
 import '@/styles/date-picker.scss';
 import '@/styles/Airbnb/date-picker-NavSearch.scss';
+import {useSearchHomeSuggestionHook} from '@/layouts/Main/SearchHome';
+import MenuItemSelectWithIcon from '@/components/Custom/MenuItemSelectWithIcon';
+import AsyncSelect from 'react-select/lib/Async';
+import {StylesConfig} from 'react-select/lib/styles';
+import {SearchSuggestRes} from '@/types/Requests/Search/SearchResponse';
+import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
+import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
+import {ReducersType} from '@/store/reducers';
+import {connect} from 'react-redux';
+import {SearchFilterState} from '@/store/reducers/searchFilter';
+import {newRoomLocation} from '@/store/context/Room/RoomIndexContext';
 
 interface IProps {
   classes?: any,
+}
+
+interface LocalProps extends IProps {
+  filter: SearchFilterState
 }
 
 const DatePicker = Loadable({
@@ -37,10 +52,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     zIndex: 10,
   },
   inputSearch: {
-    height: '30px',
+    // height: '30px',
     width: '85%',
     border: 'none',
-    fontSize: '1.5vw',
     fontWeight: 300,
     outline: 'none',
     backgroundColor: 'transparent',
@@ -64,38 +78,121 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     minWidth: '100%',
   },
   dayHour: {
-    fontSize: '1.5vw',
+    fontSize: '1rem',
   },
   searchIcon: {
     fontSize: '28px',
     width: '28px',
     height: '28px',
   },
+  toolbar: {
+    [theme!.breakpoints!.up!('md')]: {
+      padding: 0,
+    },
+    [theme!.breakpoints!.only!('sm')]: {
+      paddingLeft: 32,
+      paddingRight: 32,
+    },
+  },
 });
 
-const NavSearch: ComponentType<IProps> = (props: IProps) => {
-  const {classes}       = props;
-  const [time, setTime] = useState<string>('');
+const searchStylesHome: StylesConfig = {
+  control: (styles) => ({
+    ...styles,
+    border: 'none',
+    boxShadow: 'none',
+    cursor: 'pointer',
+  }),
+  container: (styles) => ({
+    ...styles,
+    padding: 0,
+  }),
+  indicatorSeparator: (styles) => ({
+    display: 'none',
+  }),
+  valueContainer: (styles) => ({
+    ...styles,
+    padding: 0,
+  }),
+  placeholder: (styles) => ({
+    ...styles,
+    color: 'black',
+  }),
+  menu: (styles) => ({
+    ...styles,
+    width: 'calc(100% + 30vw)',
+    left: '-5vw',
+  }),
+};
+
+// @ts-ignore
+const NavSearch: ComponentType<IProps> = (props: LocalProps) => {
+  const {classes, filter}           = props;
+  const [time, setTime]             = useState<number>(0);
+  const [searchText, setSearchText] = useState('');
+  const {history}                   = useContext<IGlobalContext>(GlobalContext);
+
+  const {inputText, onSearch, optionSearchLabel, suggestEvent} = useSearchHomeSuggestionHook();
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setTime(event.target.value);
+    let type = parseInt(event.target.value);
+    setTime(type);
   };
+
+  const setSearchValue = (value: SearchSuggestRes | any) => {
+    setSearchText(value.name);
+  };
+
+  const onButtonSearchClick = () => {
+    const pushQuery: RoomUrlParams = {
+      name: searchText,
+      number_of_rooms: filter.roomsCount,
+      check_in: filter.startDate,
+      check_out: filter.endDate,
+      number_of_guests: filter.guestsCount,
+      most_popular: null,
+      rent_type: time !== 0 ? time : undefined,
+    };
+
+    const location = newRoomLocation(pushQuery);
+    history.push(location);
+  };
+
+  useEffect(() => {
+    if (!!inputText) {
+      setSearchText(inputText);
+    }
+  }, [inputText]);
+
   return (
     <Fragment>
       <AppBar position = 'sticky' elevation = {0} classes = {{root: classes.barSearch}}>
-        <Toolbar>
-          <GridContainer xs = {12} sm = {12} md = {11} lg = {10}>
-            <Grid container spacing = {16}>
+        <Toolbar classes = {{
+          root: classes.toolbar,
+        }}>
+          <GridContainer xs = {12} sm = {12} md = {11} lg = {10} xl = {9}>
+            <Grid container spacing = {8}>
               <Grid item xs = {3} sm = {4} md = {4}>
                 <Paper elevation = {4} className = {classes.paperSize} square>
                   <SearchIcon color = 'disabled' className = {classNames(classes.searchIcon, appC['ml-10'])} />
-                  <input type = 'text'
-                         name = 'name'
-                         defaultValue = ''
-                         className = {
-                           classNames(classes.inputSearch, appC['ml-10'])
-                         }
-                         placeholder = 'Enter a destination or property' />
+                  <AsyncSelect
+                    name = 'search-bar'
+                    defaultInputValue = ''
+                    components = {{Option: MenuItemSelectWithIcon}}
+                    cacheOptions
+                    defaultOptions
+                    getOptionLabel = {optionSearchLabel}
+                    getOptionValue = {optionSearchLabel}
+                    inputValue = {inputText}
+                    loadOptions = {suggestEvent}
+                    onInputChange = {onSearch}
+                    placeholder = 'Tìm kiếm'
+                    className = {
+                      classNames(classes.inputSearch, appC['ml-20'])
+                    }
+                    onChange = {setSearchValue}
+                    styles = {searchStylesHome}
+                  />
                 </Paper>
               </Grid>
               <Grid item xs = {1} sm = {2} md = {2}>
@@ -114,11 +211,11 @@ const NavSearch: ComponentType<IProps> = (props: IProps) => {
                       />
                     }
                   >
-                    <MenuItem value = '' disabled>
-                      <Typography className = {classes.dayHour} color = 'textSecondary'>Theo ngày/giờ</Typography>
+                    <MenuItem value = {0}>
+                      <Typography className = {classes.dayHour}>Ngày/giờ</Typography>
                     </MenuItem>
-                    <MenuItem value = 'Day'>Theo ngày</MenuItem>
-                    <MenuItem value = 'Hour'>Theo giờ</MenuItem>
+                    <MenuItem value = {2}>Theo ngày</MenuItem>
+                    <MenuItem value = {1}>Theo giờ</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -130,7 +227,14 @@ const NavSearch: ComponentType<IProps> = (props: IProps) => {
                 </Paper>
               </Grid>
               <Grid item xs = {1} sm = {1} md = {2}>
-                <Button variant = 'contained' color = 'primary' fullWidth className = {classes.btSearch}>
+                <Button
+                  name = 'search-navbar'
+                  variant = 'contained'
+                  color = 'primary'
+                  fullWidth
+                  onClick = {onButtonSearchClick}
+                  className = {classes.btSearch}
+                >
                   <Hidden mdUp>
                     <SearchIcon className = {classes.searchIcon} />
                   </Hidden>
@@ -147,6 +251,14 @@ const NavSearch: ComponentType<IProps> = (props: IProps) => {
   );
 };
 
+const mapStateToProps = (state: ReducersType) => {
+  return {
+    filter: state.searchFilter,
+  };
+};
+
 export default compose<IProps, any>(
+  connect(mapStateToProps),
   withStyles(styles),
+  memo,
 )(NavSearch);

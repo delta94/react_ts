@@ -23,6 +23,7 @@ import {ThemeStyle} from '@material-ui/core/styles/createTypography';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import Button from '@material-ui/core/Button/Button';
+import mapMarker from '@/assets/SvgIcon/map-marker.svg';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   imgSize: {
@@ -171,7 +172,7 @@ interface IProps {
 // @ts-ignore
 const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
   const {classes, room, isHover, focus} = props;
-  const {width}                  = useContext<IGlobalContext>(GlobalContext);
+  const {width}                         = useContext<IGlobalContext>(GlobalContext);
 
   const xsMode = width === 'xs';
 
@@ -185,7 +186,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
     draggable: !xsMode,
-    autoplay: xsMode,
+    // autoplay: xsMode,
     autoplaySpeed: 5000,
     pauseOnFocus: xsMode,
     focusOnSelect: xsMode,
@@ -219,7 +220,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
               )}
             </Slider>
           </Grid>
-          <Grid item lg = {8} sm = {8} xs = {12} onClick={() => focus(roomMemo)}>
+          <Grid item lg = {8} sm = {8} xs = {12} onClick = {() => focus(roomMemo)}>
             <Grid container className = {classes.maxHeight}>
               <Grid item xs = {12}>
                 <Grid container spacing = {0} className = {classNames(
@@ -247,12 +248,12 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                             ) : ''}
 
                             {/*Address*/}
-                            {/*<span className = {classes.verticalMid}>*/}
-                            {/*<img src = {mapMarker} className = {classNames(*/}
-                            {/*classes.mapMarker, classes.verticalMid,*/}
-                            {/*)} />&nbsp;*/}
-                            {/*<a className = {classes.address}>{roomMemo.details.data[0].address}</a>*/}
-                            {/*</span>*/}
+                            <span className = {classes.verticalMid}>
+                            <img src = {mapMarker} className = {classNames(
+                              classes.mapMarker, classes.verticalMid,
+                            )} />&nbsp;
+                              <a className = {classes.address}>{`${roomMemo.district.data.name}, ${roomMemo.city.data.name}`}</a>
+                            </span>
                           </Grid>
                           <Hidden xsUp>
                             <Grid item lg = {12} sm = {12} style = {{marginTop: 6}}>
@@ -310,7 +311,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
                                 variant = {isHover ? 'contained' : 'outlined'}
                                 color = 'primary'
                                 size = 'small'
-                              >Details</Button>
+                              >Chi tiết</Button>
                             </Grid>
                           ) : ''}
                         </Grid>

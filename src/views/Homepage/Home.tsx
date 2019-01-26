@@ -9,6 +9,7 @@ import useFocusTitle from '@/utils/focusState';
 import BG from '@/assets/adult-adventure-backlit-915972.jpg';
 import '@/styles/date-picker.scss';
 import '@/styles/Airbnb/date-picker-homepage.scss';
+import {connect} from 'react-redux';
 
 interface IProps {
   classes?: any;

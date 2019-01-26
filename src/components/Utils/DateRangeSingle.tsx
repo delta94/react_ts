@@ -1,9 +1,8 @@
 import * as act from '@/store/actions/actionTypes';
 import {ReducersType} from '@/store/reducers';
-import {BookingState, BookingAction, DateRange} from '@/store/reducers/booking';
-import moment from 'moment';
-import React, {useState, useEffect, ComponentType, useContext} from 'react';
-import {DateRangePicker, FocusedInputShape} from 'react-dates';
+import {BookingAction, DateRange} from '@/store/reducers/booking';
+import React, {ComponentType, useContext} from 'react';
+import {DateRangePicker} from 'react-dates';
 import 'react-dates/initialize';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
@@ -13,21 +12,25 @@ import {useDatePickerHook} from '@/components/Utils/DatePickerRoomDetail';
 import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 
 interface IProps {
-  filter: SearchFilterState
+  minNights?: number
+}
 
+interface LocalProps extends IProps {
+  filter: SearchFilterState
   updateDate(date: DateRange): any
 }
 
-const DateRangeSingle: ComponentType<IProps> = (props: IProps) => {
-  const {state}                       = useContext<IRoomDetailsContext>(RoomDetailsContext);
+// @ts-ignore
+const DateRangeSingle: ComponentType<IProps> = (props: LocalProps) => {
+  const {state} = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
   const {
-          setFocusedInput, onDateChange, sd, ed, focusedInput, blockingDate, isOutSideRange
+          setFocusedInput, onDateChange, sd, ed, focusedInput, blockingDate, isOutSideRange,
         } = useDatePickerHook(props, state, null);
 
   return (
     <DateRangePicker
-      numberOfMonths={1}
+      numberOfMonths = {1}
       startDateId = 'startDate'
       endDateId = 'endDate'
       startDate = {sd}

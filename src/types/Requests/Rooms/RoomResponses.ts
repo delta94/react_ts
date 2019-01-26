@@ -1,6 +1,8 @@
 import {TransformerInclude} from '@/types/Requests/ResponseTemplate';
 import {ComfortIndexRes} from '@/types/Requests/Comforts/ComfortResponses';
 import {MediaIndexRes} from '@/types/Requests/Media/MediaIndexResponse';
+import {CityRes} from '@/types/Requests/Cities/CityResponse';
+import {DistrictRes} from '@/types/Requests/Districts/DistrictResponse';
 
 export interface RoomIndexRes<T = any> {
   id: number;
@@ -45,6 +47,8 @@ export interface RoomIndexRes<T = any> {
   user: TransformerInclude<User>;
   comforts: TransformerInclude<ComfortIndexRes[]>;
   media: TransformerInclude<MediaIndexRes[]>
+  city: TransformerInclude<CityRes>
+  district: TransformerInclude<DistrictRes>
 }
 
 export interface RoomDetails<T=any> {

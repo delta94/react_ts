@@ -1,5 +1,5 @@
 import React, {ComponentType, Fragment} from 'react';
-import Grid, {GridSize} from '@material-ui/core/Grid/Grid';
+import Grid, {GridSize, GridSpacing} from '@material-ui/core/Grid/Grid';
 
 interface IProps {
   xs: GridSize
@@ -7,13 +7,20 @@ interface IProps {
   lg?: GridSize
   xl?: GridSize
   sm?: GridSize
+  spacing?: GridSpacing
   className?: string
 }
 
 const GridContainer: ComponentType<IProps> = props => {
   return (
     <Fragment>
-      <Grid container justify = 'center' alignContent = 'center' className = {props.className}>
+      <Grid
+        container
+        justify = 'center'
+        alignContent = 'center'
+        className = {props.className}
+        spacing={props.spacing ? props!.spacing : 0}
+      >
         <Grid item
               xs = {props.xs}
               sm = {props.sm || props.xs}

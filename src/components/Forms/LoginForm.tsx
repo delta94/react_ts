@@ -38,8 +38,7 @@ import Cookies from 'universal-cookie';
 import * as Yup from 'yup';
 import borderC from '@/styles/Styling/border.module.scss';
 import {withRouter, RouteChildrenProps} from 'react-router';
-import Divider from '@material-ui/core/Divider/Divider';
-import AlignS from '@/styles/Position/align.module.scss'
+import AlignS from '@/styles/Position/align.module.scss';
 import Blue from '@material-ui/core/colors/blue';
 
 interface IPasswordInput {
@@ -99,8 +98,8 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   color: {
     color: Blue[600],
-    cursor: 'pointer'
-  }
+    cursor: 'pointer',
+  },
 
 });
 
@@ -118,7 +117,7 @@ export const PasswordInputAdornment: FunctionComponent<IPasswordInput> = props =
   return (
     <InputAdornment position = 'end'>
       <IconButton onClick = {() => props.handle(!props.isShown)}>
-        {!props.isShown ? <VisibilityIcon /> : <InvisibilityIcon />}
+        {props.isShown ? <VisibilityIcon /> : <InvisibilityIcon />}
       </IconButton>
     </InputAdornment>
   );
@@ -134,7 +133,7 @@ const LoginForm: FunctionComponent<IProps> = props => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          handleSignUpAnimation
+          handleSignUpAnimation,
         } = props;
 
   const [showPassWord, setShowPassWord] = useState<boolean>(false);
@@ -226,10 +225,10 @@ const LoginForm: FunctionComponent<IProps> = props => {
             </form>
             <h5 className = {borderC['text-line-center']}>hoặc đăng nhập với</h5>
             {/*<Divider className={classes.spaceTop}/>*/}
-            <Typography className={AlignS.textCenter}>
+            <Typography className = {AlignS.textCenter}>
               Chưa có tài khoản?
-              <b className={classes.color}
-                 onClick={() => handleSignUpAnimation(true)}
+              <b className = {classes.color}
+                 onClick = {() => handleSignUpAnimation(true)}
               > Đăng ký ngay</b>
             </Typography>
           </Paper>
@@ -241,11 +240,11 @@ const LoginForm: FunctionComponent<IProps> = props => {
 
 const FormValidationSchema = Yup.object().shape({
   account_email: Yup.string()
-    .required('Please fill your email')
-    .email('Email address not valid'),
+    .required('Vui lòng nhập địa chỉ email')
+    .email('Email không hợp lệ'),
   account_password: Yup.string()
-    .required('Please enter your password')
-    .min(5, 'Password must more than 5 characters'),
+    .required('Vui lòng nhập mật khẩu')
+    .min(5, 'Mật khẩu phải tối thiểu 5 ký tự'),
 });
 
 const FormMilk = withFormik({
@@ -275,11 +274,12 @@ const FormMilk = withFormik({
           maxAge: cookieTime,
         });
       }
-
       cookies.set('_token', data.access_token, {
         path: '/',
         maxAge: cookieTime,
       });
+
+      window.location.reload();
       bags.setSubmitting(false);
       bags.props.handleLoginButton(false);
     }).catch(e => {

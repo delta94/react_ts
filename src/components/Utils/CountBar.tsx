@@ -9,11 +9,14 @@ import React, {ComponentType, MouseEvent, useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
 import {Dispatch} from 'redux';
+import NavigateNext from '@material-ui/icons/NavigateNext';
+import NavigateBefore from '@material-ui/icons/NavigateBefore';
 
 interface IProps {
   'p-classes': any;
   singular: string;
   plural: string;
+  name: string
   divider?: boolean;
 }
 
@@ -26,7 +29,7 @@ interface IPropsLocal extends IProps {
 const CountBar: ComponentType<IProps> = (props: IPropsLocal) => {
   const classes             = props['p-classes'];
   const dividerStatus       = props.divider;
-  let pluralLowerCase       = props.plural.toLowerCase() + 'Count';
+  let pluralLowerCase       = props.name.toLowerCase() + 'Count';
   const [status, setStatus] = useState(true);
 
   useEffect(() => {
@@ -46,12 +49,12 @@ const CountBar: ComponentType<IProps> = (props: IPropsLocal) => {
 
   return (
     <Grid container spacing = {8} justify = 'center' alignItems = 'center'>
-      <Grid item xs = {2}>
+      <Grid item sm = {2} xs = {3}>
         <Button onClick = {event => handleCount(event, -1)} disabled = {status}>
-          <Remove />
+          <NavigateBefore/>
         </Button>
       </Grid>
-      <Grid item xs = {8} style = {{
+      <Grid item sm = {8} xs = {6} style = {{
         textAlign: 'center',
       }}>
         <span className = {classes.countNumber}>{props.filter[pluralLowerCase]}</span>&nbsp;
@@ -60,9 +63,9 @@ const CountBar: ComponentType<IProps> = (props: IPropsLocal) => {
               ? props.plural
               : props.singular}</span>
       </Grid>
-      <Grid container item xs = {2} alignItems = 'flex-end'>
+      <Grid container item sm = {2} xs = {3} alignItems = 'flex-end'>
         <Button onClick = {event => handleCount(event, 1)} style = {{marginLeft: 'auto'}}>
-          <Add />
+          <NavigateNext/>
         </Button>
       </Grid>
       {dividerStatus

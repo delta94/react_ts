@@ -16,6 +16,7 @@ import Loadable from 'react-loadable';
 import {compose} from 'recompose';
 import {BookingFormContext, IBookingFormContext} from '@/store/context/Booking/BookingFormContext';
 import InfoHeader from '@/components/Bookings/InfoHeader';
+import {DEFAULT_DATE_FORMAT, DEFAULT_DATE_TIME_FORMAT} from '@/utils/store/global';
 
 export interface IProps {
   classes?: any;
@@ -86,6 +87,7 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
 
   const removeCoupon = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     dispatch({
       type: 'removeCoupon',
     });
@@ -109,13 +111,13 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
                     <Grid container item xs = {12}>
                       <Grid item xs = {6} className = {classes.fontLow}>Ngày nhận phòng</Grid>
                       <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
-                        moment.unix(price!.checkin).format('Y/MM/DD')
+                        moment.unix(price!.checkin).format(DEFAULT_DATE_TIME_FORMAT)
                       }</Grid>
                     </Grid>
                     <Grid container item xs = {12}>
                       <Grid item xs = {6} className = {classes.fontLow}>Ngày trả phòng</Grid>
                       <Grid container item xs = {6} className = {classes.fontLow} justify = 'flex-end'>{
-                        moment.unix(price!.checkout).format('Y/MM/DD')
+                        moment.unix(price!.checkout).format(DEFAULT_DATE_TIME_FORMAT)
                       }</Grid>
                     </Grid>
                     <Grid container item xs = {12}>
@@ -153,7 +155,7 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
                           {`${formatMoney(discount)}đ`}
                         </Grid>
                       </Grid>
-                    ): ''}
+                    ) : ''}
                   </Grid>
                   <Divider className = {classes.spaceTop} />
                   <Grid container spacing = {16} className = {classes.spaceTop}>
@@ -176,8 +178,8 @@ const BookingInfoDetail: ComponentType<IProps> = props => {
                 <Grid container item xs = {12} justify = 'flex-end'>
                   {price
                     ? (!state.coupon
-                        ? <button onClick = {couponHandle} ref = {couponRef}>Mã khuyến mãi</button>
-                        : <button onClick = {removeCoupon}>Xóa mã</button>
+                        ? <a href = {'javascript:void'} onClick = {couponHandle} ref = {couponRef}>Mã khuyến mãi</a>
+                        : <a href = {'javascript:void'} onClick = {removeCoupon}>Xóa mã</a>
                     )
                     : <SimpleLoader />
                   }

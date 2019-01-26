@@ -117,11 +117,11 @@ const BookingCouponForm: ComponentType<IProps> = props => {
           <form onSubmit = {handleSubmit}>
             <Paper className = {classes.paperCustom} square elevation = {1}>
               <Grid container spacing = {8}>
-                <Grid item xs = {8}>
+                <Grid item xs = {7}>
                   <FormControl variant = 'outlined' error = {!!(errors.coupon && touched.coupon)} fullWidth>
                     <InputLabel
                       htmlFor = 'coupon'
-                    >Coupon Code</InputLabel>
+                    >Mã giảm giá</InputLabel>
                     <OutlineInput id = 'coupon'
                                   name = 'coupon'
                                   value = {values.coupon.toUpperCase()}
@@ -132,14 +132,16 @@ const BookingCouponForm: ComponentType<IProps> = props => {
                     {(touched.coupon && errors.coupon) ? <FormHelperText>{errors.coupon}</FormHelperText> : ''}
                   </FormControl>
                 </Grid>
-                <Grid item xs = {4}>
+                <Grid item xs = {5}>
                   <Button
+                    name = 'apply-coupon'
                     type = 'submit'
                     color = 'primary'
                     disabled = {isSubmitting}
                     size = 'large'
                     variant = 'contained'
-                    style = {{height: '100%', width: '100%'}}>{isSubmitting ? <SimpleLoading /> : 'Apply'}</Button>
+                    style = {{height: '100%', width: '100%'}}
+                  >{isSubmitting ? <SimpleLoading /> : 'Sử dụng'}</Button>
                 </Grid>
               </Grid>
             </Paper>

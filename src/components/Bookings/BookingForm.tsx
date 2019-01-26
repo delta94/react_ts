@@ -3,7 +3,14 @@ import {FormikProps} from '@/types/Interface/Formik';
 import {BookingCreateReq} from '@/types/Requests/Booking/BookingRequests';
 import {axios} from '@/utils/axiosInstance';
 import {scrollDefault} from '@/utils/elementInteraction';
-import {AVAILABLE, DEFAULT_DATE_TIME_FORMAT, INTERNET_BANKING, PENDING, WEBSITE_SRC, ONLINE} from '@/utils/store/global';
+import {
+  AVAILABLE,
+  DEFAULT_DATE_TIME_FORMAT,
+  INTERNET_BANKING,
+  PENDING,
+  WEBSITE_SRC,
+  ONLINE,
+} from '@/utils/store/global';
 import {withStyles, createStyles} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -15,9 +22,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Grid from '@material-ui/core/Grid/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -51,34 +56,33 @@ interface IProps {
   state: BookingFormState;
 }
 
-
 interface ILocalProps extends IProps, FormikProps<IFormikValues>, RouteComponentProps {
 
 }
 
 const FormValidationSchema = Yup.object().shape({
   firstName: Yup.string()
-    .required('Please fill your name')
-    .min(3, 'Must be longer than 3 characters')
-    .max(50, 'No longer than 50 characters'),
+    .required('Vui lòng điền tên')
+    .min(2, 'Phải có ít nhất 2 ký tự')
+    .max(50, 'Tối đa 50 ký tự'),
   lastName: Yup.string()
-    .required('Please fill your name')
-    .min(3, 'Must be longer than 3 characters')
-    .max(50, 'No longer than 50 characters'),
+    .required('Vui lòng điền họ')
+    .min(2, 'Phải có ít nhất 2 ký tự')
+    .max(50, 'Tối đa 50 ký tự'),
   email: Yup.string()
-    .required('Please fill your email')
-    .email('Email address not valid'),
+    .required('Vui lòng điền địa chỉ email')
+    .email('Email không hợp lệ'),
   phone: Yup.string()
-    .required('Please fill your phone number'),
+    .required('Vui lòng điền số điện thoại'),
   country: Yup.number()
-    .required('Please select a country')
-    .min(1, 'Please select a country'),
+    .required('Vui lòng chọn thành phố')
+    .min(1, 'Vui lòng chọn thành phố'),
   isSomeOneElse: Yup.boolean(),
   guestName: Yup.string().when('isSomeOneElse', (status: boolean, schema: StringSchema) => {
     return status
-      ? schema.required('Please fill the field name')
-        .min(4, 'Must be longer than 4 characters')
-        .max(50, 'No longer than 50 characters')
+      ? schema.required('Vui lòng điền tên')
+        .min(2, 'Phải có ít nhất 2 ký tự')
+        .max(50, 'Tối đa 50 ký tự')
       : schema;
   }),
 });
@@ -174,7 +178,7 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
     }
 
     // Filter the services list
-    let filtered: Array<number> = services.filter((val, i, arr) => {
+    let filtered: number[] = services.filter((val) => {
       return (value !== val && status);
     });
 
@@ -191,12 +195,12 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
           <Grid container spacing = {24}>
             <Grid item xs = {12}>
               <Typography variant = 'h6'>
-                Let us know who you are
+                Thông tin đặt phòng
               </Typography>
             </Grid>
             <Grid item xs = {12} lg = {6}>
               <FormControl error = {!!(touched!.firstName && errors.firstName)} fullWidth>
-                <InputLabel htmlFor = 'firstName'>First name</InputLabel>
+                <InputLabel htmlFor = 'firstName'>Tên</InputLabel>
                 <Input id = 'firstName'
                        name = 'firstName'
                        onChange = {handleChange}
@@ -208,7 +212,7 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
             </Grid>
             <Grid item xs = {12} lg = {6}>
               <FormControl error = {!!(touched!.lastName && errors.lastName)} fullWidth>
-                <InputLabel htmlFor = 'lastName'>Last name</InputLabel>
+                <InputLabel htmlFor = 'lastName'>Họ</InputLabel>
                 <Input id = 'lastName'
                        name = 'lastName'
                        onChange = {handleChange}
@@ -230,23 +234,23 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
                 <FormHelperText>{touched.email ? errors.email : ''}</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs = {2}>
-              <FormControl error = {!!(errors.country && touched!.country)} fullWidth>
-                <InputLabel htmlFor = 'country'> </InputLabel>
-                <Select id = 'country'
-                        name = 'country'
-                        onChange = {handleChange}
-                        onBlur = {handleBlur}
-                        value = {values.country}>
-                  <MenuItem value = {1}>VN</MenuItem>
-                  <MenuItem value = {2}>US</MenuItem>
-                </Select>
-                <FormHelperText>{touched.country ? errors.country : ''}</FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs = {4}>
+            {/*<Grid item xs = {2}>*/}
+            {/*<FormControl error = {!!(errors.country && touched!.country)} fullWidth>*/}
+            {/*<InputLabel htmlFor = 'country'> </InputLabel>*/}
+            {/*<Select id = 'country'*/}
+            {/*name = 'country'*/}
+            {/*onChange = {handleChange}*/}
+            {/*onBlur = {handleBlur}*/}
+            {/*value = {values.country}>*/}
+            {/*<MenuItem value = {1}>VN</MenuItem>*/}
+            {/*<MenuItem value = {2}>US</MenuItem>*/}
+            {/*</Select>*/}
+            {/*<FormHelperText>{touched.country ? errors.country : ''}</FormHelperText>*/}
+            {/*</FormControl>*/}
+            {/*</Grid>*/}
+            <Grid item xs = {12} sm = {6} md = {6}>
               <FormControl error = {!!(errors.phone && touched!.phone)} fullWidth>
-                <InputLabel htmlFor = 'phone-number'>Phone number</InputLabel>
+                <InputLabel htmlFor = 'phone-number'>Số điện thoại</InputLabel>
                 <Input id = 'phone-number'
                        name = 'phone'
                        onChange = {handleChange}
@@ -270,7 +274,7 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
                       color = 'primary'
                     />
                   }
-                  label = "I'm book this room for someone else" />
+                  label = 'Tôi đặt phòng cho người khác' />
               </FormControl>
             </Grid>
             {/*Booking for another one section*/}
@@ -283,12 +287,12 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
                   <Grid container spacing = {16}>
                     <Grid item xs = {12}>
                       <Typography variant = 'h6'>
-                        Guest information
+                        Thông tin người nhận
                       </Typography>
                     </Grid>
                     <Grid item xs = {12}>
                       <FormControl error = {!!(errors.guestName && touched.guestName)} fullWidth>
-                        <InputLabel htmlFor = 'guest-name'>First and last name</InputLabel>
+                        <InputLabel htmlFor = 'guest-name'>Họ và tên</InputLabel>
                         <Input id = 'guest-name'
                                name = 'guestName'
                                inputRef = {guestNameRef}
@@ -304,45 +308,46 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
               </Collapse>
             </Grid>
             <Grid item xs = {12}>
-              <Button color = 'primary' style = {{paddingLeft: 0}} onClick = {() => toggleRequest(!isRequest)}>
+              <Button name = 'addition-services' color = 'primary' style = {{paddingLeft: 0}}
+                      onClick = {() => toggleRequest(!isRequest)}>
                 {isRequest ? <RemoveIcon /> : <AddIcon />}
-                Click here for more requests
+                Yêu cầu thêm dịch vụ
               </Button>
             </Grid>
             <Grid item xs = {12}>
               <Collapse in = {isRequest}>
                 <Grid container spacing = {24}>
                   <Grid item xs = {12}>
-                    <Paper className = {
-                      classNames(classes.paperCustom, classes.grayPaper)
-                    }
-                           elevation = {0} square>
-                      <Grid container spacing = {16}>
-                        {prefer.map((req, i) => (
-                          <Grid item md = {6} xs = {4} key = {i}>
-                            <FormControl>
-                              <FormControlLabel
-                                control = {
-                                  <Checkbox
-                                    name = 'additional-request'
-                                    value = {req.id.toString()}
-                                    color = 'primary'
-                                    onClick = {(e: any) => setAdditionalServices(e)}
-                                  />
-                                }
-                                label = {req.value + (req.options ? ` (${req.options})` : '')} />
-                            </FormControl>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Paper>
+                    {/*<Paper className = {*/}
+                    {/*classNames(classes.paperCustom, classes.grayPaper)*/}
+                    {/*}*/}
+                    {/*elevation = {0} square>*/}
+                    {/*<Grid container spacing = {16}>*/}
+                    {/*{prefer.map((req, i) => (*/}
+                    {/*<Grid item md = {6} xs = {4} key = {i}>*/}
+                    {/*<FormControl>*/}
+                    {/*<FormControlLabel*/}
+                    {/*control = {*/}
+                    {/*<Checkbox*/}
+                    {/*name = 'additional-request'*/}
+                    {/*value = {req.id.toString()}*/}
+                    {/*color = 'primary'*/}
+                    {/*onChange = {setAdditionalServices}*/}
+                    {/*/>*/}
+                    {/*}*/}
+                    {/*label = {req.value + (req.options ? ` (${req.options})` : '')} />*/}
+                    {/*</FormControl>*/}
+                    {/*</Grid>*/}
+                    {/*))}*/}
+                    {/*</Grid>*/}
+                    {/*</Paper>*/}
                   </Grid>
                   <Grid item xs = {12}>
                     <FormControl fullWidth>
-                      <InputLabel htmlFor = 'additional-note'>Additional notes</InputLabel>
+                      <InputLabel htmlFor = 'additional-note'>Ghi chú</InputLabel>
                       <Input id = 'additional-note'
                              name = 'additionalNote'
-                             multiline = {true}
+                             multiline
                              onChange = {handleChange}
                              onBlur = {handleBlur}
                              value = {values.additionalNote}
@@ -356,11 +361,12 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
               <Grid container justify = 'flex-end'>
                 <Grid item>
                   <Button variant = 'contained'
+                          name = 'confirm-information'
                           size = 'large'
                           color = 'primary'
                           disabled = {!room || isSubmitting}
                           type = 'submit'>
-                    {(room && !isSubmitting) ? 'Process your lists' : <SimpleLoading />}
+                    {(room && !isSubmitting) ? 'Xác nhận thông tin' : <SimpleLoading />}
                   </Button>
                 </Grid>
               </Grid>
@@ -369,7 +375,7 @@ const BookingForm: ComponentType<IProps> = (props: ILocalProps) => {
               <Grid container justify = 'flex-end'>
                 <Grid item>
                   <Typography variant = 'subtitle2' style = {{color: '#b3b3b3'}}>
-                    Don't worry, you won't be charged yet
+                    Bạn vẫn chưa phải thanh toán ở bước này
                   </Typography>
                 </Grid>
               </Grid>
@@ -425,7 +431,7 @@ const FormMilk = withFormik({
       history.push(url);
       bags.setSubmitting(false);
     }).catch(e => {
-      console.log(e.response);
+      history.push('/404');
       bags.setSubmitting(false);
     });
   },

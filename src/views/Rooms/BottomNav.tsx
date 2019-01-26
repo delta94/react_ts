@@ -23,7 +23,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     position: 'fixed',
     width: '100%',
     bottom: 0,
-    height: 58,
+    height: 60,
   },
 });
 
@@ -66,14 +66,13 @@ const BottomNav: ComponentType<IProps> = (props: IProps) => {
     <Fragment>
       <BottomNavigation
         value = {index}
-        style = {{position: 'fixed'}}
         onChange = {(e, value) => setIndex(value)}
         showLabels
         className = {classes.root}
       >
-        <BottomNavigationAction label = 'Filter' icon = {<Filter />} />
-        <BottomNavigationAction label = 'Lists' icon = {<List />} />
-        <BottomNavigationAction label = 'Maps' icon = {<Map />} />
+        <BottomNavigationAction label = 'Bộ lọc' icon = {<Filter />} />
+        <BottomNavigationAction label = 'Phòng' icon = {<List />} />
+        <BottomNavigationAction label = 'Bản đồ' icon = {<Map />} />
       </BottomNavigation>
       <Dialog
         fullScreen
