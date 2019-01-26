@@ -9,6 +9,8 @@ import useFocusTitle from '@/utils/focusState';
 import BG from '@/assets/adult-adventure-backlit-915972.jpg';
 import '@/styles/date-picker.scss';
 import '@/styles/Airbnb/date-picker-homepage.scss';
+import Footer from '@/layouts/Main/Footer';
+import ListRoom from '@/layouts/Main/ListRoom';
 
 interface IProps {
   classes?: any;
@@ -41,6 +43,8 @@ const Home: FunctionComponent<IProps | any> = props => {
           </Grid>
         </GridContainer>
       </div>
+      <ListRoom />
+      <Footer />
     </Fragment>
   );
 };
