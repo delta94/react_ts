@@ -5,9 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper/Paper';
 import BookingList from '@/views/ProfilePage/BookingList';
-import NoteOutlined from '@material-ui/icons/NoteOutlined';
-
-
+import InsertDriveFileOutlined from '@material-ui/icons/InsertDriveFileOutlined';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {Typography} from "@material-ui/core";
 import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
@@ -15,6 +13,9 @@ import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
 const styles: any = (theme: ThemeCustom) => createStyles({
   boxBookingProfile: {
     position: 'relative',
+    [theme!.breakpoints!.down!('xs')]: {
+      paddingBottom: 50,
+    },
   },
   tabsRoot: {
     borderBottom: '1px solid #e8e8e8',
@@ -59,10 +60,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     WebkitTransform: 'translateX(-50%) translateY(0)',
     MozTransform: 'translateX(-50%) translateY(0)',
     transform: 'translateX(-50%) translateY(0)',
+    [theme!.breakpoints!.down!('xs')]: {
+      paddingBottom: 75,
+    },
   },
-  iconNote: {
-    fontSize: 32,
-  }
 });
 
 interface ITabContainer {
@@ -83,7 +84,7 @@ const TabContainer: ComponentType<ITabContainer> = (props: ITabContainer) => {
 
 const BookingProfile: ComponentType<IBookingProfile> = (props: IBookingProfile) => {
   const {classes} = props;
-  const [value, setValue] = useState<number>(1);
+  const [value, setValue] = useState<number>(0);
   const {width} = useContext<IGlobalContext>(GlobalContext);
 
   const handleChange = (event: ChangeEvent<{}>, values: number) => {
@@ -92,7 +93,7 @@ const BookingProfile: ComponentType<IBookingProfile> = (props: IBookingProfile) 
 
   return (
     <Fragment>
-      <Paper square style = {{position: 'relative'}}>
+      <Paper square className = {classes.boxBookingProfile}>
         <Tabs
           value = {value}
           onChange = {handleChange}
@@ -103,22 +104,22 @@ const BookingProfile: ComponentType<IBookingProfile> = (props: IBookingProfile) 
           <Tab
             disableRipple
             classes = {{root: classes.tabRoot, selected: classes.tabSelected}}
-            label = 'Pending'
+            label = 'Chờ xác nhận'
           />
           <Tab
             disableRipple
             classes = {{root: classes.tabRoot, selected: classes.tabSelected}}
-            label = 'Upcoming'
+            label = 'Sắp tới'
           />
           <Tab
             disableRipple
             classes = {{root: classes.tabRoot, selected: classes.tabSelected}}
-            label = 'Completed'
+            label = 'Đã hoàn thành'
           />
           <Tab
             disableRipple
             classes = {{root: classes.tabRoot, selected: classes.tabSelected}}
-            label = 'Cancelled'
+            label = 'Đã hủy'
           />
 
         </Tabs>
@@ -138,16 +139,7 @@ const BookingProfile: ComponentType<IBookingProfile> = (props: IBookingProfile) 
           {value === 3 && <TabContainer> <BookingList status = {5} />
           </TabContainer>}
         </div>
-        <div className = {classes.fakeData}>
-          <Typography align = 'center' variant = 'h4' color = 'textSecondary'>
-            <NoteOutlined className = {classes.iconNote} />
-          </Typography>
-          <Typography align = 'center' variant = 'h4' color = 'textSecondary'>
-            Nothing in your list
-          </Typography>
-        </div>
       </Paper>
-
     </Fragment>
   );
 };

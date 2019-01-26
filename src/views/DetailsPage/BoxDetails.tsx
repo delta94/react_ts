@@ -24,7 +24,11 @@ import medalCertified from '@/assets/medalCertified.svg';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 // @ts-ignore
 import StarRatings from 'react-star-ratings';
-import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
+// @ts-ignore
+import ReactHtmlParser, {processNodes, convertNodeToElement, htmlparser2} from 'react-html-parser'
+import {
+  IRoomDetailsContext, RoomDetailsContext,
+} from '@/store/context/Room/RoomDetailsContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 
 interface IProps {
@@ -66,8 +70,10 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     verticalAlign: 'bottom',
     fontSize: 20,
   },
-  boxPadding: {
-    padding: 16,
+  boxPaddingXS: {
+    [theme!.breakpoints!.down!('xs')]: {
+      padding: '0px 8px',
+    },
   },
   roomAmenitiesTitle: {
     color: '#46afcc',
@@ -192,6 +198,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.1)',
     padding: 24,
     width: '100%',
+    [theme!.breakpoints!.down!('xs')]: {
+      padding: 16,
+    },
   },
   titleHighlight: {
     fontSize: 17,
@@ -206,8 +215,20 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     color: '#484848',
   },
   expansionPanelSummary: {
+    display: 'block',
+    paddingBottom: 20,
+    [theme!.breakpoints!.down!('xs')]: {
+      paddingBottom: 0,
+    },
+  },
+  convenientExpansionPanelSummary: {
     [theme!.breakpoints!.down!('xs')]: {
       display: 'block',
+    },
+  },
+  RootExpansionPanelSummary: {
+    [theme!.breakpoints!.down!('xs')]: {
+      padding: '0 10px'
     },
   },
   expansionPanel: {
@@ -219,10 +240,21 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     display: 'block',
   },
   headingPanel: {
-    flexBasis: '33.33%',
+    flexBasis: '25%',
     flexShrink: 0,
     fontSize: 16,
   },
+  des_3Line: {
+    overflow: 'hidden',
+    display: '-webkit-box',
+    WebkitLineClamp: 4,
+    WebkitBoxOrient: 'vertical',
+    maxHeight: 200,
+  },
+  tagP_inHtmlPare: {
+    width: '100%',
+    display: 'block',
+  }
 });
 
 const BoxDetails: ComponentType<IProps> = (props: IProps) => {
@@ -233,12 +265,35 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
   const {room} = state;
 
   if (room == null) {
-    return <SimpleLoader />;
+    return <SimpleLoader />
   }
+  const description = room!.details.data[0].description;
+
+  const transformHtmlTitle = (node: any, index: number) => {
+    let validNodeIndex = index === 0 || index === 1;
+    if (!validNodeIndex) {
+      return null
+    }
+  };
+  const transformHtmlContent = (node: any, index: number) => {
+    console.log("before   ", node, index);
+
+    let validNodeIndex = index === 0 || index === 1;
+    let validNodeTag = node.type === 'tag' || node.type === 'text';
+    if (validNodeIndex && validNodeTag && node.parent === null) {
+      return null
+    }
+    if (node.name === 'p') {
+      node.attribs.class = classes.tagP_inHtmlPare;
+      return convertNodeToElement(node, index, transformHtmlContent);
+    }
+    console.log("after   ", node, index);
+
+  };
 
   return (
     <Fragment>
-      <Grid container>
+      <Grid container className = {classes.boxPaddingXS}>
         <Grid item xs = {9} className = {classes.boxName}>
           <Grid container direction = 'column'
                 justify = 'center'
@@ -255,7 +310,7 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 starSpacing = '1px'
                 starRatedColor = '#46afcc'
               />
-              <span className = {classes.spanViews}>{room!.total_review} lượt xem</span>
+              <span className = {classes.spanViews}>{room!.total_review} đánh giá</span>
             </Grid>
             <Grid item className = {classes.rowMargin}>
               <span className = {classes.txtAddress}>
@@ -342,25 +397,25 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
         <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <People className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>{room!.max_guest} guests</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{room!.max_guest} khách</span></div>
           </div>
         </Grid>
         <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <MeetingRoom className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>{room!.number_room} rooms</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{room!.number_room} phòng</span></div>
           </div>
         </Grid>
         <Grid item xs = {3} sm = {3}>
           <div className = {classes.collectionAmenities}>
             <LocalHotel className = {classes.roomAmenitiesIcon} />
-            <div className = {classes.roomAmenitiesTitle}><span>{room!.number_bed} beds</span></div>
+            <div className = {classes.roomAmenitiesTitle}><span>{room!.number_bed} giường</span></div>
           </div>
         </Grid>
       </Grid>
       <Grid container className = {classes.rowMargin20}>
         <div className = {classes.boxHighlight}>
-          <Typography variant = {'button'} color = {'textSecondary'}>Home Highlights</Typography>
+          <Typography variant = {'button'} color = {'textSecondary'}>Điểm nổi bật của homestay</Typography>
           <div className = {classes.rowMargin20}>
             <span className = {classes.titleHighlight}>Is a Superhost: </span>
             <span className = {classes.contentHighlight}>Superhosts are experienced, highly rated hosts who are committed to providing great stays for guests.</span>
@@ -379,68 +434,71 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
       </Grid>
       <Grid container className = {classes.rowMargin20}>
         <ExpansionPanel classes = {{root: classes.expansionPanel}}>
-          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />} classes = {{content: classes.expansionPanelSummary}}>
+          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />}
+                                 classes = {{
+                                   content: classes.expansionPanelSummary,
+                                   root: classes.RootExpansionPanelSummary
+                                 }}>
             <Typography className = {classNames(classes.titleHighlight, classes.headingPanel)}>
-              About homestay
+              Thông tin về homestay
             </Typography>
-            <Typography variant = {'body2'}>
-              Stunning views over the hinterland. Luxurious villa sleeping 10 persons in a loft style room. Property
-              spreads over 10 acres. Horses and dogs are welcome.
-            </Typography>
+            <div className = {classes.des_3Line}>
+              {ReactHtmlParser(description, {
+                transform: transformHtmlTitle
+              })}
+            </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails classes = {{root: classes.expansionPanelDetails}}>
             <Grid container className = {classes.rowMargin}>
-              <Grid item xs = {4}>
-                <Typography variant = {'subtitle2'}>The space: </Typography>
-              </Grid>
-              <Grid item xs = {8}>
-                <Typography variant = {'body2'}> - 25 min from Surfers Paradise</Typography>
-                <Typography variant = {'body2'}> - Soothing hot outdoor spa</Typography>
-                <Typography variant = {'body2'}> - Heating & Air Conditioning</Typography>
-                <Typography variant = {'body2'}> - Property is on 10 acres of beautiful land</Typography>
-              </Grid>
+              {ReactHtmlParser(description, {
+                transform: transformHtmlContent
+              })}
             </Grid>
-            <Grid container className = {classes.rowMargin}>
-              <Grid item xs = {4}>
-                <Typography variant = {'subtitle2'}>Guest access: </Typography>
-              </Grid>
-              <Grid item xs = {8}>
-                <Typography variant = {'body2'}> - Guests have access to the entire property with the exception of the
-                                                 main house that the owner occupies.</Typography>
-              </Grid>
-            </Grid>
+            {/*<Grid container className = {classes.rowMargin}>*/}
+            {/*<Grid item xs = {4}>*/}
+            {/*<Typography variant = {'subtitle2'}>Quyền hạn của khách: </Typography>*/}
+            {/*</Grid>*/}
+            {/*<Grid item xs = {8}>*/}
+            {/*<Typography variant = {'body2'}> - Guests have access to the entire property with the exception of the*/}
+            {/*main house that the owner occupies.</Typography>*/}
+            {/*</Grid>*/}
+            {/*</Grid>*/}
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </Grid>
       <Grid container className = {classes.rowMargin20}>
         <ExpansionPanel classes = {{root: classes.expansionPanel}}>
-          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />} classes = {{content: classes.expansionPanelSummary}}>
+          <ExpansionPanelSummary expandIcon = {<ExpandMoreIcon />}
+                                 classes = {{
+                                   content: classes.convenientExpansionPanelSummary,
+                                   root: classes.RootExpansionPanelSummary
+                                 }}>
             <Typography className = {classNames(classes.titleHighlight, classes.headingPanel)}>
-              Amenities
+              Tiện Nghi
             </Typography>
             <Grid container>
               <Grid item xs = {3} sm = {3}>
                 <div className = {classes.collectionAmenities}>
                   <MeetingRoom className = {classes.roomAmenitiesIcon} />
-                  <div className = {classes.roomAmenitiesTitle}><span>2 Bedroom(s)</span></div>
+                  <div className = {classes.roomAmenitiesTitle}><span>2 phòng ngủ</span></div>
                 </div>
               </Grid>
               <Grid item xs = {3} sm = {3}>
                 <div className = {classes.collectionAmenities}>
                   <LocalHotel className = {classes.roomAmenitiesIcon} />
-                  <div className = {classes.roomAmenitiesTitle}><span>2 beds</span></div>
+                  <div className = {classes.roomAmenitiesTitle}><span>2 giường</span></div>
                 </div>
               </Grid>
               <Grid item xs = {3} sm = {3}>
                 <div className = {classes.collectionAmenities}>
                   <Wifi className = {classes.roomAmenitiesIcon} />
-                  <div className = {classes.roomAmenitiesTitle}><span>Free Wifi</span></div>
+                  <div className = {classes.roomAmenitiesTitle}><span>Wifi miễn phí</span></div>
                 </div>
               </Grid>
               <Grid item xs = {3} sm = {3}>
                 <div className = {classes.collectionAmenities}>
                   <Fastfood className = {classes.roomAmenitiesIcon} />
-                  <div className = {classes.roomAmenitiesTitle}><span>Free Breakfast</span></div>
+                  <div className = {classes.roomAmenitiesTitle}><span>Miễn phí bữa sáng</span></div>
                 </div>
               </Grid>
             </Grid>
@@ -451,29 +509,31 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
                 <Typography variant = {'subtitle2'}>&#9679; Wifi: </Typography>
               </Grid>
               <Grid item xs = {8}>
-                <Typography variant = {'body2'}>- Continuous access in the listing</Typography>
+                <Typography variant = {'body2'}>- Truy cập liên tục</Typography>
               </Grid>
             </Grid>
             <Grid container className = {classes.rowMargin}>
               <Grid item xs = {4}>
-                <Typography variant = {'subtitle2'}>&#9679; Dryer: </Typography>
+                <Typography variant = {'subtitle2'}>&#9679; Máy xấy tóc: </Typography>
               </Grid>
               <Grid item xs = {8}>
-                <Typography variant = {'body2'}>- In the building, free or for a fee</Typography>
+                <Typography variant = {'body2'}>- Miễn phí hoặc tính phí</Typography>
               </Grid>
             </Grid>
             <Grid container className = {classes.rowMargin}>
               <Grid item xs = {4}>
-                <Typography variant = {'subtitle2'}>&#9679; TV: </Typography>
-              </Grid>
-              <Grid item xs = {8} />
-            </Grid>
-            <Grid container className = {classes.rowMargin}>
-              <Grid item xs = {4}>
-                <Typography variant = {'subtitle2'}>&#9679; Air conditioning: </Typography>
+                <Typography variant = {'subtitle2'}>&#9679; Tivi: </Typography>
               </Grid>
               <Grid item xs = {8}>
-                <Typography variant = {'body2'}>- Yes</Typography>
+                <Typography variant = {'body2'}>- Có</Typography>
+              </Grid>
+            </Grid>
+            <Grid container className = {classes.rowMargin}>
+              <Grid item xs = {4}>
+                <Typography variant = {'subtitle2'}>&#9679; Điều hòa: </Typography>
+              </Grid>
+              <Grid item xs = {8}>
+                <Typography variant = {'body2'}>- Có</Typography>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>

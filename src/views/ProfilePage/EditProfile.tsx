@@ -13,10 +13,9 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Lock from '@material-ui/icons/LockOutlined';
-import React, {ComponentType, useContext, useMemo} from 'react';
+import React, {ComponentType, useContext, useMemo, useState} from 'react';
 import {compose} from 'recompose';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
-import Hidden from '@material-ui/core/Hidden';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {ProfileContext, IProfileContext} from '@/store/context/Profile/ProfileContext';
 import {Formik, FormikActions} from 'formik';
@@ -26,12 +25,18 @@ import moment from 'moment';
 import {ProfileInfoReq} from '@/types/Requests/Profile/ProfileReq';
 import {axios} from "@/utils/axiosInstance";
 import GridContainer from "@/layouts/Grid/Container";
-
+import {Snackbar, SnackbarContent} from "@material-ui/core";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   boxEditProfile: {
     position: 'relative',
     justifyContent: 'center',
+    [theme!.breakpoints!.down!('xs')]: {
+      paddingBottom: 50,
+    },
   },
   formControl: {
     minWidth: 120,
@@ -97,6 +102,18 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     [theme!.breakpoints!.down!('md')]: {
       padding: '25px 0 0 0',
     },
+  },
+  snackContent: {
+    backgroundColor: '#43A047',
+  },
+  iconSnackContent: {
+    opacity: 0.9,
+    marginRight: theme!.spacing!.unit,
+    fontSize: 20,
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
   }
 });
 
@@ -120,6 +137,8 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
   const {classes} = props;
   const {state} = useContext<IProfileContext>(ProfileContext);
   const {profile} = state;
+  const [openSnack, setOpenSnack] = useState<boolean>(false);
+
 
   let birthday: any = null;
   if (profile == null) {
@@ -158,19 +177,19 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
 
   const validationForm = Yup.object().shape({ // Validate form field
     gender: Yup.number()
-      .required('gioi tinh cua ban'),
+      .required('Giới tính của bạn'),
     name: Yup.string()
-      .required('Name is required')
-      .min(3, 'ten phai co it nhat 3 ki tu')
-      .max(50, 'ten khong qua 225 ki tu'),
+      .required('Họ và Tên là bắt buộc')
+      .min(2, 'Tên phải có ít nhất 2 kí tự')
+      .max(50, 'Tên không quá 50 kí tự'),
     email: Yup.string()
-      .required('Email is required')
+      .required('Email là bắt buộc')
       .email('Vui lòng nhập đúng định dạng email'),
     phone: Yup.string()
-      .required('Phone is required')
-      .test('checkNaN', 'Khong duoc nhap chu', value => !isNaN(value))
-      .min(10, 'so dien thoai phai co it nhat 10 so')
-      .max(11, 'so dien thoai phai khong qua 11 so'),
+      .required('Số điện thoại là bắt buộc')
+      .test('checkNaN', 'Không được nhập chữ và các kí hiệu đặc biệt', value => !isNaN(value))
+      .min(10, 'SĐT phải có ít nhất 10 số')
+      .max(11, 'SĐT không vượt quá 11 số'),
   });
 
   return (
@@ -186,7 +205,6 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
           let year = values.year ? values.year : '';
 
           const data: ProfileInfoReq = {
-            uuid: profile!.uuid,
             name: values.name,
             email: values.email,
             gender: values.gender,
@@ -198,6 +216,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
           axios.put('profile', data)
             .then(res => {
               actions.setSubmitting(false);
+              setOpenSnack(!openSnack);
             })
             .catch(error => {
               actions.setSubmitting(false);
@@ -218,16 +237,15 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
             <form onSubmit = {handleSubmit}>
               <Paper square className = {classes.boxPadding}>
                 <GridContainer xs = {12} sm = {12} md = {11} lg = {11} className = {classes.editRequired}>
-                  <Typography variant = 'h5' className = {classes.typoBigTitle}>Required</Typography>
+                  <Typography variant = 'h5' className = {classes.typoBigTitle}>Đề nghị</Typography>
                   <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
-                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>I
-                                                                                                    am </Typography>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Tôi là </Typography>
                     </Grid>
                     <Grid item xs = {4} sm = {3} md = {2} lg = {2}>
                       <FormControl className = {classes.formControl}>
-                        <InputLabel htmlFor = 'Gender'>Gender</InputLabel>
+                        <InputLabel htmlFor = 'Gender'>Giới tính</InputLabel>
                         <Select
                           value = {values.gender}
                           onChange = {handleChange}
@@ -238,10 +256,10 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                           }}
                         >
                           <MenuItem value = {0}>
-                            <em>Unknown</em>
+                            <em>K.xác định</em>
                           </MenuItem>
-                          <MenuItem value = {1}>Mr</MenuItem>
-                          <MenuItem value = {2}>Ms</MenuItem>
+                          <MenuItem value = {1}>Nam</MenuItem>
+                          <MenuItem value = {2}>Nữ</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>
@@ -252,7 +270,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         required
                         error = {!!errors.name}
                       >
-                        <InputLabel htmlFor = 'name'>Name</InputLabel>
+                        <InputLabel htmlFor = 'name'>Họ và tên</InputLabel>
                         <Input
                           value = {values.name}
                           onChange = {handleChange}
@@ -270,12 +288,12 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
-                        Phone Number
+                        Số điện thoại
                       </Typography>
                     </Grid>
                     <Grid item xs = {4} sm = {3} md = {2} lg = {2}>
                       <FormControl required className = {classes.formControl}>
-                        <InputLabel htmlFor = 'arenaCode'>arena code</InputLabel>
+                        <InputLabel htmlFor = 'arenaCode'>Mã vùng</InputLabel>
                         <Select
                           value = {0}
                           onChange = {handleChange}
@@ -305,7 +323,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                           required
                           error = {!!errors.phone}
                         >
-                          <InputLabel htmlFor = 'Phone'>Phone</InputLabel>
+                          <InputLabel htmlFor = 'Phone'>Số điện thoại</InputLabel>
                           <Input
                             value = {values.phone}
                             onChange = {handleChange}
@@ -322,7 +340,8 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                           />
                           {!!errors.phone ? touched.phone && <FormHelperText>{errors.phone}</FormHelperText> :
                             <FormHelperText id = 'phone-helper-text'>
-                              The number for guest contacts, booking requests, reminders, and other notifications.
+                              SĐT để liên lạc giữa chủ nhà và khách, yêu cầu đặt phòng, gửi nhắc nhở, và các thông báo
+                              khác
                             </FormHelperText>
                           }
                         </FormControl>
@@ -333,7 +352,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
-                        Email Address
+                        Email
                       </Typography>
                     </Grid>
                     <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
@@ -359,8 +378,8 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                             }}
                           />
                           {!!errors.email ? touched.email && <FormHelperText>{errors.email}</FormHelperText> :
-                            <FormHelperText id = 'email-helper-text'>We won’t share your private email address with
-                                                                     anyone else</FormHelperText>
+                            <FormHelperText id = 'email-helper-text'>Chúng tôi sẽ không chia sẻ địa chỉ email của bạn
+                                                                     cho bất kì ai.</FormHelperText>
                           }
                         </FormControl>
                       </Tooltip>
@@ -370,7 +389,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>
-                        Date of birth
+                        Ngày sinh
                       </Typography>
                     </Grid>
                     <Grid item xs = {3} sm = {2} md = {2} lg = {2}>
@@ -379,12 +398,12 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         <TextField
                           id = 'standard-select-Day'
                           select
-                          label = 'Day'
+                          label = 'Ngày'
                           className = {classes.formControl}
                           onChange = {handleChange}
                           onBlur = {handleBlur}
                           name = 'day'
-                          value = {values.day ? values.day : '1'}
+                          value = {values.day ? values.day : '01'}
                           SelectProps = {{
                             MenuProps: {
                               className: classes.menu,
@@ -401,12 +420,12 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         <TextField
                           id = 'standard-select-month'
                           select
-                          label = 'Month'
+                          label = 'Tháng'
                           onChange = {handleChange}
                           onBlur = {handleBlur}
                           name = 'month'
                           className = {classes.formControl}
-                          value = {values.month ? values.month : '1'}
+                          value = {values.month ? values.month : '01'}
                           // onChange = {handleChange}
                           SelectProps = {{
                             MenuProps: {
@@ -426,12 +445,12 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                             <TextField
                               id = 'standard-select-year'
                               select
-                              label = 'Year'
+                              label = 'Năm'
                               className = {classes.formControl}
                               onChange = {handleChange}
                               onBlur = {handleBlur}
                               name = 'year'
-                              value = {values.year ? values.year : '1900'}
+                              value = {values.year ? values.year : '1980'}
                               // onChange = {handleChange}
                               SelectProps = {{
                                 MenuProps: {
@@ -453,7 +472,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left'
-                                  className = {classes.typoTitle}>Address </Typography>
+                                  className = {classes.typoTitle}>Địa chỉ </Typography>
                     </Grid>
                     <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <FormControl
@@ -461,7 +480,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         aria-describedby = 'address-helper-text'
                         fullWidth
                       >
-                        <InputLabel htmlFor = 'Address'>Address</InputLabel>
+                        <InputLabel htmlFor = 'Address'>Địa chỉ</InputLabel>
                         <Input
                           name = 'address'
                           value = {values.address ? values.address : ''}
@@ -476,8 +495,8 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                   <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
-                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Describe
-                                                                                                    Yourself </Typography>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Miêu tả bản
+                                                                                                    thân </Typography>
                     </Grid>
                     <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <TextField
@@ -494,12 +513,12 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                   </Grid>
                 </GridContainer>
                 <GridContainer xs = {12} sm = {12} md = {11} lg = {11} className = {classes.editRequired}>
-                  <Typography variant = 'h5' className = {classes.typoBigTitle}>Optional</Typography>
+                  <Typography variant = 'h5' className = {classes.typoBigTitle}>Tùy chọn</Typography>
                   <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left'
-                                  className = {classes.typoTitleOptional}>School </Typography>
+                                  className = {classes.typoTitleOptional}>Trường học </Typography>
                     </Grid>
                     <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <Tooltip title = 'Private' placement = 'right-start'
@@ -524,7 +543,7 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
                       <Typography variant = 'button' align = 'left'
-                                  className = {classes.typoTitleOptional}>Work </Typography>
+                                  className = {classes.typoTitleOptional}>Công việc </Typography>
                     </Grid>
                     <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <Tooltip title = 'Private' placement = 'right-start'
@@ -548,8 +567,9 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                   <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
-                      <Typography variant = 'button' align = 'left' className = {classes.typoTitleOptional}>Emergency
-                                                                                                    Contact </Typography>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitleOptional}>Liên lạc
+                                                                                                            khẩn
+                                                                                                            cấp </Typography>
                     </Grid>
                     <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <Tooltip title = 'Private' placement = 'right-start'
@@ -567,9 +587,8 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                             }}
                           />
                           <FormHelperText id = 'emergencyContact-helper-text'>
-                            Give our Customer Experience team a trusted
-                            contact we can alert in an urgent
-                            situation.
+                            Cung cấp cho chúng tôi một liên hệ đáng tin cậy để có thể thông báo trong tình huống khẩn
+                            cấp.
                           </FormHelperText>
                         </FormControl>
                       </Tooltip>
@@ -581,14 +600,14 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                         className = {classes.rowButton}>
                     <Grid item xs = {4} sm = {2}>
                       <Button variant = 'contained' size = 'large' onClick = {handleReset}>
-                        Reset
+                        Tạo lại
                       </Button>
                     </Grid>
                     <Grid item xs = {4} sm = {2}>
                       <Button variant = 'contained' color = 'primary' size = 'large' type = 'submit'
                               disabled = {isSubmitting}
                       >
-                        Save
+                        Lưu
                       </Button>
                     </Grid>
                   </Grid>
@@ -598,6 +617,41 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
           );
         }}
       </Formik>
+      <Snackbar
+        anchorOrigin = {{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open = {openSnack}
+        autoHideDuration = {5000}
+        onClose = {() => {
+          setOpenSnack(!openSnack)
+        }}
+      >
+        <SnackbarContent
+          className = {classes.snackContent}
+          aria-describedby = 'client-snackbar'
+          message = {
+            <span id = 'client-snackbar' className = {classes.message}>
+              <CheckCircleIcon className = {classes.iconSnackContent} />
+               Lưu dữ liệu thành công !
+            </span>
+          }
+          action = {[
+            <IconButton
+              key = 'close'
+              aria-label = 'Close'
+              color = 'inherit'
+              className = {classes.close}
+              onClick = {() => {
+                setOpenSnack(!openSnack)
+              }}
+            >
+              <CloseIcon className = {classes.iconClose} />
+            </IconButton>,
+          ]}
+        />
+      </Snackbar>
     </div>
   );
 };

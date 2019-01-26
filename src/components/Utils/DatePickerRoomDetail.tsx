@@ -17,6 +17,7 @@ import {RoomDetailsContext, IRoomDetailsContext, RoomDetailsState} from '@/store
 import Button from '@material-ui/core/Button';
 import {DEFAULT_DATE_FORMAT} from '@/utils/store/global';
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
+import {Grid} from "@material-ui/core";
 
 interface IProps {
   classes?: any
@@ -116,6 +117,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     justifyContent: 'center',
     paddingTop: 20,
   },
+  paddingXS: {
+    [theme!.breakpoints!.down!('xs')]: {
+      width: '95%',
+      margin: '0 auto',
+      overflow: 'hidden'
+    },
+  },
 });
 
 // @ts-ignore
@@ -135,32 +143,34 @@ const DatePickerRoomDetail: ComponentType<IProps> = (props: LocalProps) => {
   return (
     <Fragment>
       <div className = {classes.rowMargin}>
-        <Typography className = {classes.titleHighlight}>
-          Availability
-        </Typography>
-        <Button variant = 'outlined' className = {classes.btClear}
-                onClick = {() => setFocusedInput('startDate')}>Clear</Button>
-        <div className = {classes.boxCalendar}>
-          <DayPickerRangeController
-            minimumNights = {!!minNights ? minNights : 1}
-            startDate = {sd}
-            endDate = {ed}
-            onDatesChange = {({startDate, endDate}) => {
-              onDateChange(startDate, endDate);
-            }}
-            focusedInput = {focusedInput}
-            onFocusChange = {focusedInput => {
-              setFocusedInput(!!focusedInput ? focusedInput : 'startDate');
-            }}
-            numberOfMonths = {isWide ? 2 : 1}
-            // verticalHeight = {400}
-            noBorder
-            enableOutsideDays = {false}
-            isDayBlocked = {blockingDate}
-            isOutsideRange = {isOutSideRange}
-            hideKeyboardShortcutsPanel
-            initialVisibleMonth = {() => moment()}
-          />
+        <div className = {classes.paddingXS}>
+          <Typography className = {classes.titleHighlight}>
+            Lịch trống phòng
+          </Typography>
+          <Button variant = 'outlined' className = {classes.btClear}
+                  onClick = {() => setFocusedInput('startDate')}>Clear</Button>
+          <div className = {classes.boxCalendar}>
+            <DayPickerRangeController
+              minimumNights = {!!minNights ? minNights : 1}
+              startDate = {sd}
+              endDate = {ed}
+              onDatesChange = {({startDate, endDate}) => {
+                onDateChange(startDate, endDate);
+              }}
+              focusedInput = {focusedInput}
+              onFocusChange = {focusedInput => {
+                setFocusedInput(!!focusedInput ? focusedInput : 'startDate');
+              }}
+              numberOfMonths = {isWide ? 2 : 1}
+              // verticalHeight = {400}
+              noBorder
+              enableOutsideDays = {false}
+              isDayBlocked = {blockingDate}
+              isOutsideRange = {isOutSideRange}
+              hideKeyboardShortcutsPanel
+              initialVisibleMonth = {() => moment()}
+            />
+          </div>
         </div>
       </div>
     </Fragment>

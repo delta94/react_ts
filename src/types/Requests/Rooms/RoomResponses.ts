@@ -54,6 +54,7 @@ export interface RoomIndexRes<T = any> {
 export interface RoomDetails<T=any> {
   name: string,
   address: string,
+  description: string
 }
 
 export interface RoomScheduleRes {

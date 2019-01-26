@@ -48,6 +48,7 @@ const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
           dots: true,
           autoplay:true,
           autoplaySpeed: 5000,
+          swipeToSlide: true,
         }
       },
       {
@@ -55,6 +56,7 @@ const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          swipeToSlide: true,
           infinite: true,
           dots: true,
           autoplay:true,

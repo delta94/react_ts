@@ -88,6 +88,7 @@
     "react-dev-utils": "^6.1.1",
     "react-dom": "^16.8.0-alpha.1",
     "react-grid-gallery": "^0.5.3",
+    "react-html-parser": "^2.0.2",
     "react-i18next": "^9.0.2",
     "react-image": "^1.5.1",
     "react-image-lightbox": "^5.1.0",

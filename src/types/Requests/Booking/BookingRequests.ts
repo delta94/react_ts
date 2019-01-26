@@ -1,3 +1,5 @@
+import {BaseGetRequestParams} from "@/types/Requests/RequestTemplate";
+
 export interface BookingCreateReq {
   name: string;
   name_received?: string | null;
@@ -50,4 +52,9 @@ export interface BookingPayment {
   checkout_minute?: number;
   number_guests: number;
   booking_type: number;
+}
+
+export interface BookingIndexParams extends BaseGetRequestParams {
+  status?: number
+  size?: number
 }

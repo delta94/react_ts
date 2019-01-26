@@ -17,7 +17,7 @@ import IconButton from "@material-ui/core/IconButton";
 import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
 import {TransitionCustom} from "@/views/Rooms/BottomNav";
 import moment from 'moment';
-
+import Hidden from "@material-ui/core/Hidden";
 
 
 const styles: any = (theme: ThemeCustom) => createStyles({
@@ -93,7 +93,7 @@ const DialogBookingDetails: ComponentType<IDialogBookingDetails> = (props: IDial
         TransitionComponent = {TransitionCustom}
         keepMounted
         scroll = 'body'
-        fullScreen = {width === 'xs'}
+        fullScreen = {width === 'xs' || width === 'sm'}
         maxWidth = 'md'
         open = {props.stateOpen === props.dataBooking.id}
         onClose = {() => handleClick(0)}
@@ -110,11 +110,11 @@ const DialogBookingDetails: ComponentType<IDialogBookingDetails> = (props: IDial
                 <span className = {classes.titleDetails}>Thông tin Phòng</span>
               </Typography>
               <Grid container spacing = {16}>
-                <Grid item xs = {4} sm = {5} md = {4} lg = {4}>
+                <Grid item xs = {12} sm = {5} md = {4} lg = {4}>
                   <img alt = 'image room' src = {`http://westay.org/storage/rooms/${room.media.data[0].image}`}
                        className = {classes.imageRoom} />
                 </Grid>
-                <Grid item xs = {8} sm = {7} md = {7} lg = {6} container direction = 'column' justify = 'space-between'
+                <Grid item xs = {12} sm = {7} md = {7} lg = {6} container direction = 'column' justify = 'space-between'
                       alignItems = 'flex-start'>
                   <Grid container direction = 'column'>
                     <Grid item>
@@ -152,27 +152,30 @@ const DialogBookingDetails: ComponentType<IDialogBookingDetails> = (props: IDial
                 <span className = {classes.titleDetails}>Thông tin khách hàng</span>
               </Typography>
               <Grid container>
-                <Grid item xs>
+                <Grid item xs = {12} sm>
                   <Typography className = {classes.rowMargin}>
                     <span className = {classes.contentDetails}>Khách đặt: </span><span>{props.dataBooking.name}</span>
                   </Typography>
                   <Typography className = {classes.rowMargin}>
                     <span
-                      className = {classes.contentDetails}>SDT khách đặt: </span><span>{props.dataBooking.phone}</span>
+                      className = {classes.contentDetails}>SĐT khách đặt: </span><span>{props.dataBooking.phone}</span>
                   </Typography>
                   <Typography className = {classes.rowMargin}>
                     <span
                       className = {classes.contentDetails}>Email khách đặt: </span><span>{props.dataBooking.email}</span>
                   </Typography>
+                  <Hidden smUp>
+                    <Divider />
+                  </Hidden>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs = {12} sm>
                   <Typography className = {classes.rowMargin}>
                     <span
                       className = {classes.contentDetails}>Khách nhận: </span><span>{props.dataBooking.name_received}</span>
                   </Typography>
                   <Typography className = {classes.rowMargin}>
                         <span
-                          className = {classes.contentDetails}>SDT Khách nhận: </span><span>{props.dataBooking.phone_received}</span>
+                          className = {classes.contentDetails}>SĐT Khách nhận: </span><span>{props.dataBooking.phone_received}</span>
                   </Typography>
                   <Typography className = {classes.rowMargin}>
                         <span
@@ -192,10 +195,14 @@ const DialogBookingDetails: ComponentType<IDialogBookingDetails> = (props: IDial
                 <span className = {classes.titleDetails}>Thông tin thanh toán</span>
               </Typography>
               <Grid container>
-                <Grid item xs>
+                <Grid item xs = {12} sm>
                   <Typography className = {classes.rowMargin}>
                     <span className = {classes.contentDetails}>Ngày đặt phòng: </span>
                     <span>{moment(props.dataBooking.checkin).format('DD-MM-YYYY, HH:mm A')}</span>
+                  </Typography>
+                  <Typography className = {classes.rowMargin}>
+                    <span className = {classes.contentDetails}>Ngày trả phòng: </span>
+                    <span>{moment(props.dataBooking.checkout).format('DD-MM-YYYY, HH:mm A')}</span>
                   </Typography>
                   <Typography className = {classes.rowMargin}>
                         <span
@@ -203,21 +210,17 @@ const DialogBookingDetails: ComponentType<IDialogBookingDetails> = (props: IDial
                   </Typography>
                   <Typography className = {classes.rowMargin}>
                         <span
+                          className = {classes.contentDetails}>Trạng thái thanh toán: </span><span>{props.dataBooking.payment_status_txt}</span>
+                  </Typography>
+                </Grid>
+                <Grid item xs = {12} sm>
+                  <Typography className = {classes.rowMargin}>
+                        <span
                           className = {classes.contentDetails}>Giá gốc: </span><span>{formatMoney(props.dataBooking.price_original)} </span>
                   </Typography>
                   <Typography className = {classes.rowMargin}>
                         <span
                           className = {classes.contentDetails}>Tiền dịch vụ: </span><span>{formatMoney(props.dataBooking.service_fee)} </span>
-                  </Typography>
-                </Grid>
-                <Grid item xs>
-                  <Typography className = {classes.rowMargin}>
-                    <span className = {classes.contentDetails}>Ngày trả phòng: </span>
-                    <span>{moment(props.dataBooking.checkout).format('DD-MM-YYYY, HH:mm A')}</span>
-                  </Typography>
-                  <Typography className = {classes.rowMargin}>
-                        <span
-                          className = {classes.contentDetails}>Trạng thái thanh toán: </span><span>{props.dataBooking.payment_status_txt}</span>
                   </Typography>
                   <Typography className = {classes.rowMargin}>
                         <span

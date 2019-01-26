@@ -77,12 +77,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   boxPadding: {
     padding: 16,
     [theme!.breakpoints!.down!('xs')]: {
-      padding: 10,
+      padding: '10px 0',
     },
   },
   boxSuggest: {
     margin: '10px 0',
     padding: '16px 0',
+    [theme!.breakpoints!.down!('xs')]: {
+      padding: '0px 10px',
+    },
   },
   title: {
     fontSize: 24,
@@ -172,7 +175,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
                 <div className = {classes.boxSuggest}>
                   <div>
                     <Typography className = {classes.title}>
-                      Phòng tương tự
+                      Gợi ý
                     </Typography>
                   </div>
                   <Divider className = {classes.divider} />

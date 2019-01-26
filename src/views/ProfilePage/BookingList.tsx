@@ -15,8 +15,7 @@ import Location from '@material-ui/icons/LocationOnOutlined';
 import StarRatings from 'react-star-ratings';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {
-  IProfileContext,
-  ProfileContext,
+  getUserBookingList, IProfileContext, ProfileContext
 } from "@/store/context/Profile/ProfileContext";
 import _ from 'lodash';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
@@ -24,7 +23,10 @@ import moment from 'moment';
 import {formatMoney} from "@/utils/mixins";
 import DialogBookingDetails from '@/views/ProfilePage/DialogBookingDetails';
 import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
-
+import InsertDriveFileOutlined from '@material-ui/icons/InsertDriveFileOutlined';
+import Pagination from 'rc-pagination';
+import localeInfo from 'rc-pagination/lib/locale/vi_VN';
+import 'rc-pagination/assets/index.css';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   boxBooking: {
@@ -119,7 +121,19 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     [theme!.breakpoints!.down!('sm')]: {
       fontSize: 17,
     },
-  }
+  },
+  fakeData: {
+    width: '100%',
+    padding: '75px 0',
+  },
+  iconNote: {
+    color: '#757575',
+    fontSize: 40,
+  },
+  boxPagination: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 });
 
 interface IBookingList {
@@ -129,10 +143,40 @@ interface IBookingList {
 
 
 const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
-  const {classes} = props;
-  const {state} = useContext<IProfileContext>(ProfileContext);
+  const {classes, status} = props;
   const [openDialog, setOpenDialog] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isEmpty, setEmpty] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
   const {history} = useContext<IGlobalContext>(GlobalContext);
+  const {state, dispatch} = useContext<IProfileContext>(ProfileContext);
+
+  const {bookings, metaBookings} = state;
+  useEffect(() => {
+    setLoading(true);
+    getUserBookingList(props.status, currentPage)
+      .then(res => {
+        dispatch({
+          type: 'setData',
+          bookings: res.data,
+          meta: res.meta
+        });
+        setLoading(false)
+      })
+      .catch(err => {
+        setLoading(false)
+      });
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (!isLoading && bookings.length === 0) {
+      setEmpty(true)
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    console.log(bookings, isEmpty)
+  }, [bookings]);
 
   const handleClick = (id: number) => {
     setOpenDialog(id);
@@ -142,155 +186,180 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
     history.push(`/room/${id}`);
   };
 
-  const {bookings} = state;
+  const ChangePage = (current: number) => {
+    setCurrentPage(current);
+  };
+
   if (bookings == null) {
     return <SimpleLoader />
   }
 
   const mapBookings = _.map(bookings, i => {
     const room = i.room.data;
-    if (i.status == props.status) {
-      return (
-        <GridContainer xs = {12} sm = {12} md = {12} lg = {11} key = {i.id}>
-          <Paper className = {classes.boxBooking}>
-            <Grid container spacing = {16} direction = 'row' justify = 'center'>
-              <Grid item xs = {12} sm = {4} md = {4} lg = {3}>
-                <img alt = 'image room' src = {`http://westay.org/storage/rooms/${room.media.data[0].image}`}
-                     className = {classes.imageRoom} />
-              </Grid>
-              <Grid item xs = {12} sm = {5} md = {5} lg = {6} container direction = 'column'
-                    justify = 'space-between' alignItems = 'flex-start'>
-                <Grid container direction = 'column'>
-                  <Grid item>
-                    <Typography variant = 'h6' className = {classes.typoName}>{room!.details.data[0].name}</Typography>
-                  </Grid>
-                  <Grid item className = {classes.rowMargin}>
-                    <StarRatings
-                      rating = {room!.avg_rating}//index rating
-                      starDimension = '20px'
-                      starSpacing = '1px'
-                      starRatedColor = '#FFC412'
-                    />
-                    <span className = {classes.spanViews}>{room!.total_review} views</span>
-                  </Grid>
-                  <Grid item className = {classes.rowMargin}>
+    return (
+      <GridContainer xs = {12} sm = {12} md = {12} lg = {11} key = {i.id}>
+        <Paper className = {classes.boxBooking}>
+          <Grid container spacing = {16} direction = 'row' justify = 'center'>
+            <Grid item xs = {12} sm = {4} md = {4} lg = {3}>
+              <img alt = 'image room' src = {`http://westay.org/storage/rooms/${room.media.data[0].image}`}
+                   className = {classes.imageRoom} />
+            </Grid>
+            <Grid item xs = {12} sm = {5} md = {5} lg = {6} container direction = 'column'
+                  justify = 'space-between' alignItems = 'flex-start'>
+              <Grid container direction = 'column'>
+                <Grid item>
+                  <Typography variant = 'h6' className = {classes.typoName}>{room!.details.data[0].name}</Typography>
+                </Grid>
+                <Grid item className = {classes.rowMargin}>
+                  <StarRatings
+                    rating = {room!.avg_rating}//index rating
+                    starDimension = '20px'
+                    starSpacing = '1px'
+                    starRatedColor = '#FFC412'
+                  />
+                  <span className = {classes.spanViews}>{room!.total_review} đánh giá</span>
+                </Grid>
+                <Grid item className = {classes.rowMargin}>
                         <span className = {classes.txtAddress}>
                           <Location className = {classes.iconLocation} />
                           {room!.details.data[0].address}
                         </span>
-                  </Grid>
                 </Grid>
-                <Grid container direction = 'column'>
-                  <Grid item>
-                    <img alt = 'fb social' src = {fb} className = {classes.imgSocial} />
-                    <img alt = 'gg social' src = {gg} className = {classes.imgSocial} />
-                    <img alt = 'tw social' src = {twt} className = {classes.imgSocial} />
+              </Grid>
+              <Grid container direction = 'column'>
+                <Grid item>
+                  <img alt = 'fb social' src = {fb} className = {classes.imgSocial} />
+                  <img alt = 'gg social' src = {gg} className = {classes.imgSocial} />
+                  <img alt = 'tw social' src = {twt} className = {classes.imgSocial} />
+                </Grid>
+                <Hidden lgDown = {status == 2 || status == 5 || status == 1}
+                        lgUp = {status == 2 || status == 5 || status == 1}>
+                  <Grid item className = {classes.rowMargin}>
+                    <Button variant = 'outlined' color = 'primary' size = 'small'>
+                      Đánh giá
+                    </Button>
                   </Grid>
-                  <Hidden lgDown = {props.status == 2 || props.status == 5 || props.status == 1}
-                          lgUp = {props.status == 2 || props.status == 5 || props.status == 1}>
-                    <Grid item className = {classes.rowMargin}>
-                      <Button variant = 'outlined' color = 'primary' size = 'small'>
-                        Reviews
-                      </Button>
+                </Hidden>
+              </Grid>
+            </Grid>
+            <Grid item xs = {12} sm = {3} md = {3} lg = {3} container direction = 'row' justify = 'space-around'>
+              <Grid item sm = {12} container spacing = {0}>
+                <Grid item xs = {6} sm>
+                  <Grid item className = {classes.timeBooking}>
+                    <Typography variant = 'button'>From
+                      <Hidden smUp>
+                        <span>: {moment(i.checkin).format('DD-MM-YYYY')}</span>
+                      </Hidden>
+                    </Typography>
+                    <Divider />
+                  </Grid>
+                  <Hidden xsDown>
+                    <Grid item container className = {classes.timeBooking}>
+                      <Grid item xs = {4}>
+                        <Typography variant = 'h4'
+                                    className = {classes.typoDay}>{moment(i.checkin).format('DD')}</Typography>
+                      </Grid>
+                      <Grid item xs = {8}>
+                        <Typography className = {classes.fontTime}>{moment(i.checkin).format('dddd')}</Typography>
+                        <Typography className = {classes.fontTime}>
+                          <span>{moment(i.checkin).format('MMM')}</span>
+                          <span> {moment(i.checkin).format('YYYY')}</span>
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Hidden>
+                </Grid>
+                <Grid item xs = {6} sm>
+                  <Grid item className = {classes.borLeft}>
+                    <Typography variant = 'button'>To
+                      <Hidden smUp>
+                        <span>: {moment(i.checkout).format('DD-MM-YYYY')}</span>
+                      </Hidden>
+                    </Typography>
+                    <Divider />
+                  </Grid>
+                  <Hidden xsDown>
+                    <Grid item container className = {classes.borLeft}>
+                      <Grid item xs = {4}>
+                        <Typography variant = 'h4'
+                                    className = {classes.typoDay}>{moment(i.checkout).format('DD')}</Typography>
+                      </Grid>
+                      <Grid item xs = {8}>
+                        <Typography className = {classes.fontTime}>{moment(i.checkout).format('dddd')}</Typography>
+                        <Typography className = {classes.fontTime}>
+                          <span>{moment(i.checkout).format('MMM')}</span>
+                          <span> {moment(i.checkout).format('YYYY')}</span>
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </Hidden>
                 </Grid>
               </Grid>
-              <Grid item xs = {12} sm = {3} md = {3} lg = {3} container direction = 'row' justify = 'space-around'>
-                <Grid item sm = {12} container spacing = {0}>
-                  <Grid item xs = {6} sm>
-                    <Grid item className = {classes.timeBooking}>
-                      <Typography variant = 'button'>From
-                        <Hidden smUp>
-                          <span>: {moment(i.checkin).format('DD-MM-YYYY')}</span>
-                        </Hidden>
-                      </Typography>
-                      <Divider />
-                    </Grid>
-                    <Hidden xsDown>
-                      <Grid item container className = {classes.timeBooking}>
-                        <Grid item xs = {4}>
-                          <Typography variant = 'h4'
-                                      className = {classes.typoDay}>{moment(i.checkin).format('DD')}</Typography>
-                        </Grid>
-                        <Grid item xs = {8}>
-                          <Typography className = {classes.fontTime}>{moment(i.checkin).format('dddd')}</Typography>
-                          <Typography className = {classes.fontTime}>
-                            <span>{moment(i.checkin).format('MMM')}</span>
-                            <span> {moment(i.checkin).format('YYYY')}</span>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Hidden>
-                  </Grid>
-                  <Grid item xs = {6} sm>
-                    <Grid item className = {classes.borLeft}>
-                      <Typography variant = 'button'>To
-                        <Hidden smUp>
-                          <span>: {moment(i.checkout).format('DD-MM-YYYY')}</span>
-                        </Hidden>
-                      </Typography>
-                      <Divider />
-                    </Grid>
-                    <Hidden xsDown>
-                      <Grid item container className = {classes.borLeft}>
-                        <Grid item xs = {4}>
-                          <Typography variant = 'h4'
-                                      className = {classes.typoDay}>{moment(i.checkout).format('DD')}</Typography>
-                        </Grid>
-                        <Grid item xs = {8}>
-                          <Typography className = {classes.fontTime}>{moment(i.checkout).format('dddd')}</Typography>
-                          <Typography className = {classes.fontTime}>
-                            <span>{moment(i.checkout).format('MMM')}</span>
-                            <span> {moment(i.checkout).format('YYYY')}</span>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Hidden>
-                  </Grid>
-                </Grid>
-                <Grid item sm = {12} className = {classes.typoTotal}>
-                  <Typography variant = 'h6' align = 'right' className = {classes.typoTotalFee}>
-                    <span>Total: </span><span> {formatMoney(i.total_fee)} </span><span> VND</span>
-                  </Typography>
-                </Grid>
+              <Grid item sm = {12} className = {classes.typoTotal}>
+                <Typography variant = 'h6' align = 'right' className = {classes.typoTotalFee}>
+                  <span>Total: </span><span> {formatMoney(i.total_fee)} </span><span> VND</span>
+                </Typography>
               </Grid>
             </Grid>
-            <Divider />
-            <Grid container spacing = {16} direction = 'row' justify = 'space-between'>
-              <Grid item container justify = 'space-around' xs = {8} sm = {4} md = {4} lg = {3}>
-                <div className = {classes.rowBottom}>
-                  <Hidden lgDown = {props.status == 2 || props.status == 1}
-                          lgUp = {props.status == 2 || props.status == 1}>
-                    <Button color = 'primary' className = {classes.button} onClick = {() => handleBookAgain(room!.id)}>
-                    Book Again
+          </Grid>
+          <Divider />
+          <Grid container spacing = {16} direction = 'row' justify = 'space-between'>
+            <Grid item container justify = 'space-around' xs = {8} sm = {4} md = {4} lg = {3}>
+              <div className = {classes.rowBottom}>
+                <Hidden lgDown = {status == 2 || status == 1}
+                        lgUp = {status == 2 || status == 1}>
+                  <Button color = 'primary' className = {classes.button} onClick = {() => handleBookAgain(room!.id)}>
+                    Đặt lại
                   </Button>
-                  </Hidden>
-                  <Button color = 'primary' className = {classes.button}>
-                    Send Receipt
-                  </Button>
-                </div>
-              </Grid>
-              <Grid item container justify = 'flex-end' xs = {4} sm = {4} md = {4} lg = {3}>
-                <div className = {classes.rowBottom}>
-                  <Button variant = 'contained' color = 'primary' className = {classes.button}
-                          onClick = {() => handleClick(i.id)}>
-                    Details
-                  </Button>
-                </div>
-              </Grid>
+                </Hidden>
+                <Button color = 'primary' className = {classes.button}>
+                  Gửi biên lai
+                </Button>
+              </div>
             </Grid>
-          </Paper>
+            <Grid item container justify = 'flex-end' xs = {4} sm = {4} md = {4} lg = {3}>
+              <div className = {classes.rowBottom}>
+                <Button variant = 'contained' color = 'primary' className = {classes.button}
+                        onClick = {() => handleClick(i.id)}>
+                  Chi tiết
+                </Button>
+              </div>
+            </Grid>
+          </Grid>
+        </Paper>
 
-          <DialogBookingDetails stateOpen = {openDialog} setStateOpen = {setOpenDialog} dataBooking = {i} />
-        </GridContainer>
-      )
-    }
+        <DialogBookingDetails stateOpen = {openDialog} setStateOpen = {setOpenDialog} dataBooking = {i} />
+      </GridContainer>
+    )
   });
 
   return (
     <Fragment>
-      {mapBookings}
+      {(bookings.length > 0 && !isEmpty) ?
+        <Fragment>
+          {mapBookings}
+          <div className = {classes.boxPagination}>
+            <Pagination className = 'ant-pagination' locale = {localeInfo} total = {metaBookings!.pagination.total}
+                        pageSize = {metaBookings!.pagination.per_page} current = {metaBookings!.pagination.current_page}
+                        onChange = {ChangePage} />
+          </div>
+        </Fragment>
+        : ''}
+      {isLoading ?
+        <div className = {classes.fakeData}>
+          <SimpleLoader width = {100} height = {100} />
+        </div>
+        : ''}
+      {isEmpty ? (
+        <div className = {classes.fakeData}>
+          <div style = {{textAlign: 'center'}}>
+            <InsertDriveFileOutlined color = 'secondary' className = {classes.iconNote} />
+          </div>
+          <Typography align = 'center' variant = 'h5' color = 'textSecondary'>
+            Danh sách trống
+          </Typography>
+        </div>
+      ) : ''}
     </Fragment>
   );
 };

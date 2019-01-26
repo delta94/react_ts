@@ -19,6 +19,11 @@ import houseSweet from '@/assets/house.png';
 import {ThemeCustom} from '@/components/Theme/Theme';
 
 const styles:any        = (theme:ThemeCustom) => createStyles ({
+  boxSweetHome: {
+    [theme!.breakpoints!.down!('xs')]: {
+      paddingBottom: 80,
+    },
+  },
   inputDisabled: {
     padding: '0 3px',
     textAlign: 'center',
@@ -178,7 +183,7 @@ const HomeSweetHome:ComponentType<IHomeSweetHome> = (props:IHomeSweetHome) => {
 
   return (
       <Fragment>
-        <Paper square>
+        <Paper square className = {classes.boxSweetHome}>
           <GridContainer xs = {11}>
             <Grid item xs = {12} className = {classes.firstLine}>
               <div>

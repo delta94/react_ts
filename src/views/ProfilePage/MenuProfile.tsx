@@ -24,6 +24,9 @@ import Grow from '@material-ui/core/Grow';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {IProfileContext, ProfileContext} from '@/store/context/Profile/ProfileContext';
 import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
+import BottomNavigation from "@material-ui/core/BottomNavigation";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import {Hidden} from "@material-ui/core";
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   bg_menu: {
@@ -94,6 +97,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   btUpload: {
     cursor: 'pointer',
   },
+  NaviBottom: {
+    position: 'fixed',
+    width: '100%',
+    bottom: 0,
+    boxShadow: '0px 1px 5px 2px rgba(0,0,0,0.2)',
+    overflowX: 'scroll',
+    whiteSpace: 'nowrap',
+    justifyContent: 'flex-start'
+  }
 });
 
 interface ITabContainer {
@@ -153,16 +165,27 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
       <div className = {classes.menuProfile}>
         <GridContainer xs = {12} sm = {12} md = {11} lg = {10}>
           <Grid container>
-            <AppBar position = 'static' className = {classes.tabMenu}>
-              <Tabs value = {value} onChange = {handleChange} variant = {width == 'xs' ? "scrollable" : "fullWidth"}
-                    indicatorColor = 'primary' textColor = 'primary' scrollButtons = 'off'>
-                <Tab icon = {<Person />} label = 'My Profile' />
-                <Tab icon = {<Bookmarks />} label = 'My Booking' />
-                <Tab icon = {<Favorite />} label = 'My Wishlist' />
-                <Tab icon = {<CardGift />} label = 'My Rewards' />
-                <Tab icon = {<Weekend />} label = 'Home Sweet Home' />
-              </Tabs>
-            </AppBar>
+            <Hidden xsDown>
+              <AppBar position = 'static' className = {classes.tabMenu}>
+                <Tabs value = {value} onChange = {handleChange} variant = {width == 'xs' ? "scrollable" : "fullWidth"}
+                      indicatorColor = 'primary' textColor = 'primary' scrollButtons = 'off'>
+                  <Tab icon = {<Person />} label = 'Thông tin cá nhân' />
+                  <Tab icon = {<Bookmarks />} label = 'Danh sách booking' />
+                  <Tab icon = {<Favorite />} label = 'Danh sách yêu thích' />
+                  <Tab icon = {<CardGift />} label = 'Điểm thưởng' />
+                  <Tab icon = {<Weekend />} label = 'Cài đặt' />
+                </Tabs>
+              </AppBar>
+            </Hidden>
+            <Hidden smUp>
+              <BottomNavigation value = {value} onChange = {handleChange} className = {classes.NaviBottom}>
+                <BottomNavigationAction label = 'Hồ sơ' value = {0} icon = {<Person />} />
+                <BottomNavigationAction label = 'Bookings' value = {1} icon = {<Bookmarks />} />
+                <BottomNavigationAction label = 'Yêu thích' value = {2} icon = {<Favorite />} />
+                <BottomNavigationAction label = 'Điểm thưởng' value = {3} icon = {<CardGift />} />
+                <BottomNavigationAction label = 'Cài đặt' value = {4} icon = {<Weekend />} />
+              </BottomNavigation>
+            </Hidden>
           </Grid>
         </GridContainer>
       </div>

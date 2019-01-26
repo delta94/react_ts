@@ -12,7 +12,7 @@ import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/Room
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
 import Pagination from 'rc-pagination';
-import localeInfo from 'rc-pagination/lib/locale/en_US';
+import localeInfo from 'rc-pagination/lib/locale/vi_VN';
 // @ts-ignore
 import StarRatings from 'react-star-ratings';
 import 'rc-pagination/assets/index.css';
@@ -151,16 +151,22 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     borderRadius: 5,
     overflow: 'hidden',
     border: '1px solid #e0e0e0',
-  }
+  },
+  paddingXS: {
+    [theme!.breakpoints!.down!('xs')]: {
+      width: '95%',
+      margin: '0 auto',
+    },
+  },
 });
 
 
 const BoxReviews: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSizee] = useState<number>(2);
-  const [data, setData] = useState<any[]>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  const [pageSize] = useState<number>(2);
+  const [data] = useState<any[]>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const {state} = useContext<IRoomDetailsContext>(RoomDetailsContext);
   const {width} = useContext<IGlobalContext>(GlobalContext);
 
   const {room} = state;
@@ -170,7 +176,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
   const indexOfFirst = indexOfLast - pageSize;
   const newData = data.slice(indexOfFirst, indexOfLast);
 
-  const ChangePage = (current: number, pSize: number) => {
+  const ChangePage = (current: number) => {
     setCurrentPage(current);
   };
 
@@ -182,8 +188,8 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
             <Avatar alt = 'Avatar' src = {avatarDemo} className = {classes.avatar} />
           </Grid>
           <Grid item xs = {9} sm={10}>
-            <Typography variant = 'h6' className = {classes.nameUser}>Cristiano Ronaldo {todo}</Typography>
-            <Typography variant = {'caption'}>December 2018</Typography>
+            <Typography variant = 'h6' className = {classes.nameUser}>Nguyễn Văn Anh {todo}</Typography>
+            <Typography variant = {'caption'}>01/12/2018</Typography>
             <Typography className = {classes.comments}>
               Great location in the city! Easy to get to many places in the city within walking distance or by subway.
               Apartment was very clean and had everything we needed.Great location in the city!
@@ -197,119 +203,126 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
   return (
     <Fragment>
       <div className = {classes.rowMargin}>
-        <Typography className = {classes.titleHighlight}>
-          Ratings
-        </Typography>
-        <Grid container>
-          <Grid item xs = {12} sm={3}>
-            <div className = {classes.rowMargin2}>
-              <div style = {{textAlign: 'center'}}>
-                <StarRatings
-                  rating = {room!.avg_rating} //index rating
-                  starDimension = '24px'
-                  starSpacing = '1px'
-                  starRatedColor = '#46afcc'
-                />
-              </div>
-              <div className = {classes.boxMark}>
-                <div className = {classes.Mark}>
-                  <Typography variant = {"h5"} className = {classes.TypoMark}>
-                    {room!.standard_point}
-                  </Typography>
-                </div>
-              </div>
-              <Typography variant = {"h5"} className = {classes.status}>
-                {room!.avg_rating_txt}
-              </Typography>
-            </div>
-          </Grid>
-          <Grid item container xs = {12} sm={9}>
-            <Grid item xs = {12}>
+        <div className = {classes.paddingXS}>
+          <Typography className = {classes.titleHighlight}>
+            Đánh giá
+          </Typography>
+          <Grid container>
+            <Grid item xs = {12} sm={3}>
               <div className = {classes.rowMargin2}>
-                <Grid container className = {classes.rowMargin2}>
-                  <Grid item xs = {4} sm={7} className = {classes.titleRating}>
-                    <Typography className = {classes.titleReview}>
-                      Service
+                <div style = {{textAlign: 'center'}}>
+                  <StarRatings
+                    rating = {room!.avg_rating} //index rating
+                    starDimension = '24px'
+                    starSpacing = '1px'
+                    starRatedColor = '#46afcc'
+                  />
+                </div>
+                <div className = {classes.boxMark}>
+                  <div className = {classes.Mark}>
+                    <Typography variant = {"h5"} className = {classes.TypoMark}>
+                      {room!.standard_point}
                     </Typography>
-                  </Grid>
-                  <Grid item xs = {8} sm={5} className = {classes.valueRating}>
-                    <StarRatings
-                      rating = {5} //index rating
-                      starDimension = {width === 'xs' ? '22px' : '24px'}
-                      starSpacing = '1px'
-                      starRatedColor = '#46afcc'
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container className = {classes.rowMargin2}>
-                  <Grid item xs = {4} sm={7} className = {classes.titleRating}>
-                    <Typography className = {classes.titleReview}>
-                      Quality
-                    </Typography>
-                  </Grid>
-                  <Grid item xs = {8} sm={5} className = {classes.valueRating}>
-                    <StarRatings
-                      rating = {5} //index rating
-                      starDimension = {width === 'xs' ? '22px' : '24px'}
-                      starSpacing = '1px'
-                      starRatedColor = '#46afcc'
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container className = {classes.rowMargin2}>
-                  <Grid item xs = {4} sm={7} className = {classes.titleRating}>
-                    <Typography className = {classes.titleReview}>
-                      Valuable
-                    </Typography>
-                  </Grid>
-                  <Grid item xs = {8} sm={5} className = {classes.valueRating}>
-                    <StarRatings
-                      rating = {4.5} //index rating
-                      starDimension = {width === 'xs' ? '22px' : '24px'}
-                      starSpacing = '1px'
-                      starRatedColor = '#46afcc'
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container className = {classes.rowMargin2}>
-                  <Grid item xs = {4} sm={7} className = {classes.titleRating}>
-                    <Typography className = {classes.titleReview}>
-                      Clealiness
-                    </Typography>
-                  </Grid>
-                  <Grid item xs = {8} sm={5} className = {classes.valueRating}>
-                    <StarRatings
-                      rating = {4.5} //index rating
-                      starDimension = {width === 'xs' ? '22px' : '24px'}
-                      starSpacing = '1px'
-                      starRatedColor = '#46afcc'
-                    />
-                  </Grid>
-                </Grid>
+                  </div>
+                </div>
+                <Typography variant = {"h5"} className = {classes.status}>
+                  {room!.avg_rating_txt}
+                </Typography>
               </div>
             </Grid>
+            <Grid item container xs = {12} sm={9}>
+              <Grid item xs = {12}>
+                <div className = {classes.rowMargin2}>
+                  <Grid container className = {classes.rowMargin2}>
+                    <Grid item xs = {4} sm={7} className = {classes.titleRating}>
+                      <Typography className = {classes.titleReview}>
+                        Dịch vụ
+                      </Typography>
+                    </Grid>
+                    <Grid item xs = {8} sm={5} className = {classes.valueRating}>
+                      <StarRatings
+                        rating = {5} //index rating
+                        starDimension = {width === 'xs' ? '22px' : '24px'}
+                        starSpacing = '1px'
+                        starRatedColor = '#46afcc'
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container className = {classes.rowMargin2}>
+                    <Grid item xs = {4} sm={7} className = {classes.titleRating}>
+                      <Typography className = {classes.titleReview}>
+                        Chất lượng
+                      </Typography>
+                    </Grid>
+                    <Grid item xs = {8} sm={5} className = {classes.valueRating}>
+                      <StarRatings
+                        rating = {5} //index rating
+                        starDimension = {width === 'xs' ? '22px' : '24px'}
+                        starSpacing = '1px'
+                        starRatedColor = '#46afcc'
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container className = {classes.rowMargin2}>
+                    <Grid item xs = {4} sm={7} className = {classes.titleRating}>
+                      <Typography className = {classes.titleReview}>
+                        Giá trị
+                      </Typography>
+                    </Grid>
+                    <Grid item xs = {8} sm={5} className = {classes.valueRating}>
+                      <StarRatings
+                        rating = {4.5} //index rating
+                        starDimension = {width === 'xs' ? '22px' : '24px'}
+                        starSpacing = '1px'
+                        starRatedColor = '#46afcc'
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container className = {classes.rowMargin2}>
+                    <Grid item xs = {4} sm={7} className = {classes.titleRating}>
+                      <Typography className = {classes.titleReview}>
+                        Sạch sẽ
+                      </Typography>
+                    </Grid>
+                    <Grid item xs = {8} sm={5} className = {classes.valueRating}>
+                      <StarRatings
+                        rating = {4.5} //index rating
+                        starDimension = {width === 'xs' ? '22px' : '24px'}
+                        starSpacing = '1px'
+                        starRatedColor = '#46afcc'
+                      />
+                    </Grid>
+                  </Grid>
+                </div>
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
-      <div className = {classes.rowMargin}>
-        <Typography className = {classes.titleHighlight}>
-          {room!.total_review} Reviews
-        </Typography>
-        {renderListComment}
-        <div className={classes.boxPagination}>
-          <Pagination className = 'ant-pagination' total = {11} locale = {localeInfo}
-                      pageSize = {pageSize}
-                      current = {currentPage}
-                      onChange = {ChangePage}
-          />
         </div>
       </div>
       <div className = {classes.rowMargin}>
-        <Typography className = {classes.titleHighlight}>
-          Map
-        </Typography>
-        <div className = {classes.boxMap}>
-            <LocationHomeMap zoom={14} center={{lat: parseFloat(room!.latitude), lng: parseFloat(room!.longitude)}}/>
+        <div className = {classes.paddingXS}>
+          <Typography className = {classes.titleHighlight}>
+            {room!.total_review} Nhận xét
+          </Typography>
+          {renderListComment}
+          <div className = {classes.boxPagination}>
+            <Pagination className = 'ant-pagination' total = {11} locale = {localeInfo}
+                        pageSize = {pageSize}
+                        current = {currentPage}
+                        onChange = {ChangePage}
+            />
+          </div>
+        </div>
+      </div>
+      <div className = {classes.rowMargin}>
+        <div className = {classes.paddingXS}>
+          <Typography className = {classes.titleHighlight}>
+            Bản đồ
+          </Typography>
+          <div className = {classes.boxMap}>
+            <LocationHomeMap zoom = {14}
+                             center = {{lat: parseFloat(room!.latitude), lng: parseFloat(room!.longitude)}} />
+          </div>
         </div>
       </div>
     </Fragment>

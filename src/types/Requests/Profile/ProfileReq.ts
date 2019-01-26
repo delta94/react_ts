@@ -1,17 +1,17 @@
 import {TransformerInclude} from "@/types/Requests/ResponseTemplate";
 
 export interface ProfileInfoReq {
-  uuid: string
+  uuid?: string
   name: string
   email: string
   gender: number
-  birthday: string | null
+  birthday?: string | null
   address?: string | null
   phone: string
   account_number?: number | null
   avatar?: string | null
   avatar_url?: string
-  subcribe?: number
+  subscribe?: number
   settings?: TransformerInclude<SettingProfile>
 }
 

@@ -4,6 +4,8 @@ import {BookingIndexRes} from '@/types/Requests/Booking/BookingResponses';
 import {updateObject} from '@/store/utility';
 import {AxiosRes, Pagination} from '@/types/Requests/ResponseTemplate';
 import {axios} from '@/utils/axiosInstance';
+import {BookingIndexParams} from "@/types/Requests/Booking/BookingRequests";
+import qs from "query-string";
 
 export const ProfileContext = createContext<| any>(null);
 
@@ -12,10 +14,10 @@ export interface IProfileContext {
   dispatch: Dispatch<ProfileAction>
 }
 
-export type ProfileAction = { type: 'setData', profile: ProfileInfoRes, bookings: BookingIndexRes[], meta?: Pagination }
+export type ProfileAction = { type: 'setData', profile?: ProfileInfoRes, bookings?: BookingIndexRes[], meta?: Pagination }
 
 export type ProfileState = {
-  readonly profile: ProfileInfoRes | null
+  readonly profile?: ProfileInfoRes | null
   readonly bookings: BookingIndexRes[]
   readonly metaBookings?: Pagination
 }
@@ -43,8 +45,14 @@ const getProfile = async () => {
   return res.data;
 };
 
-const getUserBookingList = async () => {
-  const res: AxiosRes<BookingIndexRes[]> = await axios.get(`bookings?include=room.details,room.media`);
+export const getUserBookingList = async (status?: number, page?: number) => {
+  const params: Partial<BookingIndexParams> = {
+    status,
+    include: 'room.details,room.media',
+    size: 5,
+    page: page,
+  };
+  const res: AxiosRes<BookingIndexRes[]> = await axios.get(`bookings?${qs.stringify(params)}`);
   return res.data;
 };
 

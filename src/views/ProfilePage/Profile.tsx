@@ -25,7 +25,6 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 
 const Profile: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
-
   const [state, dispatch] = useReducer<ProfileState, ProfileAction>(ProfileReducer, ProfileStateInit);
 
   useEffect(() => {
