@@ -12,12 +12,12 @@
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
-    // [::1] is the IPv6 localhost address.
-    window.location.hostname === '[::1]' ||
-    // 127.0.0.1/8 is considered localhost for IPv4.
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    )
+  // [::1] is the IPv6 localhost address.
+  window.location.hostname === '[::1]' ||
+  // 127.0.0.1/8 is considered localhost for IPv4.
+  window.location.hostname.match(
+    /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
+  ),
 );
 
 type Config = {
@@ -30,7 +30,7 @@ export function register(config?: Config) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(
       (process as { env: { [key: string]: string } }).env.PUBLIC_URL,
-      window.location.href
+      window.location.href,
     );
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
@@ -51,11 +51,12 @@ export function register(config?: Config) {
         navigator.serviceWorker.ready.then(() => {
           console.log(
             'This web app is being served cache-first by a service ' +
-              'worker. To learn more, visit http://bit.ly/CRA-PWA'
+            'worker. To learn more, visit http://bit.ly/CRA-PWA',
           );
         });
       } else {
         // Is not localhost. Just register service worker
+        console.log(process.env.PUBLIC_URL);
         registerValidSW(swUrl, config);
       }
     });
@@ -79,7 +80,7 @@ function registerValidSW(swUrl: string, config?: Config) {
               // content until all client tabs are closed.
               console.log(
                 'New content is available and will be used when all ' +
-                  'tabs for this page are closed. See http://bit.ly/CRA-PWA.'
+                'tabs for this page are closed. See http://bit.ly/CRA-PWA.',
               );
 
               // Execute callback
@@ -124,12 +125,13 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
         });
       } else {
         // Service worker found. Proceed as normal.
+        console.log('Service worker found');
         registerValidSW(swUrl, config);
       }
     })
     .catch(() => {
       console.log(
-        'No internet connection found. App is running in offline mode.'
+        'No internet connection found. App is running in offline mode.',
       );
     });
 }
@@ -141,3 +143,11 @@ export function unregister() {
     });
   }
 }
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent Chrome 67 and earlier from automatically showing the prompt
+  // e.preventDefault();
+  // Stash the event so it can be triggered later.
+  console.log('Before install trigger');
+});
+

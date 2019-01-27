@@ -27,6 +27,8 @@ import {ThemeStyle} from '@material-ui/core/styles/createTypography';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import LazyLoad from 'react-lazyload';
+import Chip from '@material-ui/core/Chip/Chip';
+import Green from '@material-ui/core/colors/green';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   imgSize: {
@@ -40,7 +42,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       height: 250,
     },
     [theme!.breakpoints!.only!('xl')]: {
-      height: 260
+      height: 260,
     },
     [theme!.breakpoints!.only!('sm')]: {
       height: 240,
@@ -134,6 +136,14 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   chip: {
     height: 24,
+    borderRadius: 4,
+    backgroundColor: Green[600],
+    color: 'white',
+    marginTop: 8
+  },
+  chipSpan: {
+    paddingLeft: 4,
+    paddingRight: 4
   },
   contentHeight: {
     height: 'max-content',
@@ -233,11 +243,13 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                           </span>
                           </Grid>
                           <Hidden xsDown>
-                            <Grid item lg = {12} sm = {12} style = {{marginTop: 6}}>
+                            <Grid item lg = {12} sm = {12}>
                               <ul className = {classes.ul}>
-                                {_.map([1, 2, 3], (val) => (
-                                  <li key = {val} className = {classes.list}><SvgCustom /></li>
-                                ))}
+                                {_.map(room.comforts.data, (o, i) => {
+                                  return i < 3 ? (
+                                    <li key = {o.id} className = {classes.list}><SvgCustom icon = {o.icon} /></li>
+                                  ) : '';
+                                })}
                                 {(totalComfort > 0) ? (
                                   <Tooltip
                                     enterTouchDelay = {300}
@@ -253,6 +265,11 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                               </ul>
                             </Grid>
                           </Hidden>
+                          <Grid item lg = {12} sm = {12}>
+                            <Chip label = {room.room_type_txt} className = {classes.chip} classes={{
+                              label: classes.chipSpan
+                            }} />
+                          </Grid>
                         </Grid>
                       </Grid>
                       {/*Price section*/}
@@ -263,7 +280,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                               {(room.price_day > 0) ? (
                                 <Fragment>
                                   {`${formatMoney(room.price_day, 0)}`}
-                                  <sub className = {classes.subEl}>đ/day</sub>
+                                  <sub className = {classes.subEl}>đ/ngày</sub>
                                 </Fragment>
                               ) : ''}
                             </Typography>
@@ -331,11 +348,11 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                                 <Typography
                                   variant = 'subtitle2'
                                   className = {classes.reviewSizeSM}
-                                >Excellent</Typography>
+                                >{}</Typography>
                                 <Typography
                                   variant = 'body2'
                                   className = {classes.reviewSizeSM}
-                                >9 reviews</Typography>
+                                >{room.total_review} đánh giá</Typography>
                               </Grid>
                             </Hidden>
                           </Fragment>
@@ -368,5 +385,5 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
-  memo
+  memo,
 )(RoomCard);

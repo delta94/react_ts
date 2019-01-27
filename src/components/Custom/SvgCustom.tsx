@@ -11,6 +11,7 @@ interface IProps {
   iconClass?: string;
   borderClass?: string;
   text?: string;
+  icon?: string
 }
 
 interface TextProps {
@@ -54,7 +55,7 @@ const Text = (props: TextProps) => {
 
 // @ts-ignore
 const SvgCustom: ComponentType<IProps> = (props: IProps) => {
-  const {classes, borderClass} = props;
+  const {classes, borderClass, icon} = props;
 
   return (
     <Fragment>
@@ -68,7 +69,7 @@ const SvgCustom: ComponentType<IProps> = (props: IProps) => {
         classes.circle,
       )}>
         {!(props.text) ? (
-          <img src = {wifi} className = {classNames(
+          <img src = {icon} className = {classNames(
             classes.marker,
           )} />
         ): <Text value={props.text} classes={classes}/>}

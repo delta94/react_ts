@@ -53,6 +53,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     marginLeft: '20px',
   },
   button: {
+    zIndex: 99999,
     height: theme!.palette!.button.nav,
     borderRadius: '0px',
     '&:hover': {},
@@ -133,8 +134,16 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
           <Hidden smDown>
             <Logo />
             <div className = {classes.grow}>
-              <Button color = 'inherit' className = {classes.link}>Trở thành chủ nhà</Button>
+
             </div>
+            <Button
+              href = 'https://merchant.westay.org'
+              color = 'inherit'
+              className = {classes.button}
+              name = 'merchant-site'
+            >
+              Dành cho chủ nhà
+            </Button>
             <Button
               name = 'support'
               color = 'inherit'
@@ -150,7 +159,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
                   className = {classes.button}
                   onClick = {() => setMenuStatus(!menuStatus)}
                   style = {{backgroundColor: 'transparent'}}
-                ><Avatar><People/></Avatar>
+                ><Avatar><People /></Avatar>
                 </Button>
                 <Popper open = {menuStatus} anchorEl = {userRefButton.current} transition>
                   {({TransitionProps, placement}) => (
