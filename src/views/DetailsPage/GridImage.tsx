@@ -69,9 +69,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     transition: 'all 0.5s',
     cursor: 'pointer',
     '&:hover': {
-      MsTransform: 'scale(1.2)', /* IE 9 */
-      WebkitTransform: 'scale(1.2)', /* Safari 3-8 */
-      transform: 'scale(1.2)',
+      MsTransform: 'scale(1.1)', /* IE 9 */
+      WebkitTransform: 'scale(1.1)', /* Safari 3-8 */
+      transform: 'scale(1.1)',
     },
   },
   boxImgSmall: {

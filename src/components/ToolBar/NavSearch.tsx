@@ -68,6 +68,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   formControl: {
     height: 50,
     width: '100%',
+    borderRadius: 4,
     backgroundColor: '#ffffff',
   },
   inputOutline: {
@@ -117,6 +118,7 @@ const searchStylesHome: StylesConfig = {
   placeholder: (styles) => ({
     ...styles,
     color: 'black',
+    fontWeight: 400,
   }),
   menu: (styles) => ({
     ...styles,
@@ -127,10 +129,10 @@ const searchStylesHome: StylesConfig = {
 
 // @ts-ignore
 const NavSearch: ComponentType<IProps> = (props: LocalProps) => {
-  const {classes, filter}           = props;
-  const [time, setTime]             = useState<number>(0);
+  const {classes, filter} = props;
+  const [time, setTime] = useState<number>(0);
   const [searchText, setSearchText] = useState('');
-  const {history}                   = useContext<IGlobalContext>(GlobalContext);
+  const {history} = useContext<IGlobalContext>(GlobalContext);
 
   const {inputText, onSearch, optionSearchLabel, suggestEvent} = useSearchHomeSuggestionHook();
 
@@ -173,7 +175,7 @@ const NavSearch: ComponentType<IProps> = (props: LocalProps) => {
           <GridContainer xs = {12} sm = {12} md = {11} lg = {10} xl = {9}>
             <Grid container spacing = {8}>
               <Grid item xs = {3} sm = {4} md = {4}>
-                <Paper elevation = {4} className = {classes.paperSize} square>
+                <Paper elevation = {4} className = {classes.paperSize}>
                   <SearchIcon color = 'disabled' className = {classNames(classes.searchIcon, appC['ml-10'])} />
                   <AsyncSelect
                     name = 'search-bar'
@@ -187,6 +189,7 @@ const NavSearch: ComponentType<IProps> = (props: LocalProps) => {
                     loadOptions = {suggestEvent}
                     onInputChange = {onSearch}
                     placeholder = 'Tìm kiếm'
+                    classNamePrefix = 'duy'
                     className = {
                       classNames(classes.inputSearch, appC['ml-20'])
                     }
@@ -222,7 +225,7 @@ const NavSearch: ComponentType<IProps> = (props: LocalProps) => {
               <Grid item xs = {5} sm = {5} md = {4}>
                 <Paper elevation = {4}
                        className = {classes.paperSize}
-                       square>
+                >
                   <DatePicker />
                 </Paper>
               </Grid>

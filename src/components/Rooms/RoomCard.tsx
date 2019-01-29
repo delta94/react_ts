@@ -71,7 +71,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   borderSection: {
     borderLeft: '1px rgba(0,0,0,0.1) solid',
-    padding: 10,
+    padding: '0 8px 10px 10px',
   },
   marginSvg: {
     marginLeft: 5,
@@ -86,10 +86,17 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   list: {
     paddingRight: 4,
   },
+  dropShadow: {
+    filter: 'drop-shadow(1px 2px 3px rgba(0,0,0,0.3))',
+  },
   reviewScore: {
     padding: 10,
     color: '#fff',
-    backgroundColor: Blue[600],
+    backgroundColor: 'tomato',
+    WebkitClipPath: 'polygon(50% 0%, 100% 0, 100% 100%, 51% 69%, 0 100%, 0 0)',
+    clipPath: 'polygon(50% 0%, 100% 0, 100% 100%, 50% 70%, 0 100%, 0 0)',
+    height: 50,
+    transform: 'translateY(-2px)',
     [theme!.breakpoints!.between!('sm', 'md')]: {
       padding: 7,
     },
@@ -181,6 +188,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
     slidesToShow: 1,
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
+    // dotsClass: classes.name
   };
 
   const cardEvent = () => {
@@ -247,7 +255,9 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                               <ul className = {classes.ul}>
                                 {_.map(room.comforts.data, (o, i) => {
                                   return i < 3 ? (
-                                    <li key = {o.id} className = {classes.list}><SvgCustom icon = {o.icon} /></li>
+                                    <li key = {o.id} className = {classes.list}>
+                                      <SvgCustom icon = {o.icon} name = {o.details.data[0].name} />
+                                    </li>
                                   ) : '';
                                 })}
                                 {(totalComfort > 0) ? (
@@ -335,10 +345,10 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                 <Grid item lg = {3} sm = {3} className = {classes.borderSection}>
                   <Grid container className = {classes.maxHeight}>
                     <Grid item lg = {12} sm = {12} className = {classes.contentHeight}>
-                      <Grid container spacing = {8} alignItems = 'center' justify = 'center' direction = 'row-reverse'>
-                        {room.total_review > 0 ? (
+                      <Grid container spacing = {8} alignItems = 'center' justify = 'center' direction = 'row'>
+                        {room.total_review === 0 ? (
                           <Fragment>
-                            <Grid item>
+                            <Grid item className = {classes.dropShadow}>
                               <Paper className = {classes.reviewScore} elevation = {0}>
                                 <Typography variant = {typoVariant} color = 'secondary'>6.9</Typography>
                               </Paper>
@@ -352,7 +362,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                                 <Typography
                                   variant = 'body2'
                                   className = {classes.reviewSizeSM}
-                                >{room.total_review} đánh giá</Typography>
+                                >{room.total_review}2150 đánh giá</Typography>
                               </Grid>
                             </Hidden>
                           </Fragment>

@@ -15,6 +15,7 @@ import Location from '@material-ui/icons/LocationOnOutlined';
 import StarRatings from 'react-star-ratings';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {
+  getDataProfile,
   getUserBookingList, IProfileContext, ProfileContext
 } from "@/store/context/Profile/ProfileContext";
 import _ from 'lodash';
@@ -154,10 +155,11 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   const {bookings, metaBookings} = state;
   useEffect(() => {
     setLoading(true);
+    // getDataProfile(dispatch,props.status, currentPage);
     getUserBookingList(props.status, currentPage)
       .then(res => {
         dispatch({
-          type: 'setData',
+          type: 'setDataBooking',
           bookings: res.data,
           meta: res.meta
         });
@@ -175,7 +177,6 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   }, [isLoading]);
 
   useEffect(() => {
-    console.log(bookings, isEmpty)
   }, [bookings]);
 
   const handleClick = (id: number) => {
@@ -340,7 +341,7 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
           {mapBookings}
           <div className = {classes.boxPagination}>
             <Pagination className = 'ant-pagination' locale = {localeInfo} total = {metaBookings!.pagination.total}
-                        pageSize = {metaBookings!.pagination.per_page} current = {metaBookings!.pagination.current_page}
+                        pageSize = {metaBookings!.pagination.per_page} current = {currentPage}
                         onChange = {ChangePage} />
           </div>
         </Fragment>

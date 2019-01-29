@@ -221,7 +221,7 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
             <form onSubmit = {handleSubmit}>
               <Grid container spacing = {16}>
                 <Grid item md = {12} xs = {12}>
-                  <Paper elevation = {4} className = {classes.paperSize} square>
+                  <Paper elevation = {4} className = {classes.paperSize}>
                     <SearchIcon className = {classes.marginSearch} fontSize = 'large' />
                     <AsyncSelect
                       name = 'name'
@@ -245,7 +245,7 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
                 <Grid item md = {12} xs = {12}>
                   <Paper elevation = {4}
                          className = {classes.paperSize}
-                         square>
+                  >
                     <Hidden xsDown>
                       <DatePicker />
                     </Hidden>
@@ -255,7 +255,7 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
                   </Paper>
                 </Grid>
                 <Grid item md = {8} xs = {12} sm = {12}>
-                  <Paper elevation = {4} className = {classes.paperSize} square>
+                  <Paper elevation = {4} className = {classes.paperSize}>
                     <People className = {classes.marginSearch} fontSize = 'large' />
                     <Grid container spacing = {8}>
                       <Grid item lg = {12}>

@@ -55,15 +55,17 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     right: '2%',
   },
   btnMore: {
-    backgroundColor: 'rgba(192,192,192,0.6)',
+    backgroundColor: '#fff',
+    color: '#343434',
     MozTransition: 'all 0.3s',
     WebkitTransition: 'all 0.3s',
     transition: 'all 0.3s',
+    border: 'none',
     '&:hover': {
       MsTransform: 'scale(1.1)', /* IE 9 */
       WebkitTransform: 'scale(1.1)', /* Safari 3-8 */
       transform: 'scale(1.1)',
-      backgroundColor: 'rgba(192,192,192,0.5)',
+      backgroundColor: '#fff',
     },
   },
   boxDetails: {
@@ -142,7 +144,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
           <GridImage isOpen = {isOpen} setIsOpen = {setIsOpen} />
           <div className = {classes.div_btnMore}>
             <Button className = {classes.btnMore} variant = 'outlined'
-                    size = 'small' color = 'secondary' onClick = {() => setIsOpen(true)}
+                    size = 'small' onClick = {() => setIsOpen(true)}
             >Xem thêm</Button>
           </div>
         </div>
@@ -170,19 +172,19 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
                 </Grid>
               </Hidden>
             </Grid>
-            <Grid container className = {classes.boxPadding}>
-              <Grid item xs = {12}>
-                <div className = {classes.boxSuggest}>
-                  <div>
-                    <Typography className = {classes.title}>
-                      Gợi ý
-                    </Typography>
-                  </div>
-                  <Divider className = {classes.divider} />
-                  <SliderSuggest />
-                </div>
-              </Grid>
-            </Grid>
+            {/*<Grid container className = {classes.boxPadding}>*/}
+            {/*<Grid item xs = {12}>*/}
+            {/*<div className = {classes.boxSuggest}>*/}
+            {/*<div>*/}
+            {/*<Typography className = {classes.title}>*/}
+            {/*Gợi ý*/}
+            {/*</Typography>*/}
+            {/*</div>*/}
+            {/*<Divider className = {classes.divider} />*/}
+            {/*<SliderSuggest />*/}
+            {/*</div>*/}
+            {/*</Grid>*/}
+            {/*</Grid>*/}
           </GridContainer>
         </div>
         <Hidden lgUp>

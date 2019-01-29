@@ -130,7 +130,7 @@ export const getRooms = async (location: LocationDescriptorObject, page?: number
   const params: RoomUrlParams = qs.parse(location.search!);
 
   let query: Partial<RoomIndexGetParams> = {
-    include: 'details,media,city,district,comforts',
+    include: 'details,media,city,district,comforts.details',
     name: params.name,
     rent_type: params.rent_type,
     check_in: params.check_in,

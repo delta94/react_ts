@@ -299,21 +299,21 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
           </Grid>
         </div>
       </div>
-      <div className = {classes.rowMargin}>
-        <div className = {classes.paddingXS}>
-          <Typography className = {classes.titleHighlight}>
-            {room!.total_review} Nhận xét
-          </Typography>
-          {renderListComment}
-          <div className = {classes.boxPagination}>
-            <Pagination className = 'ant-pagination' total = {11} locale = {localeInfo}
-                        pageSize = {pageSize}
-                        current = {currentPage}
-                        onChange = {ChangePage}
-            />
-          </div>
-        </div>
-      </div>
+      {/*<div className = {classes.rowMargin}>*/}
+      {/*<div className = {classes.paddingXS}>*/}
+      {/*<Typography className = {classes.titleHighlight}>*/}
+      {/*{room!.total_review} Nhận xét*/}
+      {/*</Typography>*/}
+      {/*{renderListComment}*/}
+      {/*<div className = {classes.boxPagination}>*/}
+      {/*<Pagination className = 'ant-pagination' total = {11} locale = {localeInfo}*/}
+      {/*pageSize = {pageSize}*/}
+      {/*current = {currentPage}*/}
+      {/*onChange = {ChangePage}*/}
+      {/*/>*/}
+      {/*</div>*/}
+      {/*</div>*/}
+      {/*</div>*/}
       <div className = {classes.rowMargin}>
         <div className = {classes.paddingXS}>
           <Typography className = {classes.titleHighlight}>

@@ -49,10 +49,10 @@ const GuestSelect: FunctionComponent<IProps> = (props: IProps) => {
     <Grid item md = {8} xs = {12} sm = {12}>
       <Paper elevation = {4}
              className = {classes.paperSize}
-             square>
+      >
         <Grid container spacing = {8} justify = 'center'>
           <Grid item xs = {12}>
-            <BookingTypeSelectBar/>
+            <BookingTypeSelectBar />
             <CountBar
               divider
               singular = 'Khách'

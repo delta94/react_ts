@@ -15,6 +15,7 @@ export interface IProfileContext {
 }
 
 export type ProfileAction = { type: 'setData', profile?: ProfileInfoRes, bookings?: BookingIndexRes[], meta?: Pagination }
+  | { type: 'setDataBooking', bookings?: BookingIndexRes[], meta?: Pagination }
 
 export type ProfileState = {
   readonly profile?: ProfileInfoRes | null
@@ -32,6 +33,11 @@ export const ProfileReducer = (state: ProfileState, action: ProfileAction) => {
     case 'setData':
       return updateObject<ProfileState>(state, {
         profile: action.profile,
+        bookings: action.bookings,
+        metaBookings: action.meta,
+      });
+    case 'setDataBooking' :
+      return updateObject<ProfileState>(state, {
         bookings: action.bookings,
         metaBookings: action.meta,
       });
@@ -56,10 +62,10 @@ export const getUserBookingList = async (status?: number, page?: number) => {
   return res.data;
 };
 
-export const getDataProfile = (dispatch: Dispatch<ProfileAction>) => {
+export const getDataProfile = (dispatch: Dispatch<ProfileAction>, status?: number, page?: number) => {
   Promise.all([
     getProfile(),
-    getUserBookingList(),
+    getUserBookingList(status, page),
   ]).then(res => {
     const [profile, bookings] = res;
     dispatch({
