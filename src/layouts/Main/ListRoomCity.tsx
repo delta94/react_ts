@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles, {WithStyles} from '@material-ui/core/styles/withStyles';
-import React, {ComponentType, Fragment} from 'react';
+import React, {ComponentType, Fragment, useContext, useEffect, useState} from 'react';
 import {compose} from 'recompose';
 
 import Slider, {Settings} from "react-slick";
@@ -12,6 +12,9 @@ import RoomCity from '@/layouts/Main/RoomCity';
 import NextArrowSlider from '@/views/DetailsPage/NextArrowSlider';
 import PrevArrowSlider from '@/views/DetailsPage/PrevArrowSlider';
 
+import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
+import {RoomCityContext, IRoomCityContext, getRoomCity} from '@/store/context/Room/RoomCityContext';
+import _ from 'lodash';
 interface IProps {
    classes?: any
 }
@@ -28,7 +31,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 
 // @ts-ignore
 const ListRoomCity: ComponentType<IProps> = (props: IProps) => {
-   const {classes} = props;
+   const {classes} 					= props;
+   const [isEmpty, setIsEmpty]   = useState<boolean>(false);
+   const [isLoading, setLoading] = useState<boolean>(false);
+ 	const {location}              = useContext<IGlobalContext>(GlobalContext);
+   const {state, dispatch}       = useContext<IRoomCityContext>(RoomCityContext);
+
+   const {rooms, meta} = state;
 
    const settingRoomCity: Settings = {
       dots: false,
@@ -66,16 +75,28 @@ const ListRoomCity: ComponentType<IProps> = (props: IProps) => {
 	    	},
     	]
    };
+
+   useEffect(() => {
+   	getRoomCity().then(data => {
+			const roomData   = data.data;
+			dispatch({
+				type: 'setRoomCities',
+				rooms: roomData,
+			});
+		}).catch(err => {
+			console.error(err);
+		})
+	},[])
+
    return (
    	<Grid container className={classes.listRoomCity}>
 	   	<h2 className={classes.titleRoom}>Phòng theo thành phố</h2>
 	   	<Slider {...settingRoomCity}>
-		   	<RoomCity/>
-		   	<RoomCity/>
-		   	<RoomCity/>
-		   	<RoomCity/>
-		   	<RoomCity/>
-		   	<RoomCity/>
+		   	{ _.map(rooms, (room,index) => (
+	            <div key = {index}>
+	              <RoomCity room = {room} />
+	            </div>
+          	)) }
 	   	</Slider>
    	</Grid>
    );

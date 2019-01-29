@@ -13,8 +13,10 @@ import imgRoomDemo3 from '@/assets/room_demo3.jpeg';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import {NumberRoomCity} from '@/types/Requests/Rooms/RoomResponses';
 interface IProps {
-   classes?: any
+   classes?: any,
+   room: NumberRoomCity,
 }
 
 const styles: any = (theme: ThemeCustom) => createStyles({
@@ -30,23 +32,22 @@ const styles: any = (theme: ThemeCustom) => createStyles({
    	height: 'auto',
    },
    gridListTile:{
-   	width:'90% !important',
+   	width:'95% !important',
    },
    gridListTileBar:{
    	textAlign:'center',
    },
    titleListTileBar:{
-   	fontSize:'1.2em',
+   	fontSize:'1.1em',
    },
    subtitleListTileBar:{
-   	fontSize:'0.9em',
+   	fontSize:'0.8em',
    },
 });
 
 // @ts-ignore
 const RoomCity: ComponentType<IProps> = (props: IProps) => {
-   const {classes} = props;
-
+   const {classes,room} = props;
    return (
       <Fragment>
          <div className={classes.root}>
@@ -55,8 +56,8 @@ const RoomCity: ComponentType<IProps> = (props: IProps) => {
    	            <img src={imgRoomDemo} />
    	            <GridListTileBar
    	            	className={classes.gridListTileBar}
-   	               title={'Hà Nội'}
-   	               subtitle={<span>100$ <sub>/1day</sub> </span>}
+   	               title={room.name_city}
+   	               subtitle={<span>Hiện có: {room.total_rooms} phòng</span>}
    	               classes={{title:classes.titleListTileBar,subtitle:classes.subtitleListTileBar}}
    	            />
    	          </GridListTile>

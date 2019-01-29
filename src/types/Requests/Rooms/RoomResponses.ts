@@ -61,3 +61,10 @@ export interface User<T=any> {
   avatar_url: string,
   vip_txt:string,
 }
+
+export interface NumberRoomCity<T = any> {
+  city_id: number,
+  name_city: string,
+  image: string,
+  total_rooms: string,
+}
