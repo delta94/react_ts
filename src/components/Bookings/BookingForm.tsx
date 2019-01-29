@@ -73,7 +73,11 @@ const FormValidationSchema = Yup.object().shape({
     .required('Vui lòng điền địa chỉ email')
     .email('Email không hợp lệ'),
   phone: Yup.string()
-    .required('Vui lòng điền số điện thoại'),
+    .required('Vui lòng điền số điện thoại')
+    .min(10, 'Số điện thoại phải từ 10 đến 11 số')
+    .max(11, 'Số điện thoại phải từ 10 đến 11 số')
+    .test('checkNaN', 'Không được nhập chữ và các kí hiệu đặc biệt', value => !isNaN(value))
+  ,
   country: Yup.number()
     .required('Vui lòng chọn thành phố')
     .min(1, 'Vui lòng chọn thành phố'),
