@@ -19,7 +19,6 @@ import {formatMoney} from '@/utils/mixins';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '@/styles/PageProfile/StylePageProfile.scss';
-import Blue from '@material-ui/core/colors/blue';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import Button from '@material-ui/core/Button/Button';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
@@ -29,6 +28,7 @@ import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import LazyLoad from 'react-lazyload';
 import Chip from '@material-ui/core/Chip/Chip';
 import Green from '@material-ui/core/colors/green';
+import Flash from '@material-ui/icons/FlashOnRounded';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   imgSize: {
@@ -71,7 +71,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   borderSection: {
     borderLeft: '1px rgba(0,0,0,0.1) solid',
-    padding: 10,
+    padding: '0 8px 10px 10px',
   },
   marginSvg: {
     marginLeft: 5,
@@ -86,18 +86,30 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   list: {
     paddingRight: 4,
   },
+  dropShadow: {
+    filter: 'drop-shadow(2px 3px 2px rgba(0,0,0,0.3))',
+  },
   reviewScore: {
     padding: 10,
     color: '#fff',
-    backgroundColor: Blue[600],
+    backgroundColor: '#039be5',
+    WebkitClipPath: 'polygon(50% 0%, 100% 0, 100% 100%, 51% 69%, 0 100%, 0 0)',
+    clipPath: 'polygon(50% 0%, 100% 0, 100% 100%, 50% 70%, 0 100%, 0 0)',
+    height: 50,
+    transform: 'translateY(-2px)',
+    borderRadius: '7px 2px 4px 4px',
     [theme!.breakpoints!.between!('sm', 'md')]: {
       padding: 7,
+    },
+    [theme!.breakpoints!.down!('sm')]: {
+      height: 35,
     },
   },
   reviewCount: {
     textAlign: 'right',
   },
   reviewSizeSM: {
+    fontWeight: 500,
     [theme!.breakpoints!.down!('md')]: {
       fontSize: '0.6rem',
     },
@@ -145,6 +157,20 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     paddingLeft: 4,
     paddingRight: 4
   },
+  btFlash: {
+    fontSize: 14,
+    padding: 5,
+    paddingLeft: 0,
+    textTransform: 'none',
+    [theme!.breakpoints!.only!('md')]: {
+      fontSize: 12,
+      padding: 4,
+      paddingLeft: 0,
+    },
+  },
+  sizeFlash: {
+    fontSize: 18,
+  },
   contentHeight: {
     height: 'max-content',
   },
@@ -158,6 +184,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   price: {
     [theme!.breakpoints!.only!('xs')]: {
       marginTop: '2vh',
+    },
+  },
+  btBook: {
+    [theme!.breakpoints!.only!('md')]: {
+      fontSize: 12,
+      padding: 5,
+      width: '100%',
     },
   },
 });
@@ -181,6 +214,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
     slidesToShow: 1,
     slidesToScroll: 1,
     lazyLoad: 'ondemand',
+    // dotsClass: classes.name
   };
 
   const cardEvent = () => {
@@ -247,7 +281,9 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                               <ul className = {classes.ul}>
                                 {_.map(room.comforts.data, (o, i) => {
                                   return i < 3 ? (
-                                    <li key = {o.id} className = {classes.list}><SvgCustom icon = {o.icon} /></li>
+                                    <li key = {o.id} className = {classes.list}>
+                                      <SvgCustom icon = {o.icon} name = {o.details.data[0].name} />
+                                    </li>
                                   ) : '';
                                 })}
                                 {(totalComfort > 0) ? (
@@ -306,28 +342,29 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item lg = {3} sm = {3} xs = {12}>
-                    <Grid container
-                          className = {classes.maxHeight}
-                          spacing = {8}
-                          alignItems = 'flex-end'
-                          justify = 'flex-end'
-                    >
+                  <Grid item lg = {3} sm = {3} xs = {12} container direction = 'column'
+                        justify = 'space-between' alignItems = 'flex-start'>
+
                       <Grid item lg = {12} sm = {12}>
                         {/*Discount*/}
                       </Grid>
                       {room.manager == 1 ? (
-                        <Grid item lg = {12} sm = {12} xs = {12} className = {align.textRight}>
-                          <Tooltip
-                            classes = {{tooltip: classes.tooltip}}
-                            enterTouchDelay = {300}
-                            title = 'Đặt phòng nhanh'
-                            placement = 'top'>
-                            <ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />
-                          </Tooltip>
+                        <Grid item lg = {12} sm = {12} xs = {12} container direction = 'column' justify = 'flex-end'
+                              className = {align.textRight}>
+                          {/*<Tooltip*/}
+                          {/*classes = {{tooltip: classes.tooltip}}*/}
+                          {/*enterTouchDelay = {300}*/}
+                          {/*title = 'Đặt phòng nhanh'*/}
+                          {/*placement = 'top'>*/}
+                          {/*<ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />*/}
+                          {/*</Tooltip>*/}
+                          <Button variant = 'outlined' color = 'primary' fullWidth size = 'small'
+                                  className = {classes.btFlash}>
+                            <Flash className = {classes.sizeFlash} />
+                            Đặt nhanh
+                          </Button>
                         </Grid>
                       ) : ''}
-                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
@@ -335,10 +372,10 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                 <Grid item lg = {3} sm = {3} className = {classes.borderSection}>
                   <Grid container className = {classes.maxHeight}>
                     <Grid item lg = {12} sm = {12} className = {classes.contentHeight}>
-                      <Grid container spacing = {8} alignItems = 'center' justify = 'center' direction = 'row-reverse'>
-                        {room.total_review > 0 ? (
+                      <Grid container spacing = {8} alignItems = 'center' justify = 'center' direction = 'row'>
+                        {room.total_review === 0 ? (
                           <Fragment>
-                            <Grid item>
+                            <Grid item className = {classes.dropShadow}>
                               <Paper className = {classes.reviewScore} elevation = {0}>
                                 <Typography variant = {typoVariant} color = 'secondary'>6.9</Typography>
                               </Paper>
@@ -352,7 +389,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                                 <Typography
                                   variant = 'body2'
                                   className = {classes.reviewSizeSM}
-                                >{room.total_review} đánh giá</Typography>
+                                >{room.total_review}2150 đánh giá</Typography>
                               </Grid>
                             </Hidden>
                           </Fragment>
@@ -369,6 +406,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                           color = 'primary'
                           variant = 'contained'
                           size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
+                          className = {classes.btBook}
                         >Đặt phòng</Button>
                       </Grid>
                     </Grid>

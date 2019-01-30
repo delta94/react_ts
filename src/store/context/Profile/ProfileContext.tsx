@@ -1,4 +1,4 @@
-import {createContext, Dispatch} from 'react';
+import {createContext, Dispatch, useContext} from 'react';
 import {ProfileInfoRes} from '@/types/Requests/Profile/ProfileResponse';
 import {BookingIndexRes} from '@/types/Requests/Booking/BookingResponses';
 import {updateObject} from '@/store/utility';
@@ -6,6 +6,7 @@ import {AxiosRes, Pagination} from '@/types/Requests/ResponseTemplate';
 import {axios} from '@/utils/axiosInstance';
 import {BookingIndexParams} from "@/types/Requests/Booking/BookingRequests";
 import qs from "query-string";
+import {AxiosError} from "axios";
 
 export const ProfileContext = createContext<| any>(null);
 
@@ -14,7 +15,9 @@ export interface IProfileContext {
   dispatch: Dispatch<ProfileAction>
 }
 
-export type ProfileAction = { type: 'setData', profile?: ProfileInfoRes, bookings?: BookingIndexRes[], meta?: Pagination }
+export type ProfileAction =
+  { type: 'setData', profile?: ProfileInfoRes, bookings?: BookingIndexRes[], meta?: Pagination }
+  | { type: 'setDataBooking', bookings?: BookingIndexRes[], meta?: Pagination }
 
 export type ProfileState = {
   readonly profile?: ProfileInfoRes | null
@@ -32,6 +35,11 @@ export const ProfileReducer = (state: ProfileState, action: ProfileAction) => {
     case 'setData':
       return updateObject<ProfileState>(state, {
         profile: action.profile,
+        bookings: action.bookings,
+        metaBookings: action.meta,
+      });
+    case 'setDataBooking' :
+      return updateObject<ProfileState>(state, {
         bookings: action.bookings,
         metaBookings: action.meta,
       });
@@ -56,10 +64,10 @@ export const getUserBookingList = async (status?: number, page?: number) => {
   return res.data;
 };
 
-export const getDataProfile = (dispatch: Dispatch<ProfileAction>) => {
+export const getDataProfile = (dispatch: Dispatch<ProfileAction>, status?: number, page?: number) => {
   Promise.all([
     getProfile(),
-    getUserBookingList(),
+    getUserBookingList(status, page),
   ]).then(res => {
     const [profile, bookings] = res;
     dispatch({
@@ -68,7 +76,7 @@ export const getDataProfile = (dispatch: Dispatch<ProfileAction>) => {
       bookings: bookings.data,
       meta: bookings.meta
     });
-  }).catch(err => {
-
+  }).catch((err: AxiosError) => {
+    window.location.replace('/');
   });
 };

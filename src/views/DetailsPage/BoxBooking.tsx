@@ -289,7 +289,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
           <Grid item xs = {6}>
             <div className = {classes.pricePerDay}>
               <span className = {classes.price}>{formatMoney(room!.price_day)} <sup>&#8363;</sup></span>
-              <sub className = {classes.perTime}>/day</sub>
+              <sub className = {classes.perTime}>/ngày</sub>
             </div>
           </Grid>
           <Grid item xs = {6}>
@@ -445,14 +445,13 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
         <Divider />
         <Grid container>
           <Grid item xs>
-            <span className = {classes.title}>This room may not available on your dates!
-              <Tooltip title = 'This happened when the host want to know who you are' placement = 'top'>
+            <span className = {classes.title}>Phòng này có thể không còn trống với lịch của bạn
+              <Tooltip title = 'Điều này xảy ra khi chủ nhà muốn biết bạn là ai' placement = 'top'>
                 <HelpOutline className = {classes.iconHelp} />
               </Tooltip>
             </span>
             <Typography variant = 'caption'>
-              Don't worry, send a booking request to the host, they will confirm if the
-              room is available for you.
+              Đừng lo, gửi một yêu cầu đặt phòng đến chủ nhà, họ sẽ phản hồi nếu phòng này còn trống cho bạn
             </Typography>
           </Grid>
         </Grid>

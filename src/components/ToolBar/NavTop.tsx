@@ -31,6 +31,9 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import {ISideDrawerProps} from '@/components/ToolBar/SideDrawer';
 import Logo from '@/components/ToolBar/Logo';
 import People from '@material-ui/icons/People';
+import PowerSettingsNewRounded from '@material-ui/icons/PowerSettingsNewRounded';
+import AccountCircleOutlined from "@material-ui/icons/AccountCircleOutlined";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 interface IProps {
   classes: any,
@@ -53,7 +56,6 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     marginLeft: '20px',
   },
   button: {
-    zIndex: 99999,
     height: theme!.palette!.button.nav,
     borderRadius: '0px',
     '&:hover': {},
@@ -75,6 +77,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
     width: '60%',
   },
+  Popper: {
+    zIndex: 9999
+  }
 });
 
 const LoginForm = Loadable({
@@ -161,7 +166,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
                   style = {{backgroundColor: 'transparent'}}
                 ><Avatar><People /></Avatar>
                 </Button>
-                <Popper open = {menuStatus} anchorEl = {userRefButton.current} transition>
+                <Popper open = {menuStatus} anchorEl = {userRefButton.current} transition className = {classes.Popper}>
                   {({TransitionProps, placement}) => (
                     <Grow
                       {...TransitionProps}
@@ -170,17 +175,25 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
                         minWidth: 300,
                       }}
                     >
-                      <Paper square elevation = {1}>
+                      <Paper elevation = {1}>
                         <ClickAwayListener onClickAway = {closeMenu}>
                           <MenuList>
                             <MenuItem
                               name = 'profile'
                               onClick = {closeMenu}
                               {...to('/profile')}>
+                              <ListItemIcon>
+                                <AccountCircleOutlined />
+                              </ListItemIcon>
                               Thông tin cá nhân
                             </MenuItem>
                             <Divider />
-                            <MenuItem name = 'sign-out' onClick = {logoutTrigger}>Đăng xuất</MenuItem>
+                            <MenuItem name = 'sign-out' onClick = {logoutTrigger}>
+                              <ListItemIcon>
+                                <PowerSettingsNewRounded />
+                              </ListItemIcon>
+                              Đăng xuất
+                            </MenuItem>
                             {/*<Divider />*/}
                           </MenuList>
                         </ClickAwayListener>

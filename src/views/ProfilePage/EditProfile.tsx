@@ -176,8 +176,6 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
   }, [profile]);
 
   const validationForm = Yup.object().shape({ // Validate form field
-    gender: Yup.number()
-      .required('Giới tính của bạn'),
     name: Yup.string()
       .required('Họ và Tên là bắt buộc')
       .min(2, 'Tên phải có ít nhất 2 kí tự')
@@ -501,13 +499,13 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                     <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <TextField
                         id = 'desYourSelf'
-                        label = 'Help people to get to know you.'
+                        label = 'Giúp mọi người hiểu thêm về bạn'
                         fullWidth
                         multiline
                         rowsMax = '4'
                         onChange = {handleChange}
                         margin = 'normal'
-                        helperText = 'Please Tell them what it like to have you as a guest or a host, your style of travelling or               hosting...'
+                        helperText = 'Cho mọi người biết về những gì bạn muốn, phong cách, hoặc sở thích du lịch với tư cách là khách hoặc chủ nhà'
                       />
                     </Grid>
                   </Grid>

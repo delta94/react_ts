@@ -136,7 +136,7 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
   const handleChange = (event: ChangeEvent<{}>, value: number) => {
     setValue(value);
   };
-
+  console.log(profile);
   return (
     <Fragment>
       <div style = {{position: 'relative'}}>
@@ -170,10 +170,10 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
                 <Tabs value = {value} onChange = {handleChange} variant = {width == 'xs' ? "scrollable" : "fullWidth"}
                       indicatorColor = 'primary' textColor = 'primary' scrollButtons = 'off'>
                   <Tab icon = {<Person />} label = 'Thông tin cá nhân' />
-                  <Tab icon = {<Bookmarks />} label = 'Danh sách booking' />
+                  <Tab icon = {<Bookmarks />} label = 'Danh sách đặt phòng' />
                   <Tab icon = {<Favorite />} label = 'Danh sách yêu thích' />
                   <Tab icon = {<CardGift />} label = 'Điểm thưởng' />
-                  <Tab icon = {<Weekend />} label = 'Cài đặt' />
+                  <Tab icon = {<Weekend />} label = 'Thiết lập' />
                 </Tabs>
               </AppBar>
             </Hidden>
@@ -183,7 +183,7 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
                 <BottomNavigationAction label = 'Bookings' value = {1} icon = {<Bookmarks />} />
                 <BottomNavigationAction label = 'Yêu thích' value = {2} icon = {<Favorite />} />
                 <BottomNavigationAction label = 'Điểm thưởng' value = {3} icon = {<CardGift />} />
-                <BottomNavigationAction label = 'Cài đặt' value = {4} icon = {<Weekend />} />
+                <BottomNavigationAction label = 'Thiết lập' value = {4} icon = {<Weekend />} />
               </BottomNavigation>
             </Hidden>
           </Grid>

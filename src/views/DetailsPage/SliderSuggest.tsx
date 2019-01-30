@@ -32,6 +32,7 @@ const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
 
   const settings: Settings = {
     speed: 500,
+    swipeToSlide: true,
     dots: width === 'xs' || width === 'sm',
     slidesToShow: 3,
     slidesToScroll: 1,

@@ -11,6 +11,7 @@ interface IProps {
   iconClass?: string;
   borderClass?: string;
   text?: string;
+  name?: string;
   icon?: string
 }
 
@@ -69,9 +70,7 @@ const SvgCustom: ComponentType<IProps> = (props: IProps) => {
         classes.circle,
       )}>
         {!(props.text) ? (
-          <img src = {icon} className = {classNames(
-            classes.marker,
-          )} />
+          <img src = {icon} title = {props.name} alt = {props.name} className = {classNames(classes.marker,)} />
         ): <Text value={props.text} classes={classes}/>}
       </div>
     </Fragment>

@@ -148,7 +148,7 @@ const DatePickerRoomDetail: ComponentType<IProps> = (props: LocalProps) => {
             Lịch trống phòng
           </Typography>
           <Button variant = 'outlined' className = {classes.btClear}
-                  onClick = {() => setFocusedInput('startDate')}>Clear</Button>
+                  onClick = {() => setFocusedInput('startDate')}>Chọn lại</Button>
           <div className = {classes.boxCalendar}>
             <DayPickerRangeController
               minimumNights = {!!minNights ? minNights : 1}

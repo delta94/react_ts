@@ -152,12 +152,15 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   const {state, dispatch} = useContext<IProfileContext>(ProfileContext);
 
   const {bookings, metaBookings} = state;
+  if (bookings == null) {
+    return <SimpleLoader />
+  }
   useEffect(() => {
     setLoading(true);
     getUserBookingList(props.status, currentPage)
       .then(res => {
         dispatch({
-          type: 'setData',
+          type: 'setDataBooking',
           bookings: res.data,
           meta: res.meta
         });
@@ -175,7 +178,6 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   }, [isLoading]);
 
   useEffect(() => {
-    console.log(bookings, isEmpty)
   }, [bookings]);
 
   const handleClick = (id: number) => {
@@ -189,10 +191,6 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   const ChangePage = (current: number) => {
     setCurrentPage(current);
   };
-
-  if (bookings == null) {
-    return <SimpleLoader />
-  }
 
   const mapBookings = _.map(bookings, i => {
     const room = i.room.data;
@@ -340,7 +338,7 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
           {mapBookings}
           <div className = {classes.boxPagination}>
             <Pagination className = 'ant-pagination' locale = {localeInfo} total = {metaBookings!.pagination.total}
-                        pageSize = {metaBookings!.pagination.per_page} current = {metaBookings!.pagination.current_page}
+                        pageSize = {metaBookings!.pagination.per_page} current = {currentPage}
                         onChange = {ChangePage} />
           </div>
         </Fragment>
