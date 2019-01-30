@@ -15,7 +15,6 @@ import Location from '@material-ui/icons/LocationOnOutlined';
 import StarRatings from 'react-star-ratings';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {
-  getDataProfile,
   getUserBookingList, IProfileContext, ProfileContext
 } from "@/store/context/Profile/ProfileContext";
 import _ from 'lodash';
@@ -153,9 +152,11 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   const {state, dispatch} = useContext<IProfileContext>(ProfileContext);
 
   const {bookings, metaBookings} = state;
+  if (bookings == null) {
+    return <SimpleLoader />
+  }
   useEffect(() => {
     setLoading(true);
-    // getDataProfile(dispatch,props.status, currentPage);
     getUserBookingList(props.status, currentPage)
       .then(res => {
         dispatch({
@@ -190,10 +191,6 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
   const ChangePage = (current: number) => {
     setCurrentPage(current);
   };
-
-  if (bookings == null) {
-    return <SimpleLoader />
-  }
 
   const mapBookings = _.map(bookings, i => {
     const room = i.room.data;

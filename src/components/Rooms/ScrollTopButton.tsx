@@ -17,6 +17,7 @@ interface IProps {
 const styles: any = (theme: ThemeCustom) => createStyles({
   toTop: {
     position: 'fixed',
+    zIndex: 9,
     right: theme!.spacing!.unit! * 2,
     bottom: theme!.spacing!.unit! * 2,
     [theme!.breakpoints!.between!('xs', 'sm')]: {

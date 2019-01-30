@@ -135,7 +135,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   paper: {
     transition: theme!.transitions!.create!(['box-shadow'], {
-      duration: 400,
+      duration: 100,
       easing: 'ease-in-out',
     }),
   },
@@ -158,6 +158,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
     [theme!.breakpoints!.only!('md')]: {
       transform: 'translate(4vw)',
+    },
+  },
+  border: {
+    backgroundColor: '#eceff1',
+    '&:hover': {
+      backgroundColor: '#eceff1',
     },
   },
 });
@@ -206,8 +212,8 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
 
   return (
     <Fragment>
-      <Paper elevation = {isHover ? 10 : 3}
-             className = {classes.paper}
+      <Paper elevation = {isHover ? 20 : 3}
+             className = {classNames(classes.paper, isHover ? classes.border : '')}
       >
         <Grid container spacing = {0}>
           <Grid item lg = {4} sm = {4} xs = {12} className = {classes.imgSize}>

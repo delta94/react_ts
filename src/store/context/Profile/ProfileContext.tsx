@@ -1,4 +1,4 @@
-import {createContext, Dispatch} from 'react';
+import {createContext, Dispatch, useContext} from 'react';
 import {ProfileInfoRes} from '@/types/Requests/Profile/ProfileResponse';
 import {BookingIndexRes} from '@/types/Requests/Booking/BookingResponses';
 import {updateObject} from '@/store/utility';
@@ -6,6 +6,7 @@ import {AxiosRes, Pagination} from '@/types/Requests/ResponseTemplate';
 import {axios} from '@/utils/axiosInstance';
 import {BookingIndexParams} from "@/types/Requests/Booking/BookingRequests";
 import qs from "query-string";
+import {AxiosError} from "axios";
 
 export const ProfileContext = createContext<| any>(null);
 
@@ -14,7 +15,8 @@ export interface IProfileContext {
   dispatch: Dispatch<ProfileAction>
 }
 
-export type ProfileAction = { type: 'setData', profile?: ProfileInfoRes, bookings?: BookingIndexRes[], meta?: Pagination }
+export type ProfileAction =
+  { type: 'setData', profile?: ProfileInfoRes, bookings?: BookingIndexRes[], meta?: Pagination }
   | { type: 'setDataBooking', bookings?: BookingIndexRes[], meta?: Pagination }
 
 export type ProfileState = {
@@ -74,7 +76,7 @@ export const getDataProfile = (dispatch: Dispatch<ProfileAction>, status?: numbe
       bookings: bookings.data,
       meta: bookings.meta
     });
-  }).catch(err => {
-
+  }).catch((err: AxiosError) => {
+    window.location.replace('/');
   });
 };
