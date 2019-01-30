@@ -373,11 +373,11 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                   <Grid container className = {classes.maxHeight}>
                     <Grid item lg = {12} sm = {12} className = {classes.contentHeight}>
                       <Grid container spacing = {8} alignItems = 'center' justify = 'center' direction = 'row'>
-                        {room.total_review === 0 ? (
+                        {room.total_review > 0 ? (
                           <Fragment>
                             <Grid item className = {classes.dropShadow}>
                               <Paper className = {classes.reviewScore} elevation = {0}>
-                                <Typography variant = {typoVariant} color = 'secondary'>6.9</Typography>
+                                <Typography variant = {typoVariant} color = 'secondary'>{room.avg_rating}</Typography>
                               </Paper>
                             </Grid>
                             <Hidden xsDown>
@@ -389,7 +389,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                                 <Typography
                                   variant = 'body2'
                                   className = {classes.reviewSizeSM}
-                                >{room.total_review}2150 đánh giá</Typography>
+                                >{room.total_review} đánh giá</Typography>
                               </Grid>
                             </Hidden>
                           </Fragment>
