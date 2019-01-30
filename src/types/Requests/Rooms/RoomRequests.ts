@@ -7,8 +7,8 @@ export interface RoomIndexGetParams extends BaseGetRequestParams, Partial<MapCoo
   status?: string
   merchant?: string
   manager?: string | number
-  hot?: string
-  new?: string
+  hot?: string | number
+  new?: string | number
   rooms?: number | string
   most_popular?: any
   sort_price_day?: number | string

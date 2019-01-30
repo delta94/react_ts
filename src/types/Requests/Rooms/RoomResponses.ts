@@ -61,8 +61,15 @@ export interface RoomScheduleRes {
   blocks: string[]
 }
 
-export interface User<T=any> {
+export interface User {
   name: string,
   avatar_url: string,
   vip_txt:string,
+}
+
+export interface NumberRoomCity {
+  city_id: number,
+  name_city: string,
+  image: string,
+  total_rooms: string,
 }

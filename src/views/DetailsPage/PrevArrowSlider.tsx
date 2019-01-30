@@ -22,6 +22,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     display: 'block',
     width: 20,
     height: 20,
+    minWidth:20,
     padding: 0,
     WebkitTransform: 'translate(0, -50%)',
     transform: 'translate(0, -50%)',
@@ -30,9 +31,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     border: 'none',
     outline: 'none',
     background: 'transparent',
-    left:'-3.5%',
+    left:'-2.5%',
     [theme!.breakpoints!.down!('md')]: {
-      left:'-4.5%',
+      left:'-3.5%',
     },
     '&:hover':{
       background: 'transparent',
