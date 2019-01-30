@@ -165,7 +165,7 @@ export const newRoomLocation = (params: RoomUrlParams): LocationDescriptorObject
 };
 
 export const fetchRoom = async (url: string) => {
-  const res: AxiosRes<RoomIndexRes[]> = await get(url);
+  const res: AxiosRes<RoomIndexRes[]> = await axios.get(url);
   return res.data;
 };
 
