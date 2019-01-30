@@ -53,17 +53,17 @@ const RoomCity: ComponentType<IProps> = (props: IProps) => {
          <div className={classes.root}>
    	      <GridList cellHeight={300} className={classes.gridList}>
    	         <GridListTile className={classes.gridListTile}>
-   	            <img src={imgRoomDemo} />
+   	            <img src={room.image} />
    	            <GridListTileBar
    	            	className={classes.gridListTileBar}
    	               title={room.name_city}
-   	               subtitle={<span>Hiện có: {room.total_rooms} phòng</span>}
+   	               subtitle={<span>{room.total_rooms} phòng</span>}
    	               classes={{title:classes.titleListTileBar,subtitle:classes.subtitleListTileBar}}
    	            />
-   	          </GridListTile>
+   	         </GridListTile>
    	      </GridList>
        	</div>
-       </Fragment>
+      </Fragment>
    );
 };
 

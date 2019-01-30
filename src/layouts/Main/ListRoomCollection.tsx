@@ -19,6 +19,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 		color:'rgb(72, 72, 72)',
 	},
 	listRoomCollection:{
+		marginTop: '42px',
 		clear: 'both',
       width:'100%',
 		display:'block',
@@ -59,14 +60,16 @@ const ListRoomCollection: ComponentType<IProps> = (props: IProps) => {
    };
 
    return (
-      <Grid container className={classes.listRoomCollection}>
-     		<h2 className={classes.titleRoom}>Bộ sưu tập phòng</h2>
-     		<Slider {...settingRoomCollection}>
-     			<RoomCollection/>
-     			<RoomCollection/>
-     			<RoomCollection/>
-     		</Slider>
-     	</Grid>
+   	<Fragment>
+	      <Grid container className={classes.listRoomCollection}>
+	     		<h2 className={classes.titleRoom}>Bộ sưu tập phòng</h2>
+	     		<Slider {...settingRoomCollection}>
+	     			<RoomCollection/>
+	     			<RoomCollection/>
+	     			<RoomCollection/>
+	     		</Slider>
+	     	</Grid>
+	   </Fragment>
    );
 };
 

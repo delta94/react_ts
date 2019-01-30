@@ -93,11 +93,7 @@ const Footer: ComponentType<IProps> = (props: IProps) => {
                   <Grid item xs={6} sm={3} className={classes.linksList}>
                      <h5 className={classes.linksListGroupTitle}>Trợ giúp</h5>
                      <ul className={classes.linksListGroupList}>
-                        <li>Liên hệ vớii chúng tôi</li>
-                        <li>Câu hỏi thường gặp</li>
-                        <li>Chính sách Bảo mật</li>
-                        <li>Chính sách với cookie</li>
-                        <li>Ðiều khoản sử dụng</li>
+                        <p><strong>C&Ocirc;NG TY CỔ PHẦN WESTAY</strong><br /> <strong>Số điện thoại li&ecirc;n hệ:</strong> 0941 983 046<br /> <strong>Lĩnh vực kinh doanh:</strong>&nbsp;S&agrave;n giao dịch TMĐT<br /> <strong>Địa chỉ t&ecirc;n miền:</strong>&nbsp;http://westay.org/vi<br /> <strong>Loại h&igrave;nh website: </strong>S&agrave;n giao dịch TMĐT</p> <p>&nbsp;</p> <p><a href="http://online.gov.vn/HomePage/WebsiteDisplay.aspx?DocId=41005"><img alt="" src="http://online.gov.vn/seals/dlxOBO9dxLmirYHstOPHmA==.jpgx" /></a></p>
                      </ul>
                   </Grid>
                   <Grid item xs={6} sm={3} className={classes.linksList}>
@@ -134,8 +130,8 @@ const Footer: ComponentType<IProps> = (props: IProps) => {
             </GridContainer>
          </div>
 
-         <div className={classes.root}> 
-            <GridContainer xs = {11}>  
+         <div className={classes.root}>
+            <GridContainer xs = {11}>
                <Grid container>
                   <Grid item xs={12} sm={6} className={classes.rowFooter}>
                      <Paper

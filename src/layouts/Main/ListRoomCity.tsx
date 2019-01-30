@@ -13,8 +13,8 @@ import NextArrowSlider from '@/views/DetailsPage/NextArrowSlider';
 import PrevArrowSlider from '@/views/DetailsPage/PrevArrowSlider';
 
 import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
-import {RoomCityContext, IRoomCityContext, getRoomCity} from '@/store/context/Room/RoomCityContext';
 import _ from 'lodash';
+import {RoomHomepageContext, IRoomHomepageContext, getRoomCity} from '@/store/context/Room/RoomHomepageContext';
 interface IProps {
    classes?: any
 }
@@ -32,18 +32,18 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 // @ts-ignore
 const ListRoomCity: ComponentType<IProps> = (props: IProps) => {
    const {classes} 					= props;
-   const [isEmpty, setIsEmpty]   = useState<boolean>(false);
-   const [isLoading, setLoading] = useState<boolean>(false);
- 	const {location}              = useContext<IGlobalContext>(GlobalContext);
-   const {state, dispatch}       = useContext<IRoomCityContext>(RoomCityContext);
 
-   const {rooms, meta} = state;
+	const {state, dispatch} = useContext<IRoomHomepageContext>(RoomHomepageContext);
+ 	const {location}        = useContext<IGlobalContext>(GlobalContext);
+
+
+   const {roomsCity} = state;
 
    const settingRoomCity: Settings = {
       dots: false,
       infinite: true,
       speed: 500,
-      slidesToShow: 5,
+      slidesToShow: 4,
 		swipeToSlide: true,
 		nextArrow: <NextArrowSlider />,
     	prevArrow: <PrevArrowSlider />,
@@ -59,14 +59,17 @@ const ListRoomCity: ComponentType<IProps> = (props: IProps) => {
 	    	{
 	    		breakpoint: 768,
 	    		settings: {
+	    			dots: true,
 	    			slidesToShow: 3,
 	    			autoplay:true,
+	    			arrows:false,
 	    			autoplaySpeed: 5000,
 	    		}
 	    	},
 	    	{
 	    		breakpoint: 425,
 	    		settings: {
+	    			dots: true,
 	    			slidesToShow: 1,
 	    			autoplay:true,
 	    			autoplaySpeed: 5000,
@@ -80,8 +83,8 @@ const ListRoomCity: ComponentType<IProps> = (props: IProps) => {
    	getRoomCity().then(data => {
 			const roomData   = data.data;
 			dispatch({
-				type: 'setRoomCities',
-				rooms: roomData,
+				type: 'setRoomCity',
+				rooms: roomData
 			});
 		}).catch(err => {
 			console.error(err);
@@ -89,16 +92,18 @@ const ListRoomCity: ComponentType<IProps> = (props: IProps) => {
 	},[])
 
    return (
-   	<Grid container className={classes.listRoomCity}>
-	   	<h2 className={classes.titleRoom}>Phòng theo thành phố</h2>
-	   	<Slider {...settingRoomCity}>
-		   	{ _.map(rooms, (room,index) => (
-	            <div key = {index}>
-	              <RoomCity room = {room} />
-	            </div>
-          	)) }
-	   	</Slider>
-   	</Grid>
+   	<Fragment>
+	   	<Grid container className={classes.listRoomCity}>
+		   	<h2 className={classes.titleRoom}>Điểm đến nổi bật</h2>
+		   	<Slider {...settingRoomCity}>
+			   	{ _.map(roomsCity, (room) => (
+		            <div key = {room.city_id}>
+		              <RoomCity room = {room} />
+		            </div>
+	          	)) }
+		   	</Slider>
+	   	</Grid>
+   	</Fragment>
    );
 };
 
