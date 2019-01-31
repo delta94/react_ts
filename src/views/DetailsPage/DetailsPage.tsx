@@ -9,7 +9,7 @@ import SliderSuggest from '@/views/DetailsPage/SliderSuggest';
 import NavBottomBook from '@/views/DetailsPage/NavBottomBook';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useContext, useEffect, useReducer, useState, useMemo} from 'react';
+import React, {ComponentType, useContext, useEffect, useReducer, useState, useMemo, memo} from 'react';
 import {compose} from 'recompose';
 import Button from '@material-ui/core/Button/Button';
 import GridContainer from '@/layouts/Grid/Container';
@@ -159,7 +159,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
                       <DatePickerRoomDetail
                         minNights = {bookingType === BOOKING_TYPE_DAY ? 1 : 0}
                       />
-                    ): ''}
+                    ) : ''}
                     <BoxReviews />
                   </div>
                 </Paper>
@@ -172,19 +172,16 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
                 </Grid>
               </Hidden>
             </Grid>
-            {/*<Grid container className = {classes.boxPadding}>*/}
-            {/*<Grid item xs = {12}>*/}
-            {/*<div className = {classes.boxSuggest}>*/}
-            {/*<div>*/}
-            {/*<Typography className = {classes.title}>*/}
-            {/*Gợi ý*/}
-            {/*</Typography>*/}
-            {/*</div>*/}
-            {/*<Divider className = {classes.divider} />*/}
-            {/*<SliderSuggest />*/}
-            {/*</div>*/}
-            {/*</Grid>*/}
-            {/*</Grid>*/}
+            <Grid container className = {classes.boxPadding}>
+              <Grid item xs = {12}>
+                <div className = {classes.boxSuggest}>
+                  <Typography className = {classes.title}>
+                    Gợi ý
+                  </Typography>
+                  <SliderSuggest />
+                </div>
+              </Grid>
+            </Grid>
           </GridContainer>
         </div>
         <Hidden lgUp>
@@ -197,4 +194,5 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo,
 )(DetailsPage);

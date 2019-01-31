@@ -192,9 +192,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       padding: 5,
       width: '100%',
     },
-    typoPadding: {
-      paddingTop: 20,
-    }
+  },
+  typoPadding: {
+    paddingTop: 20,
   },
 });
 
@@ -393,18 +393,18 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                     <Grid container item lg = {12} sm = {12} justify = 'center' alignItems = 'flex-end'>
                       <Grid item lg = {12} sm = {12} className = {align.textCenter}>
                         {room.manager == 1 ?
-                          <Button
+                          <Button variant = 'contained' color = 'primary'
+                                  size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
+                                  className = {classes.btBook}>
+                            <Flash className = {classes.sizeFlash} />
+                            Đặt nhanh
+                          </Button>
+                          : <Button
                             color = 'primary'
                             variant = 'contained'
                             size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
                             className = {classes.btBook}
                           >Đặt phòng
-                          </Button>
-                          : <Button variant = 'contained' color = 'primary'
-                                    size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
-                                    className = {classes.btBook}>
-                            <Flash className = {classes.sizeFlash} />
-                            Đặt nhanh
                           </Button>
                         }
                       </Grid>

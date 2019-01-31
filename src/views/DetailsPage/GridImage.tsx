@@ -8,7 +8,9 @@ import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/Room
 import _ from 'lodash';
 // @ts-ignore
 import Lightbox from 'react-images';
-import SimpleLoader from '@/views/DetailsPage/BoxReviews';
+import SimpleLoader from '@/components/Loading/SimpleLoader';
+import ContentLoader from 'react-content-loader';
+import PlaceholderLoader from '@/components/PlaceHolder/PlaceholderLoader';
 
 interface IProps {
   classes?: any,
@@ -91,7 +93,7 @@ const GridImage: ComponentType<IProps> = (props: IProps) => {
 
   const {room} = state;
   if (room == null) {
-    return <SimpleLoader />;
+    return <PlaceholderLoader />;
   }
 
   const openLightbox  = (event: MouseEvent<HTMLImageElement>, index: number) => {

@@ -77,7 +77,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
   },
   roomAmenitiesTitle: {
-    color: '#46afcc',
+    color: '#343434',
     margin: '0 5px',
     fontSize: 13,
     [theme!.breakpoints!.down!('xs')]: {
@@ -284,25 +284,6 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
       node.attribs.class = classes.tagP_inHtmlPare;
       return convertNodeToElement(node, index, transformHtmlContent);
     }
-  };
-
-  const expansionDetails = () => {
-    let arr = [];
-    for (let i = 4; i <= room.comforts.data.length; i++) {
-      arr.push(
-        <Grid container className = {classes.rowMargin} key = {i}>
-          <Grid item xs = {3}>&#9679; &nbsp;
-            <img src = {`${room.comforts.data[i].icon}`}
-                 alt = {`${room.comforts.data[i].details.data[0].name}`}
-                 className = {classes.roomAmenitiesIcon} />
-          </Grid>
-          <Grid item xs = {9}>
-            <Typography variant = {'body2'}>{room.comforts.data[i].details.data[0].name}</Typography>
-          </Grid>
-        </Grid>
-      );
-    }
-    return arr;
   };
 
   return (
@@ -537,12 +518,12 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
             <Grid container spacing = {8} className = {classes.rowMargin}>
               {room ? _.map(room.comforts.data, (o, i) => i > 3 ? (
                 <Fragment key = {i}>
-                  <Grid item xs = {3} sm = {2} md = {2} lg = {2}>&#9679; &nbsp;
+                  <Grid item xs = {3} sm = {2} md = {1} lg = {1}>
                     <img src = {o.icon}
                          alt = {o.details.data[0].name}
                          className = {classes.roomAmenitiesIcon} />
                   </Grid>
-                  <Grid item xs = {9} sm = {4} md = {4} lg = {4}>
+                  <Grid item xs = {9} sm = {4} md = {5} lg = {5}>
                     <Typography variant = {'body2'}>{o.details.data[0].name}</Typography>
                   </Grid>
                 </Fragment>

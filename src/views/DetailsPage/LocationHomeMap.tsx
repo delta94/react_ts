@@ -1,8 +1,8 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, Fragment, useContext, useState} from 'react';
-import {compose,withProps} from 'recompose';
+import React, {ComponentType, Fragment, useContext} from 'react';
+import {compose} from 'recompose';
 import MarkerMap from '@/views/DetailsPage/MarkerMap';
 // @ts-ignore
 import GoogleMapReact, {Coords} from 'google-map-react';
@@ -20,7 +20,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 
 const LocationHomeMap: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
-  const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  const {state}   = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
   const {room} = state;
 

@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useContext,Fragment} from 'react';
+import React, {ComponentType, useContext, Fragment, memo} from 'react';
 import {compose} from 'recompose';
 import {RouteChildrenProps} from 'react-router';
 import Slider, {Settings} from 'react-slick';
@@ -15,25 +15,26 @@ import SimpleLoader from '@/components/Loading/SimpleLoader';
 import Paper from '@material-ui/core/Paper/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid/Grid';
+import _ from 'lodash';
+import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 
-
-
-interface IProps extends RouteChildrenProps {
+interface IProps {
   classes?: any,
+  room: RoomIndexRes
 }
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   boxDetail: {
-    margin:'8px 4px',
+    margin: '8px 4px',
   },
   boxImg: {
-    overflow:'hidden',
+    overflow: 'hidden',
     borderRadius: 4,
   },
-  boxContent:{
-    padding:8,
+  boxContent: {
+    padding: 8,
   },
-  rowMargin:{
+  rowMargin: {
     margin: '4px 0'
   },
   price: {
@@ -64,12 +65,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       WebkitTransform: 'rotate(10deg)',
     },
   },
-  roomName:{
+  roomName: {
     wordWrap: 'break-word',
     fontSize: 16,
     fontWeight: 800,
     lineHeight: '1.375em',
-    color: '#484848' ,
+    color: '#484848',
     minHeight: 45,
     overflow: 'hidden',
     display: '-webkit-box',
@@ -83,40 +84,43 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 });
 
 const RoomCardSlider: ComponentType<IProps> = (props: IProps) => {
-  const {classes} = props;
-  const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
-
-  const {room} = state;
+  const {classes, room} = props;
 
   const settings: Settings = {
     dots: false,
-    arrows:false,
+    arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay:true,
-    autoplaySpeed:5000,
-    draggable:false,
-    pauseOnFocus:true,
-    pauseOnHover:true,
-    swipe:false,
-    touchMove:false,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    draggable: false,
+    pauseOnFocus: true,
+    pauseOnHover: true,
+    swipe: false,
+    touchMove: false,
   };
 
-  if (room == null) {return <SimpleLoader/>}
+  // const ROOM_IMAGES = roomRecommend ? _.map(roomRecommend, i => {
+  //   _.map(i.media.data, x => {
+  //     return (
+  //       <img src = {`http://westay.org/storage/rooms/${x.image}`} className = {classes.imgSlider} alt=''/>
+  //     )
+  //   });
+  // }) : [];
 
   return (
     <Fragment>
       <div className = {classes.boxDetail}>
         <div className = {classes.boxImg}>
           <Slider {...settings}>
-            <img src = {imgRoomDemo} className = {classes.imgSlider} />
-            <img src = {imgRoomDemo2} className = {classes.imgSlider} />
-            <img src = {imgRoomDemo3} className = {classes.imgSlider} />
+            {_.map(room.media.data, o => (
+              <img src = {`http://westay.org/storage/rooms/${o.image}`} alt = {o.image} />
+            ))}
           </Slider>
         </div>
         <Paper elevation = {2} className = {classes.boxContent}>
-          <Typography className={classes.roomName}>
-            Room name demo rat la dai o day de tesst thu xem the nao ahhii
+          <Typography className = {classes.roomName}>
+
           </Typography>
           <Grid item container spacing = {8} className = {classes.rowMargin}>
             <Grid item xs>
@@ -140,7 +144,7 @@ const RoomCardSlider: ComponentType<IProps> = (props: IProps) => {
               {/*</div>*/}
             </Grid>
           </Grid>
-          <Typography variant='subtitle2'>
+          <Typography variant = 'subtitle2'>
             102 Thai Thinh, Trung Liet, Dong Da, Ha Noi, Viet Nam
           </Typography>
         </Paper>
@@ -152,4 +156,5 @@ const RoomCardSlider: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo,
 )(RoomCardSlider);

@@ -10,6 +10,7 @@
     "@material-ui/lab": "^3.0.0-alpha.28",
     "@material-ui/styles": "^3.0.0-alpha.8",
     "@svgr/webpack": "2.4.1",
+    "@types/react-content-loader": "^3.1.4",
     "airbnb-prop-types": "^2.11.0",
     "axios": "^0.18.0",
     "babel-core": "7.0.0-bridge.0",
