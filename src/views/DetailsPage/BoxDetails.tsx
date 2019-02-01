@@ -16,8 +16,6 @@ import MeetingRoom from '@material-ui/icons/MeetingRoomRounded';
 import LocalHotel from '@material-ui/icons/LocalHotelRounded';
 import People from '@material-ui/icons/PeopleRounded';
 import Home from '@material-ui/icons/HomeRounded';
-import Wifi from '@material-ui/icons/WifiRounded';
-import Fastfood from '@material-ui/icons/FastfoodRounded';
 import chat from '@/assets/chat.png';
 import verified from '@/assets/verified.png';
 import medalCertified from '@/assets/medalCertified.svg';
@@ -31,6 +29,8 @@ import {
 } from '@/store/context/Room/RoomDetailsContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import _ from 'lodash'
+import ContentPlaceHolder from '@/components/PlaceHolder/ContentPlaceHolder';
+
 
 interface IProps {
   classes?: any,
@@ -225,6 +225,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
   },
   RootExpansionPanelSummary: {
+    padding: '0 10px',
     [theme!.breakpoints!.down!('xs')]: {
       padding: '0 10px'
     },
@@ -257,14 +258,14 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 
 
 const BoxDetails: ComponentType<IProps> = (props: IProps) => {
-  const {classes} = props;
+  const {classes}  = props;
   const [arrowRef] = useState<any>(null);
-  const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  const {state}    = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
   const {room} = state;
 
   if (room == null) {
-    return <SimpleLoader />
+    return <ContentPlaceHolder />;
   }
   const description = room!.details.data[0].description;
 

@@ -61,6 +61,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     WebkitTransition: 'all 0.3s',
     transition: 'all 0.3s',
     border: 'none',
+    fontWeight: 600,
     '&:hover': {
       MsTransform: 'scale(1.1)', /* IE 9 */
       WebkitTransform: 'scale(1.1)', /* Safari 3-8 */

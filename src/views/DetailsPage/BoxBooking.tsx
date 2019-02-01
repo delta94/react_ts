@@ -41,6 +41,7 @@ import Red from '@material-ui/core/colors/red';
 import {IBookingFormParams, priceCalculate} from '@/store/context/Booking/BookingFormContext';
 import {formatMoney} from '@/utils/mixins';
 import DateRangeSingle from '@/components/Utils/DateRangeSingle';
+import ContentPlaceHolder from '@/components/PlaceHolder/ContentPlaceHolder';
 
 interface IProps {
   classes?: any,
@@ -139,7 +140,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
   const isWide = width === 'xl' || width === 'lg';
 
   if (room === null) {
-    return <SimpleLoader />;
+    return <ContentPlaceHolder />;
   }
 
   const bookingProcessor = useMemo(() => {

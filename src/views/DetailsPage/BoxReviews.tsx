@@ -26,7 +26,7 @@ interface IProps {
 const styles: any = (theme: ThemeCustom) => createStyles({
   rowMargin: {
     margin: '10px 0',
-    padding: '12px 24px',
+    padding: '12px 10px',
     [theme!.breakpoints!.down!('xs')]: {
       padding: '10px 0px',
     },
@@ -149,7 +149,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     justifyContent: 'center',
   },
   boxMap:{
-    height:300,
+    height: 350,
     margin: '10px 0',
     borderRadius: 5,
     overflow: 'hidden',
