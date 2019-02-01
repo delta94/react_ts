@@ -96,7 +96,7 @@ export const useDatePickerHook = (props: LocalProps, state: RoomDetailsState, fo
 const styles: any = (theme: ThemeCustom) => createStyles({
   rowMargin: {
     margin: '10px 0',
-    padding: '12px 24px',
+    padding: '12px 10px',
     [theme!.breakpoints!.down!('xs')]: {
       padding: '10px 0px',
     },

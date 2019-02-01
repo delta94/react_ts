@@ -244,7 +244,7 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
               <Grid item sm = {12} container spacing = {0}>
                 <Grid item xs = {6} sm>
                   <Grid item className = {classes.timeBooking}>
-                    <Typography variant = 'button'>From
+                    <Typography variant = 'button'>Từ
                       <Hidden smUp>
                         <span>: {moment(i.checkin).format('DD-MM-YYYY')}</span>
                       </Hidden>
@@ -269,7 +269,7 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
                 </Grid>
                 <Grid item xs = {6} sm>
                   <Grid item className = {classes.borLeft}>
-                    <Typography variant = 'button'>To
+                    <Typography variant = 'button'>Đến
                       <Hidden smUp>
                         <span>: {moment(i.checkout).format('DD-MM-YYYY')}</span>
                       </Hidden>

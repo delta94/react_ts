@@ -193,6 +193,9 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       width: '100%',
     },
   },
+  typoPadding: {
+    paddingTop: 20,
+  },
 });
 
 interface IProps {
@@ -348,23 +351,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                       <Grid item lg = {12} sm = {12}>
                         {/*Discount*/}
                       </Grid>
-                      {room.manager == 1 ? (
-                        <Grid item lg = {12} sm = {12} xs = {12} container direction = 'column' justify = 'flex-end'
-                              className = {align.textRight}>
-                          {/*<Tooltip*/}
-                          {/*classes = {{tooltip: classes.tooltip}}*/}
-                          {/*enterTouchDelay = {300}*/}
-                          {/*title = 'Đặt phòng nhanh'*/}
-                          {/*placement = 'top'>*/}
-                          {/*<ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />*/}
-                          {/*</Tooltip>*/}
-                          <Button variant = 'outlined' color = 'primary' fullWidth size = 'small'
-                                  className = {classes.btFlash}>
-                            <Flash className = {classes.sizeFlash} />
-                            Đặt nhanh
-                          </Button>
-                        </Grid>
-                      ) : ''}
+
                   </Grid>
                 </Grid>
               </Grid>
@@ -372,12 +359,14 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                 <Grid item lg = {3} sm = {3} className = {classes.borderSection}>
                   <Grid container className = {classes.maxHeight}>
                     <Grid item lg = {12} sm = {12} className = {classes.contentHeight}>
-                      <Grid container spacing = {8} alignItems = 'center' justify = 'center' direction = 'row'>
+                      <Grid container spacing = {8} alignItems = 'center' justify = 'center' direction = 'column'>
                         {room.total_review > 0 ? (
                           <Fragment>
                             <Grid item className = {classes.dropShadow}>
                               <Paper className = {classes.reviewScore} elevation = {0}>
-                                <Typography variant = {typoVariant} color = 'secondary'>{room.avg_rating}</Typography>
+                                <Typography variant = {typoVariant} color = 'secondary'>
+                                  {`${formatMoney(room.avg_rating, 1)}`}
+                                </Typography>
                               </Paper>
                             </Grid>
                             <Hidden xsDown>
@@ -396,18 +385,28 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                         ) : (
                           <Typography
                             variant = 'subtitle2'
+                            className = {classes.typoPadding}
                           >Chờ đánh giá</Typography>
                         )}
                       </Grid>
                     </Grid>
                     <Grid container item lg = {12} sm = {12} justify = 'center' alignItems = 'flex-end'>
                       <Grid item lg = {12} sm = {12} className = {align.textCenter}>
-                        <Button
-                          color = 'primary'
-                          variant = 'contained'
-                          size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
-                          className = {classes.btBook}
-                        >Đặt phòng</Button>
+                        {room.manager == 1 ?
+                          <Button variant = 'contained' color = 'primary'
+                                  size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
+                                  className = {classes.btBook}>
+                            <Flash className = {classes.sizeFlash} />
+                            Đặt nhanh
+                          </Button>
+                          : <Button
+                            color = 'primary'
+                            variant = 'contained'
+                            size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
+                            className = {classes.btBook}
+                          >Đặt phòng
+                          </Button>
+                        }
                       </Grid>
                     </Grid>
                   </Grid>
