@@ -1,27 +1,26 @@
 import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import path from 'path';
-import fs from 'fs';
 import {Request, Response, NextFunction} from 'express';
-
+import {store} from '@/index';
+import {ssrRender} from '@server/util';
+import {renderToString} from 'react-dom/server';
+import Footer from '@/layouts/Main/Footer';
+import {Provider} from 'react-redux';
+import theme from '@/components/Theme/Theme';
+import {MuiThemeProvider} from '@material-ui/core';
+import App from '@/App';
+import {StaticRouter} from 'react-router';
 import Home from '@/views/Homepage/Home';
 
 export const ssrApp = (req: Request, res: Response, next: NextFunction) => {
-  const filePath = path.resolve('build', 'index.html');
-
-  fs.readFile(filePath, {encoding: 'utf8'}, (err, htmlData) => {
-    if (err) {
-      console.log('Error in ssrApp', err);
-      return res.status(404).end();
-    }
-
-    const html = ReactDOMServer.renderToString(<Home/>);
-
-    return res.send(
-      htmlData.replace(
-        '<div id="root"></div>',
-        `<div id= "root">${html}</div>`,
-      ),
-    );
-  });
+  console.log(req.url);
+  const dom = renderToString((
+    <Provider store = {store}>
+      <StaticRouter location = {req.url} context = {{}}>
+        <MuiThemeProvider theme = {theme}>
+          <Footer/>
+        </MuiThemeProvider>
+      </StaticRouter>
+    </Provider>
+  ));
+  return ssrRender(res, dom);
 };

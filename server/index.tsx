@@ -7,14 +7,14 @@ const router = express.Router();
 
 const PORT = 3001;
 
-app.use('/', express.static(
+app.use(express.static(
   path.resolve('build'),
   {
     // maxAge: '30d',
   },
 ));
 
-router.use('/', ssrApp);
+router.get('/*', ssrApp);
 
 
 app.use(router);

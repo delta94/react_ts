@@ -9,8 +9,9 @@
 
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read http://bit.ly/CRA-PWA
+import {windowExist} from '@/index';
 
-const isLocalhost = Boolean(
+const isLocalhost = windowExist ? Boolean(
   window.location.hostname === 'localhost' ||
   // [::1] is the IPv6 localhost address.
   window.location.hostname === '[::1]' ||
@@ -18,7 +19,7 @@ const isLocalhost = Boolean(
   window.location.hostname.match(
     /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
   ),
-);
+) : false;
 
 type Config = {
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
@@ -144,10 +145,13 @@ export function unregister() {
   }
 }
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  // Prevent Chrome 67 and earlier from automatically showing the prompt
-  // e.preventDefault();
-  // Stash the event so it can be triggered later.
-  console.log('Before install trigger');
-});
+if (windowExist) {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    // e.preventDefault();
+    // Stash the event so it can be triggered later.
+    console.log('Before install trigger');
+  });
+}
+
 

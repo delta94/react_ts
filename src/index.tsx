@@ -14,7 +14,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer from './store/reducers';
 
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+export const windowExist = typeof window !== 'undefined';
+
+const composeEnhancers = (windowExist && process.env.NODE_ENV !== 'production')
+  ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+  : compose;
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
@@ -25,26 +29,38 @@ const persistConfig: PersistConfig = {
   blacklist: ['v_animate'],
 };
 
-const persistedReducer: Reducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer: Reducer = windowExist ? persistReducer(persistConfig, rootReducer) : rootReducer;
+// const persistedReducer: Reducer = rootReducer;
 
-let store: Store = createStore(persistedReducer, composeEnhancers(
-  applyMiddleware(thunk)
+export const store: Store = createStore(persistedReducer, composeEnhancers(
+  applyMiddleware(thunk),
 ));
 
-let persistor: Persistor = persistStore(store);
+export const persistor: Persistor = persistStore(store);
 
-const app = (
+const ReduxWrapper = () => (
   <Provider store = {store}>
-    <PersistGate loading = {null} persistor = {persistor}>
-      <BrowserRouter>
-        <CookiesProvider>
-          <App />
-        </CookiesProvider>
-      </BrowserRouter>
-    </PersistGate>
+    <BrowserRouter>
+      <CookiesProvider>
+        <App />
+      </CookiesProvider>
+    </BrowserRouter>
   </Provider>
 );
 
-ReactDOM.render(app, document.getElementById('root'));
-serviceWorker.unregister();
-// serviceWorker.register();
+const AppRoot = () => {
+  return (
+    <PersistGate persistor = {persistor}>
+      <ReduxWrapper />
+    </PersistGate>
+  );
+};
+
+if (windowExist) {
+  ReactDOM.hydrate(<AppRoot />, document.getElementById('root'));
+  serviceWorker.unregister();
+} else {
+
+}
+
+

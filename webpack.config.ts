@@ -4,7 +4,7 @@ import path from 'path';
 const serverConfigWebpack: Configuration = {
   mode: 'development',
   target: 'node',
-  watch: false,
+  watch: true,
   entry: './server/index.tsx',
   output: {
     filename: 'server.js',
@@ -27,13 +27,14 @@ const serverConfigWebpack: Configuration = {
     rules: [
       // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
       {
-        test: /\.tsx?$/,
+        test: /\.(tsx|ts)$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
         options: {
           customize: require.resolve(
             'babel-preset-react-app/webpack-overrides',
           ),
+          cacheDirectory: true
         },
       },
       {
