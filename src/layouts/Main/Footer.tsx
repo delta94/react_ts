@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import {createStyles, withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 import GridContainer from '@/layouts/Grid/Container';
+import PhoneIcon from '@material-ui/icons/Phone';
 interface IProps {
    classes?: any
 }
@@ -21,7 +22,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       paddingTop: theme!.spacing!.unit! * 5,
       paddingBottom: theme!.spacing!.unit! * 5,
       width: '100%',
-      backgroundColor : '#eee',
+      backgroundColor : '#444953',
    },
    paper: {
       paddingTop: 30,
@@ -35,7 +36,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
    	backgroundColor : '#333',
    },
    linksList: {
-      backgroundColor : '#eee',
+      backgroundColor : '#444953',
    },
    textCenter:{
       textAlign: 'center',
@@ -63,7 +64,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       [theme!.breakpoints!.only!('sm')]: {
          fontSize: '14px',
       },
-      color: '#5b5b5b',
+      color: 'white',
       fontSize: '16px',
       marginBottom: '0.5em',
    },
@@ -76,9 +77,16 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       marginTop: 0,
       paddingLeft: 0,
       fontSize: '15px',
-      color: '#5b5b5b',
+      color: 'rgba(255,255,255,.8)!important',
+      lineHeight: '1.7em',
    },
-
+   marginPhone: {
+      marginTop: 10,
+   },
+   iconPhone:{
+      fontSize: '1.1em',
+      paddingRight: '1em',
+   },
 });
 
 // @ts-ignore
@@ -90,40 +98,37 @@ const Footer: ComponentType<IProps> = (props: IProps) => {
          <div className={classes.firstItem}>
             <GridContainer xs = {11}>
                <Grid container>
-                  <Grid item xs={6} sm={3} className={classes.linksList}>
-                     <h5 className={classes.linksListGroupTitle}>Trợ giúp</h5>
+                  <Grid item xs={12} sm={4} md={4} className={classes.linksList}>
+                     <h5 className={classes.linksListGroupTitle}>
+                        Trợ giúp
+                     </h5>
                      <ul className={classes.linksListGroupList}>
                         <p><strong>C&Ocirc;NG TY CỔ PHẦN WESTAY</strong><br /> <strong>Số điện thoại li&ecirc;n hệ:</strong> 0941 983 046<br /> <strong>Lĩnh vực kinh doanh:</strong>&nbsp;S&agrave;n giao dịch TMĐT<br /> <strong>Địa chỉ t&ecirc;n miền:</strong>&nbsp;http://westay.org/vi<br /> <strong>Loại h&igrave;nh website: </strong>S&agrave;n giao dịch TMĐT</p> <p>&nbsp;</p> <p><a href="http://online.gov.vn/HomePage/WebsiteDisplay.aspx?DocId=41005"><img alt="" src="http://online.gov.vn/seals/dlxOBO9dxLmirYHstOPHmA==.jpgx" /></a></p>
                      </ul>
                   </Grid>
-                  <Grid item xs={6} sm={3} className={classes.linksList}>
-                     <h5 className={classes.linksListGroupTitle}>Trợ giúp</h5>
+                  <Grid item xs={12} sm={4} md={4} className={classes.linksList}>
+                     <h5 className={classes.linksListGroupTitle}>
+                        Quy định dành cho Sàn GDTMĐT - Dịch vụ cho thuê phòng
+                     </h5>
                      <ul className={classes.linksListGroupList}>
-                        <li>Liên hệ vớii chúng tôi</li>
-                        <li>Câu hỏi thường gặp</li>
-                        <li>Chính sách Bảo mật</li>
-                        <li>Chính sách với cookie</li>
-                        <li>Ðiều khoản sử dụng</li>
+                        <li>Quy trình giải quyết tranh chấp, khiếu nại</li>
+                        <li>Chính sách bảo mật</li>
+                        <li>Quy chế hoạt động</li>
                      </ul>
                   </Grid>
-                  <Grid item xs={6} sm={3} className={classes.linksList}>
-                     <h5 className={classes.linksListGroupTitle}>Trợ giúp</h5>
+                  <Grid item xs={12} sm={4} md={4} className={classes.linksList}>
+                     <h5 className={classes.linksListGroupTitle}>
+                        Liên hệ với chúng tôi
+                     </h5>
                      <ul className={classes.linksListGroupList}>
-                        <li>Liên hệ vớii chúng tôi</li>
-                        <li>Câu hỏi thường gặp</li>
-                        <li>Chính sách Bảo mật</li>
-                        <li>Chính sách với cookie</li>
-                        <li>Ðiều khoản sử dụng</li>
-                     </ul>
-                  </Grid>
-                  <Grid item xs={6} sm={3} className={classes.linksList}>
-                     <h5 className={classes.linksListGroupTitle}>Trợ giúp</h5>
-                     <ul className={classes.linksListGroupList}>
-                        <li>Liên hệ vớii chúng tôi</li>
-                        <li>Câu hỏi thường gặp</li>
-                        <li>Chính sách Bảo mật</li>
-                        <li>Chính sách với cookie</li>
-                        <li>Ðiều khoản sử dụng</li>
+                        <p>
+                           <PhoneIcon fontSize='small' className={classes.iconPhone}/>
+                           0967 528 419
+                        </p>
+                        <li>
+                           <PhoneIcon fontSize='small' className={classes.iconPhone} />
+                           0967 528 419
+                        </li>
                      </ul>
                   </Grid>
                </Grid>

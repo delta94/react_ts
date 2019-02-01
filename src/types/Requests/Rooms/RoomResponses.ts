@@ -72,4 +72,5 @@ export interface NumberRoomCity {
   name_city: string,
   image: string,
   total_rooms: string,
+  average_price: number,
 }

@@ -2,7 +2,7 @@ import {BaseGetRequestParams} from '@/types/Requests/RequestTemplate';
 
 export interface RoomIndexGetParams extends BaseGetRequestParams, Partial<MapCoords> {
   name?: string
-  city?: string
+  city?: string |  number
   district?: string
   status?: string
   merchant?: string
@@ -45,6 +45,7 @@ export interface MapCoords {
 
 export interface RoomUrlParams {
   name?: string
+  city?: string |  number
   number_of_rooms?: number
   rent_type?: number
   check_in?: string

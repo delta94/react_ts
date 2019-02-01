@@ -23,7 +23,6 @@ const styles: any = (theme: ThemeCustom) => createStyles({
    listRoomNew: {
       width: '100%',
       display: 'block',
-      marginTop: '42px',
    },
    titleRoom: {
       color: 'rgb(72, 72, 72)',
@@ -92,8 +91,8 @@ const ListRoomNew: ComponentType<IProps> = (props: IProps) => {
 
    return (
       <Fragment>
+         <h2 className = {classes.titleRoom}>Phòng mới</h2>
          <Grid container className = {classes.listRoomNew}>
-            <h2 className = {classes.titleRoom}>Phòng mới</h2>
             <Slider {...settingRoomHot}>
                {_.map(roomsHot, (room, index) => (
                   <div key = {index}>

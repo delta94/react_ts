@@ -25,9 +25,11 @@ interface IProps {
 const styles: any = (theme: ThemeCustom) => createStyles({
 	card: {
 		width:'96%',
+		backgroundColor: 'transparent !important',
 	},
 	media: {
 		height: '14em',
+		borderRadius: '0.2em !important',
 	},
 	cardContent:{
 		padding:0,
@@ -35,7 +37,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 	},
 	nameCity: {
 		fontWeight: 500,
-		fontSize: '1em !important',
+		fontSize: '0.8em !important',
 		lineHeight: '16px !important',
 		letterSpacing: 'normal !important',
 		textTransform: 'uppercase',
@@ -47,7 +49,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 	},
 	nameRoom: {
 		fontWeight: 500 ,
-		fontSize: '1.5em !important',
+		fontSize: '1.25em !important',
 		lineHeight: '21px !important',
 		maxHeight: '42px !important',
 		textOverflow: 'ellipsis !important',
@@ -58,6 +60,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 		color: 'rgb(72, 72, 72) !important',
 		WebkitLineClamp: 2,
 		WebkitBoxOrient: 'vertical',
+		textTransform: 'uppercase',
 	},
 	priceRoom: {
 		fontWeight: 'normal',
@@ -86,9 +89,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 const RoomHot: ComponentType<IProps> = (props: IProps) => {
    const {classes,room} = props;
 
+   const cardEvent = () => {
+   	let win = window.open(`/room/${room.id}`, '_blank');
+   	win!.focus();
+   };
    return (
       <Fragment>
-	   	<Card className={classes.card} elevation={0}>
+	   	<Card className={classes.card} elevation={0} onClick = {cardEvent}>
 		   	<CardActionArea>
 			   	<CardMedia
 				   	className={classes.media}
@@ -103,7 +110,7 @@ const RoomHot: ComponentType<IProps> = (props: IProps) => {
 				   		{room.details.data[0].name}
 				   	</Typography>
 				   	<Typography component="p" className={classes.priceRoom}>
-					   	{`${formatMoney(room.price_day, 0)}`}đ <sub>/ngày</sub>
+					   	{`${formatMoney(room.price_day, 0)}`}đ <sub>/ngày</sub> - {`${formatMoney(room.price_hour, 0)}`}đ <sub>/4 giờ</sub>
 				   	</Typography>
 				   	<div>
 				   		<span className={classes.starRatings}>
@@ -111,7 +118,7 @@ const RoomHot: ComponentType<IProps> = (props: IProps) => {
 							   	rating = {room.avg_rating}
 							   	starDimension = '14px'
 							   	starSpacing = '1px'
-							   	starRatedColor = '#008489 '
+							   	starRatedColor = '#46AFCC'
 						   	/>
 					   	</span>
 					   	<p className={classes.totalReview}>
