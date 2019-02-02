@@ -28,6 +28,7 @@
     "classnames": "^2.2.6",
     "cors": "^2.8.5",
     "css-loader": "1.0.0",
+    "dot-env": "^0.0.1",
     "dotenv": "6.0.0",
     "dotenv-expand": "4.2.0",
     "emoji-mart": "^2.8.1",

@@ -3,9 +3,24 @@ import {Request, Response, NextFunction} from 'express';
 import {ssrRender} from '@server/util';
 import {renderToString} from 'react-dom/server';
 import {HomeIndex} from '@server/pages/HomeIndex';
+import {getRooms, RoomIndexStateInit} from '@/store/context/Room/RoomIndexContext';
+import {updateObject} from '@/store/utility';
 
 export const ssrApp = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.url);
-  const dom = renderToString(<HomeIndex req = {req} />);
-  return ssrRender(res, dom);
+  getRooms(req.url).then(response => {
+    const roomIndexState = updateObject(RoomIndexStateInit, {
+      rooms: response.data,
+    });
+    console.log(roomIndexState);
+    const dom = renderToString((
+      <HomeIndex
+        req = {req}
+        roomState={roomIndexState}
+      />
+    ));
+    return ssrRender(res, dom);
+  }).catch(err => {
+    return ssrRender(res);
+  });
+
 };

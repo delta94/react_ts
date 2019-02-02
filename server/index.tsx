@@ -3,6 +3,7 @@ import path from 'path';
 import {ssrApp} from '@server/middleware/ssr';
 import {allOtherRoute} from '@server/util';
 
+require('dotenv').config();
 const app    = express();
 const router = express.Router();
 

@@ -1,7 +1,13 @@
 import axiosBase, {AxiosInstance} from 'axios';
 import Cookies from 'universal-cookie';
+import {windowExist} from '@/index';
 
 export type AxiosRequestType = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+
+// Create environment when do SSR
+if (!windowExist) {
+  require('dotenv').config();
+}
 
 const PRODUCTION_URL = 'https://api.westay.org/';
 
