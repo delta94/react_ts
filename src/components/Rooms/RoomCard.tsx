@@ -29,6 +29,7 @@ import LazyLoad from 'react-lazyload';
 import Chip from '@material-ui/core/Chip/Chip';
 import Green from '@material-ui/core/colors/green';
 import Flash from '@material-ui/icons/FlashOnRounded';
+import {windowExist} from '@/index';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   imgSize: {
@@ -151,11 +152,11 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     borderRadius: 4,
     backgroundColor: Green[600],
     color: 'white',
-    marginTop: 8
+    marginTop: 8,
   },
   chipSpan: {
     paddingLeft: 4,
-    paddingRight: 4
+    paddingRight: 4,
   },
   btFlash: {
     fontSize: 14,
@@ -218,8 +219,10 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
   };
 
   const cardEvent = () => {
-    let win = window.open(`/room/${room.id}`, '_blank');
-    win!.focus();
+    if (windowExist) {
+      let win = window.open(`/room/${room.id}`, '_blank');
+      win!.focus();
+    }
   };
 
   return (
@@ -231,7 +234,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
       >
         <Grid container spacing = {0}>
           <Grid item lg = {3} sm = {4} xs = {12} className = {classes.imgSize}>
-            <LazyLoad offset = {window.innerHeight}>
+            <LazyLoad offset = {windowExist ? window.innerHeight : 0}>
               <Slider {...settings}>
                 {room.media.data.length > 0 ? _.map(room.media.data, o => (
                   <img key = {o.image} src = {`http://westay.org/storage/rooms/${o.image}`}
@@ -302,8 +305,8 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                             </Grid>
                           </Hidden>
                           <Grid item lg = {12} sm = {12}>
-                            <Chip label = {room.room_type_txt} className = {classes.chip} classes={{
-                              label: classes.chipSpan
+                            <Chip label = {room.room_type_txt} className = {classes.chip} classes = {{
+                              label: classes.chipSpan,
                             }} />
                           </Grid>
                         </Grid>
@@ -345,26 +348,26 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                   <Grid item lg = {3} sm = {3} xs = {12} container direction = 'column'
                         justify = 'space-between' alignItems = 'flex-start'>
 
-                      <Grid item lg = {12} sm = {12}>
-                        {/*Discount*/}
+                    <Grid item lg = {12} sm = {12}>
+                      {/*Discount*/}
+                    </Grid>
+                    {room.manager == 1 ? (
+                      <Grid item lg = {12} sm = {12} xs = {12} container direction = 'column' justify = 'flex-end'
+                            className = {align.textRight}>
+                        {/*<Tooltip*/}
+                        {/*classes = {{tooltip: classes.tooltip}}*/}
+                        {/*enterTouchDelay = {300}*/}
+                        {/*title = 'Đặt phòng nhanh'*/}
+                        {/*placement = 'top'>*/}
+                        {/*<ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />*/}
+                        {/*</Tooltip>*/}
+                        <Button variant = 'outlined' color = 'primary' fullWidth size = 'small'
+                                className = {classes.btFlash}>
+                          <Flash className = {classes.sizeFlash} />
+                          Đặt nhanh
+                        </Button>
                       </Grid>
-                      {room.manager == 1 ? (
-                        <Grid item lg = {12} sm = {12} xs = {12} container direction = 'column' justify = 'flex-end'
-                              className = {align.textRight}>
-                          {/*<Tooltip*/}
-                          {/*classes = {{tooltip: classes.tooltip}}*/}
-                          {/*enterTouchDelay = {300}*/}
-                          {/*title = 'Đặt phòng nhanh'*/}
-                          {/*placement = 'top'>*/}
-                          {/*<ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />*/}
-                          {/*</Tooltip>*/}
-                          <Button variant = 'outlined' color = 'primary' fullWidth size = 'small'
-                                  className = {classes.btFlash}>
-                            <Flash className = {classes.sizeFlash} />
-                            Đặt nhanh
-                          </Button>
-                        </Grid>
-                      ) : ''}
+                    ) : ''}
                   </Grid>
                 </Grid>
               </Grid>

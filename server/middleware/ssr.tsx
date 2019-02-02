@@ -11,7 +11,7 @@ export const ssrApp = (req: Request, res: Response, next: NextFunction) => {
     const roomIndexState = updateObject(RoomIndexStateInit, {
       rooms: response.data,
     });
-    console.log(roomIndexState);
+
     const dom = renderToString((
       <HomeIndex
         req = {req}
@@ -20,7 +20,7 @@ export const ssrApp = (req: Request, res: Response, next: NextFunction) => {
     ));
     return ssrRender(res, dom);
   }).catch(err => {
+    console.log(err);
     return ssrRender(res);
   });
-
 };
