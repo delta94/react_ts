@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import {ssrApp} from '@server/middleware/ssr';
+import {allOtherRoute} from '@server/util';
 
 const app    = express();
 const router = express.Router();
@@ -14,8 +15,8 @@ app.use(express.static(
   },
 ));
 
-router.get('/*', ssrApp);
-
+router.get('/rooms', ssrApp);
+router.get('/*', allOtherRoute);
 
 app.use(router);
 
