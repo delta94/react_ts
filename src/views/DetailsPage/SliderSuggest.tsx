@@ -1,7 +1,7 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {withStyles} from '@material-ui/core/styles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import React, {ComponentType, useContext} from 'react';
+import React, {ComponentType, memo, useContext, Fragment} from 'react';
 import {compose} from 'recompose';
 import {RouteChildrenProps} from 'react-router';
 import Slider, {Settings} from 'react-slick';
@@ -13,33 +13,46 @@ import SimpleLoader from '@/components/Loading/SimpleLoader';
 import RoomCardSlider from '@/components/Rooms/RoomCardSlider';
 import NextArrowSlider from '@/views/DetailsPage/NextArrowSlider';
 import PrevArrowSlider from '@/views/DetailsPage/PrevArrowSlider';
-
+import _ from 'lodash';
+import RoomHot from '@/layouts/Main/RoomHot';
 
 interface IProps extends RouteChildrenProps {
   classes?: any,
 }
 
 const styles: any = (theme: ThemeCustom) => createStyles({
-  nextArrow:{
-
-  }
+  nextArrow: {},
 });
 
 const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
   const {classes} = props;
-  // const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
-  const {width} = useContext<IGlobalContext>(GlobalContext);
+  const {width}   = useContext<IGlobalContext>(GlobalContext);
+  const {state}   = useContext<IRoomDetailsContext>(RoomDetailsContext);
+
+  const {roomRecommend} = state;
 
   const settings: Settings = {
     speed: 500,
     swipeToSlide: true,
     dots: width === 'xs' || width === 'sm',
-    slidesToShow: 3,
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: width === 'md' || width === 'lg',
     nextArrow: <NextArrowSlider />,
     prevArrow: <PrevArrowSlider />,
     responsive: [
+      {
+        breakpoint: 1199,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+          autoplay: true,
+          autoplaySpeed: 5000,
+          swipeToSlide: true,
+        },
+      },
       {
         breakpoint: 769,
         settings: {
@@ -47,7 +60,7 @@ const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
           slidesToScroll: 1,
           infinite: true,
           dots: true,
-          autoplay:true,
+          autoplay: true,
           autoplaySpeed: 5000,
           swipeToSlide: true,
         }
@@ -60,7 +73,7 @@ const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
           swipeToSlide: true,
           infinite: true,
           dots: true,
-          autoplay:true,
+          autoplay: true,
           autoplaySpeed: 5000,
         }
       },
@@ -70,11 +83,11 @@ const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
   return (
     <div className = {classes.root}>
       <Slider {...settings}>
-          <RoomCardSlider/>
-          <RoomCardSlider/>
-          <RoomCardSlider/>
-          <RoomCardSlider/>
-          <RoomCardSlider/>
+        {roomRecommend !== null ? _.map(roomRecommend, (room) => (
+          <Fragment key = {room.id}>
+            <RoomHot room = {room} />
+          </Fragment>
+        )) : ''}
       </Slider>
     </div>
   );
@@ -82,4 +95,5 @@ const SliderSuggest: ComponentType<IProps> = (props: IProps) => {
 
 export default compose<IProps, any>(
   withStyles(styles),
+  memo,
 )(SliderSuggest);

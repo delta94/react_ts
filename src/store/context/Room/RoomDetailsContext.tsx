@@ -16,19 +16,20 @@ export interface IRoomDetailsContext {
 
 export type RoomDetailsState = {
   readonly room: RoomIndexRes | null,
-  readonly roomPosition: RoomIndexRes | null
+  readonly roomRecommend: RoomIndexRes[] | [],
   readonly schedule: string[]
   readonly bookingType: number
   readonly price?: BookingPriceCalculatorRes
 }
 
-export type RoomDetailsAction = { type: 'setDetails', room: RoomIndexRes, schedule: string[] }
+export type RoomDetailsAction =
+  { type: 'setDetails', room: RoomIndexRes, recommend: RoomIndexRes[], schedule: string[] }
   | { type: 'setBookingType', bookingType: number }
   | { type: 'setPrice', price: BookingPriceCalculatorRes }
 
 export const RoomDetailsStateInit: RoomDetailsState = {
   room: null,
-  roomPosition: null,
+  roomRecommend: [],
   schedule: [],
   bookingType: 2,
 };
@@ -39,6 +40,7 @@ export const RoomDetailsReducer = (state: RoomDetailsState, action: RoomDetailsA
       return updateObject<RoomDetailsState>(state, {
         room: action.room,
         schedule: action.schedule,
+        roomRecommend: action.recommend,
       });
     case 'setBookingType':
       return updateObject<RoomDetailsState>(state, {
@@ -53,8 +55,12 @@ export const RoomDetailsReducer = (state: RoomDetailsState, action: RoomDetailsA
   }
 };
 
-const getRoom = async (idRoom: number) => {
+const getRoom          = async (idRoom: number) => {
   const res: AxiosRes<RoomIndexRes> = await axios.get(`rooms/${idRoom}?include=details,user,comforts.details,media,district,city`);
+  return res.data.data;
+};
+const getRoomRecommend = async (idRoom: number) => {
+  const res: AxiosRes<RoomIndexRes[]> = await axios.get(`rooms/room_recommend/${idRoom}?include=media,details`);
   return res.data.data;
 };
 
@@ -69,11 +75,13 @@ export const getData = (id: number, dispatch: Dispatch<RoomDetailsAction>, histo
   Promise.all([
     getRoom(id),
     getRoomSchedule(id),
+    getRoomRecommend(id),
   ]).then(res => {
-    const [room, schedule] = res;
+    const [room, schedule, roomRecommend] = res;
     dispatch({
       type: 'setDetails',
       room: room,
+      recommend: roomRecommend,
       schedule: _.sortBy(schedule.data.blocks),
     });
   }).catch(err => {

@@ -26,7 +26,7 @@ interface IProps {
 const styles: any = (theme: ThemeCustom) => createStyles({
   rowMargin: {
     margin: '10px 0',
-    padding: '12px 24px',
+    padding: '12px 10px',
     [theme!.breakpoints!.down!('xs')]: {
       padding: '10px 0px',
     },
@@ -85,10 +85,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     MozTransform: 'translateX(-50%) translateY(-50%)',
     transform: 'translateX(-50%) translateY(-50%)',
     [theme!.breakpoints!.down!('md')]: {
-      fontSize: '4vw',
+      fontSize: '3.5vw',
+    },
+    [theme!.breakpoints!.down!('sm')]: {
+      fontSize: '4.5vw',
     },
     [theme!.breakpoints!.down!('xs')]: {
-      fontSize: '9vw',
+      fontSize: '8vw',
     },
   },
   status: {
@@ -146,7 +149,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     justifyContent: 'center',
   },
   boxMap:{
-    height:300,
+    height: 350,
     margin: '10px 0',
     borderRadius: 5,
     overflow: 'hidden',
@@ -221,7 +224,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
                 <div className = {classes.boxMark}>
                   <div className = {classes.Mark}>
                     <Typography variant = {"h5"} className = {classes.TypoMark}>
-                      {room!.standard_point}
+                      {/*{room!.standard_point}*/}4.9
                     </Typography>
                   </div>
                 </div>

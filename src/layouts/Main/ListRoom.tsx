@@ -25,7 +25,7 @@ interface IProps {
 const styles: any = (theme: ThemeCustom) => createStyles({
    boxListRoom: {
       width: '100%',
-      paddingTop: theme!.spacing!.unit! * 5,
+      paddingTop: theme!.spacing!.unit! * 1,
       paddingBottom: theme!.spacing!.unit! * 5,
    },
 });
@@ -41,8 +41,8 @@ const ListRoom: ComponentType<IProps> = (props: IProps) => {
             <GridContainer xs = {11}>
                <RoomHomepageContext.Provider value = {{state, dispatch}}>
                   <ListRoomHot />
-                  <ListRoomCity />
                   <ListRoomNew />
+                  <ListRoomCity />
                </RoomHomepageContext.Provider>
             </GridContainer>
          </div>

@@ -1342,6 +1342,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-content-loader@^3.1.4":
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/@types/react-content-loader/-/react-content-loader-3.1.4.tgz#ceb75c2b20b6e697e249c063ddc2b4f9ad32bb5e"
+  integrity sha512-CJhW+3D5xTpMqTEM/coWOHhJ3sXBWqZUuWGUNhHNgMJYYqqmC+LuqPpJMETmuMnZoIWScReeXjppyPjQMUnkuQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dates@^17.1.3":
   version "17.1.5"
   resolved "https://registry.yarnpkg.com/@types/react-dates/-/react-dates-17.1.5.tgz#3b293c7334372f15f04beaac02df0041316be2fc"
@@ -1410,6 +1417,13 @@
   dependencies:
     "@types/react" "*"
     redux "^4.0.0"
+
+"@types/react-resize-detector@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-resize-detector/-/react-resize-detector-3.1.0.tgz#cd63abdd7b358855d3058d2e03569450992d5c0a"
+  integrity sha512-q/kuav2WHLqCOypvNMWR7S3UKSphE0urlvgkiaKpnGXOPsy6/3BCrr+HzcoaMOvuZW7bFngbheS2gITRl4B1xQ==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-router-dom@^4.3.1":
   version "4.3.1"

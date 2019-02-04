@@ -212,7 +212,7 @@ const RoomCardMap: ComponentType<IProps> = (props: IProps) => {
 
   return (
     <Fragment>
-      <Paper elevation = {isHover ? 20 : 3}
+      <Paper elevation = {isHover ? 10 : 3}
              className = {classNames(classes.paper, isHover ? classes.border : '')}
       >
         <Grid container spacing = {0}>

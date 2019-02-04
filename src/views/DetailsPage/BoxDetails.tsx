@@ -16,8 +16,6 @@ import MeetingRoom from '@material-ui/icons/MeetingRoomRounded';
 import LocalHotel from '@material-ui/icons/LocalHotelRounded';
 import People from '@material-ui/icons/PeopleRounded';
 import Home from '@material-ui/icons/HomeRounded';
-import Wifi from '@material-ui/icons/WifiRounded';
-import Fastfood from '@material-ui/icons/FastfoodRounded';
 import chat from '@/assets/chat.png';
 import verified from '@/assets/verified.png';
 import medalCertified from '@/assets/medalCertified.svg';
@@ -31,6 +29,8 @@ import {
 } from '@/store/context/Room/RoomDetailsContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import _ from 'lodash'
+import ContentPlaceHolder from '@/components/PlaceHolder/ContentPlaceHolder';
+
 
 interface IProps {
   classes?: any,
@@ -77,7 +77,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
   },
   roomAmenitiesTitle: {
-    color: '#46afcc',
+    color: '#343434',
     margin: '0 5px',
     fontSize: 13,
     [theme!.breakpoints!.down!('xs')]: {
@@ -225,6 +225,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     },
   },
   RootExpansionPanelSummary: {
+    padding: '0 10px',
     [theme!.breakpoints!.down!('xs')]: {
       padding: '0 10px'
     },
@@ -257,14 +258,14 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 
 
 const BoxDetails: ComponentType<IProps> = (props: IProps) => {
-  const {classes} = props;
+  const {classes}  = props;
   const [arrowRef] = useState<any>(null);
-  const {state, dispatch} = useContext<IRoomDetailsContext>(RoomDetailsContext);
+  const {state}    = useContext<IRoomDetailsContext>(RoomDetailsContext);
 
   const {room} = state;
 
   if (room == null) {
-    return <SimpleLoader />
+    return <ContentPlaceHolder />;
   }
   const description = room!.details.data[0].description;
 
@@ -284,25 +285,6 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
       node.attribs.class = classes.tagP_inHtmlPare;
       return convertNodeToElement(node, index, transformHtmlContent);
     }
-  };
-
-  const expansionDetails = () => {
-    let arr = [];
-    for (let i = 4; i <= room.comforts.data.length; i++) {
-      arr.push(
-        <Grid container className = {classes.rowMargin} key = {i}>
-          <Grid item xs = {3}>&#9679; &nbsp;
-            <img src = {`${room.comforts.data[i].icon}`}
-                 alt = {`${room.comforts.data[i].details.data[0].name}`}
-                 className = {classes.roomAmenitiesIcon} />
-          </Grid>
-          <Grid item xs = {9}>
-            <Typography variant = {'body2'}>{room.comforts.data[i].details.data[0].name}</Typography>
-          </Grid>
-        </Grid>
-      );
-    }
-    return arr;
   };
 
   return (
@@ -537,12 +519,12 @@ const BoxDetails: ComponentType<IProps> = (props: IProps) => {
             <Grid container spacing = {8} className = {classes.rowMargin}>
               {room ? _.map(room.comforts.data, (o, i) => i > 3 ? (
                 <Fragment key = {i}>
-                  <Grid item xs = {3} sm = {2} md = {2} lg = {2}>&#9679; &nbsp;
+                  <Grid item xs = {3} sm = {2} md = {1} lg = {1}>
                     <img src = {o.icon}
                          alt = {o.details.data[0].name}
                          className = {classes.roomAmenitiesIcon} />
                   </Grid>
-                  <Grid item xs = {9} sm = {4} md = {4} lg = {4}>
+                  <Grid item xs = {9} sm = {4} md = {5} lg = {5}>
                     <Typography variant = {'body2'}>{o.details.data[0].name}</Typography>
                   </Grid>
                 </Fragment>
