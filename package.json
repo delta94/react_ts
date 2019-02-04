@@ -26,6 +26,7 @@
     "chalk": "2.4.1",
     "chart.js": "^2.7.3",
     "classnames": "^2.2.6",
+    "compression": "^1.7.3",
     "cors": "^2.8.5",
     "css-loader": "1.0.0",
     "dot-env": "^0.0.1",
@@ -204,6 +205,7 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.6",
+    "@types/compression": "^0.0.36",
     "@types/google-map-react": "^0.23.10",
     "@types/jest": "23.3.9",
     "@types/lodash": "^4.14.119",

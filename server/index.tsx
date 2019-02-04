@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import compression from 'compression';
 import {ssrApp} from '@server/middleware/ssr';
 import {allOtherRoute} from '@server/util';
 
@@ -9,6 +10,7 @@ const router = express.Router();
 
 const PORT = 3001;
 
+app.use(compression());
 app.use(express.static(
   path.resolve('build'),
   {
