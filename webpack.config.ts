@@ -2,7 +2,7 @@ import webpack, {Configuration} from 'webpack';
 import path from 'path';
 
 const serverConfigWebpack: Configuration = {
-  mode: 'development',
+  mode: 'production',
   target: 'node',
   watch: true,
   entry: './server/index.tsx',
