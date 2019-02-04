@@ -38,7 +38,15 @@ const serverConfigWebpack: Configuration = {
         },
       },
       {
-        test: /\.(svg|png|jpeg|jpg|scss|module\.scss|css|module\.css)$/,
+        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        loader: require.resolve('url-loader'),
+        options: {
+          limit: 10000,
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
+      },
+      {
+        test: /\.(svg|scss|module\.scss|css|module\.css)$/,
         loader: 'ignore-loader',
       },
     ],

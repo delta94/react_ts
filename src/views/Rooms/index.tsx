@@ -31,6 +31,9 @@ import _ from 'lodash';
 
 interface IProps extends RouteProps, RouterProps {
   classes: any;
+  isSSR?: boolean
+  roomStateInit?: RoomIndexState
+  mapStateInit?: RoomMapState
 }
 
 const BottomNav = Loadable({

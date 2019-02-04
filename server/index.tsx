@@ -1,8 +1,8 @@
 import express from 'express';
 import path from 'path';
 import compression from 'compression';
-import {ssrApp} from '@server/middleware/ssr';
 import {allOtherRoute} from '@server/util';
+import {ssrApp} from '@server/middleware/ssr';
 
 require('dotenv').config();
 const app    = express();

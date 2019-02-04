@@ -18,13 +18,13 @@
     "isolatedModules": false,
     "noEmit": true,
     "jsx": "preserve",
-    "baseUrl": "src",
+    "baseUrl": "",
     "paths": {
       "@/*": [
-        "*"
+        "src/*"
       ],
       "@server/*": [
-        "../server/*"
+        "server/*"
       ]
     }
   },
