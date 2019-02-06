@@ -1,8 +1,9 @@
 import express from 'express';
 import path from 'path';
 import compression from 'compression';
+import userAgent from 'express-useragent'
 import {allOtherRoute} from '@server/util';
-import {ssrApp} from '@server/middleware/ssr';
+import {SSRroomDetails} from '@server/middleware/ssr';
 
 require('dotenv').config();
 const app    = express();
@@ -11,6 +12,7 @@ const router = express.Router();
 const PORT = 3001;
 
 app.use(compression());
+app.use(userAgent.express());
 app.use(express.static(
   path.resolve('build'),
   {
@@ -18,7 +20,7 @@ app.use(express.static(
   },
 ));
 
-router.get('/rooms', ssrApp);
+router.get('/rooms', SSRroomDetails);
 router.get('/*', allOtherRoute);
 
 app.use(router);

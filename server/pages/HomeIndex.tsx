@@ -21,15 +21,13 @@ interface IProps {
 
 // @ts-ignore
 export const HomeIndex: ComponentType<IProps> = (props: IProps) => {
-  const {req, roomState}        = props;
-  const [state, dispatch]       = useReducer<RoomIndexState, RoomIndexAction>(RoomIndexReducer, roomState);
-  const [mapState, mapDispatch] = useReducer<RoomMapState, RoomMapAction>(RoomMapReducer, RoomMapStateInit);
+  const {req, roomState} = props;
 
   return (
     <AppWrapper req = {req}>
-      <RoomIndexContext.Provider value = {{state, dispatch}}>
-        <RoomListingDetails />
-      </RoomIndexContext.Provider>
+      <RoomIndex
+        roomStateInit = {roomState}
+      />
     </AppWrapper>
   );
 };

@@ -357,21 +357,8 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                     {room.manager == 1 ? (
                       <Grid item lg = {12} sm = {12} xs = {12} container direction = 'column' justify = 'flex-end'
                             className = {align.textRight}>
-                        {/*<Tooltip*/}
-                        {/*classes = {{tooltip: classes.tooltip}}*/}
-                        {/*enterTouchDelay = {300}*/}
-                        {/*title = 'Đặt phòng nhanh'*/}
-                        {/*placement = 'top'>*/}
-                        {/*<ClockFast fontSize = {(width === 'xs') ? 'small' : 'large'} />*/}
-                        {/*</Tooltip>*/}
-                        <Button variant = 'outlined' color = 'primary' fullWidth size = 'small'
-                                className = {classes.btFlash}>
-                          <Flash className = {classes.sizeFlash} />
-                          Đặt nhanh
-                        </Button>
                       </Grid>
                     ) : ''}
-
                   </Grid>
                 </Grid>
               </Grid>
@@ -413,18 +400,23 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                     <Grid container item lg = {12} sm = {12} justify = 'center' alignItems = 'flex-end'>
                       <Grid item lg = {12} sm = {12} className = {align.textCenter}>
                         {room.manager == 1 ?
-                          <Button variant = 'contained' color = 'primary'
-                                  size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
-                                  className = {classes.btBook}>
+                          <Button
+                            name = 'booking-button'
+                            variant = 'contained' color = 'primary'
+                            size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
+                            className = {classes.btBook}
+                          >
                             <Flash className = {classes.sizeFlash} />
                             Đặt nhanh
                           </Button>
                           : <Button
+                            name = 'booking-button'
                             color = 'primary'
                             variant = 'contained'
                             size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
                             className = {classes.btBook}
-                          >Đặt phòng
+                          >
+                            Đặt phòng
                           </Button>
                         }
                       </Grid>

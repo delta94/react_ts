@@ -6,7 +6,7 @@ import {HomeIndex} from '@server/pages/HomeIndex';
 import {getRooms, RoomIndexStateInit} from '@/store/context/Room/RoomIndexContext';
 import {updateObject} from '@/store/utility';
 
-export const ssrApp = (req: Request, res: Response, next: NextFunction) => {
+export const SSRroomDetails = (req: Request, res: Response, next: NextFunction) => {
   getRooms(req.url).then(response => {
     const roomIndexState = updateObject(RoomIndexStateInit, {
       rooms: response.data,

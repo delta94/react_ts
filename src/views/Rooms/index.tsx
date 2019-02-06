@@ -5,7 +5,7 @@ import RoomListing from '@/views/Rooms/RoomListing';
 import TopBarFilter from '@/views/Rooms/TopBarFilter';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
-import React, {useReducer, FunctionComponent, Fragment, useEffect} from 'react';
+import React, {useReducer, FunctionComponent, Fragment, useEffect, ComponentType} from 'react';
 import {compose} from 'recompose';
 import {
   RoomIndexContext,
@@ -29,8 +29,8 @@ import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
 import qs from 'query-string';
 import _ from 'lodash';
 
-interface IProps extends RouteProps, RouterProps {
-  classes: any;
+interface IProps {
+  classes?: any;
   isSSR?: boolean
   roomStateInit?: RoomIndexState
   mapStateInit?: RoomMapState
@@ -43,8 +43,14 @@ const BottomNav = Loadable({
 
 const styles: any = (theme: ThemeCustom) => createStyles({});
 
-const RoomIndex: FunctionComponent<IProps> = props => {
-  const [state, dispatch]       = useReducer<RoomIndexState, RoomIndexAction>(RoomIndexReducer, RoomIndexStateInit);
+const RoomIndex: ComponentType<IProps> = (props) => {
+  const {isSSR, roomStateInit, mapStateInit} = props;
+
+  const [state, dispatch] = useReducer<RoomIndexState, RoomIndexAction>(
+    RoomIndexReducer,
+    roomStateInit ? roomStateInit : RoomIndexStateInit,
+  );
+
   const [mapState, mapDispatch] = useReducer<RoomMapState, RoomMapAction>(RoomMapReducer, RoomMapStateInit);
 
   useEffect(() => {

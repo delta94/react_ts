@@ -1,8 +1,11 @@
 import webpack, {Configuration} from 'webpack';
 import path from 'path';
 
+const sassRegex       = /\.(scss|sass)$/;
+const sassModuleRegex = /\.module\.(scss|sass)$/;
+
 const serverConfigWebpack: Configuration = {
-  mode: 'production',
+  mode: 'development',
   target: 'node',
   watch: true,
   entry: './server/index.tsx',
