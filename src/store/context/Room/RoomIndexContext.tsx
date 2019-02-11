@@ -126,8 +126,18 @@ export const RoomIndexReducer = (state: RoomIndexState, action: RoomIndexAction)
  * @param {MapCoords} coords
  * @returns {Promise<BaseResponse<RoomIndexRes[]>>}
  */
-export const getRooms = async (location: LocationDescriptorObject, page?: number, coords?: MapCoords): Promise<BaseResponse<RoomIndexRes[]>> => {
-  const params: RoomUrlParams = qs.parse(location.search!);
+export const getRooms = async (
+  location: LocationDescriptorObject | string,
+  page?: number,
+  coords?: MapCoords,
+): Promise<BaseResponse<RoomIndexRes[]>> => {
+
+  let params: RoomUrlParams;
+  if (typeof location !== 'string') {
+    params = qs.parse(location.search!);
+  } else {
+    params = qs.parse(location);
+  }
 
   let query: Partial<RoomIndexGetParams> = {
     include: 'details,media,city,district,comforts.details',

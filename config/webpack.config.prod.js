@@ -223,6 +223,7 @@ module.exports = {
       .filter(ext => useTypeScript || !ext.includes('ts')),
     alias: {
       '@': paths.appSrc,
+      '@server': paths.appServer,
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -289,7 +290,7 @@ module.exports = {
           {
             test: /\.(js|mjs|jsx|ts|tsx)$/,
             include: paths.appSrc,
-
+            exclude: '/server/',
             loader: require.resolve('babel-loader'),
             options: {
               customize: require.resolve(

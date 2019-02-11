@@ -1,6 +1,6 @@
 import BG from '@/assets/avatar_demo.jpg';
 import verifiedMail from '@/assets/verified.png';
-import InformationOfHomestay from '@/components/IntroHomestay/InformationOfHomestay';
+// import InformationOfHomestay from '@/components/IntroHomestay/InformationOfHomestay';
 import GridContainer from '@/layouts/Grid/Container';
 import BookingProfile from '@/views/ProfilePage/BookingProfile';
 import EditProfile from '@/views/ProfilePage/EditProfile';
@@ -198,7 +198,7 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
         </TabContainer>}
       </div>
       <div>
-        {value === 2 && <TabContainer> <InformationOfHomestay />
+        {value === 2 && <TabContainer> a
         </TabContainer>}
       </div>
       <div>

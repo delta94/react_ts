@@ -1,4 +1,4 @@
-import React, {Fragment, FunctionComponent} from 'react';
+import React, {Fragment, FunctionComponent, useState} from 'react';
 import NavTop from '@/components/ToolBar/NavTop';
 import GridContainer from '@/layouts/Grid/Container';
 import {compose} from 'recompose';
@@ -30,7 +30,8 @@ const styles = (theme: Theme) => createStyles({
 
 const Home: FunctionComponent<IProps | any> = props => {
   const {classes} = props;
-  useFocusTitle(document.title, 'Booking now!!');
+
+  useFocusTitle(typeof window !== 'undefined' ? document.title : '', 'Booking now!!');
 
   return (
     <Fragment>

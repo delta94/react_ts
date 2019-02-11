@@ -18,7 +18,7 @@ import _ from 'lodash';
 import {RoomHomepageContext, IRoomHomepageContext, getRoomCity} from '@/store/context/Room/RoomHomepageContext';
 
 interface IProps {
-   classes?: any
+  classes?: any
 }
 
 const styles: any = (theme: ThemeCustom) => createStyles({
@@ -135,5 +135,5 @@ const ListRoomCity: ComponentType<IProps> = (props: IProps) => {
 };
 
 export default compose<IProps, any>(
-   withStyles(styles),
+  withStyles(styles),
 )(ListRoomCity);
