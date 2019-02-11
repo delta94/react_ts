@@ -47,6 +47,16 @@ const BookingPayment = Loadable({
   loading: () => null,
 });
 
+const BookingPaymentSuccess = Loadable({
+  loader: (): Promise<any> => import('@/views/Bookings/PaymentSuccess'),
+  loading: () => null,
+});
+
+const BookingPaymentFailed = Loadable({
+  loader: (): Promise<any> => import('@/views/Bookings/PaymentFailed'),
+  loading: () => null,
+});
+
 const RouteList: FunctionComponent<{}> = props => {
   return (
     <Switch>
@@ -55,6 +65,8 @@ const RouteList: FunctionComponent<{}> = props => {
       {/*Booking Router*/}
       <Route path = '/payments/book' component = {BookingForm} />
       <Route path = '/payment/invoice/:uuid' component = {BookingPayment} />
+      <Route path = '/payment/succsess' component = {BookingPaymentSuccess} />
+      <Route path = '/payment/failed' component = {BookingPaymentFailed} />
       {/*Room Router*/}
       <Route path = '/rooms' component = {RoomsIndex} />
       <Route path = '/room/:id' component = {pageDetails} />
