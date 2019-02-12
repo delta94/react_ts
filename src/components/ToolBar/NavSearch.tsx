@@ -48,7 +48,7 @@ const DatePicker = Loadable({
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   barSearch: {
-    backgroundColor: 'rgba(39, 55, 64, 1)',
+    backgroundColor: '#455A64',
     zIndex: 10,
   },
   inputSearch: {
@@ -60,13 +60,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     backgroundColor: 'transparent',
   },
   paperSize: {
-    height: 50,
+    height: 40,
     display: 'flex',
     justifyContent: 'left',
     alignItems: 'center',
   },
   formControl: {
-    height: 50,
+    height: 40,
     width: '100%',
     borderRadius: 4,
     backgroundColor: '#ffffff',
@@ -89,6 +89,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   toolbar: {
     [theme!.breakpoints!.up!('md')]: {
       padding: 0,
+      minHeight: 50,
     },
     [theme!.breakpoints!.only!('sm')]: {
       paddingLeft: 32,
@@ -117,7 +118,7 @@ const searchStylesHome: StylesConfig = {
   }),
   placeholder: (styles) => ({
     ...styles,
-    color: 'black',
+    color: '#BDBDBD',
     fontWeight: 400,
   }),
   menu: (styles) => ({
@@ -188,8 +189,7 @@ const NavSearch: ComponentType<IProps> = (props: LocalProps) => {
                     inputValue = {inputText}
                     loadOptions = {suggestEvent}
                     onInputChange = {onSearch}
-                    placeholder = 'Tìm kiếm'
-                    classNamePrefix = 'duy'
+                    placeholder = 'Thành phố, quận huyện, tên căn hộ, ...'
                     className = {
                       classNames(classes.inputSearch, appC['ml-20'])
                     }

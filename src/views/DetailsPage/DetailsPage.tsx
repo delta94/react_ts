@@ -16,7 +16,6 @@ import GridContainer from '@/layouts/Grid/Container';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Paper from '@material-ui/core/Paper/Paper';
-import Divider from '@material-ui/core/Divider';
 import {
   RoomDetailsAction,
   RoomDetailsContext,
@@ -38,7 +37,6 @@ interface IProps extends RouteChildrenProps {
 }
 
 const styles: any = (theme: ThemeCustom) => createStyles({
-  root: {},
   boxGridImage: {
     width: '100%',
     height: 'auto',
@@ -71,7 +69,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   boxDetails: {
     width: '100%',
-    paddingTop: 30,
+    paddingTop: 15,
     backgroundColor: '#fafafa',
     [theme!.breakpoints!.down!('sm')]: {
       paddingTop: 0,
@@ -109,7 +107,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   PaperBooking: {
     // border:'1px solid #e4e4e4',
     position: 'sticky',
-    top: '10%',
+    top: '9%',
     left: 'auto',
     right: 0,
   },
@@ -136,7 +134,7 @@ const DetailsPage: ComponentType<IProps> = (props: IProps) => {
 
   return (
     <RoomDetailsContext.Provider value = {{state, dispatch}}>
-      <div className = {classes.root}>
+      <div>
         <NavTop />
         <Hidden xsDown>
           <NavSearch />

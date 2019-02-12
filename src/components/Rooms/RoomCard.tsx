@@ -1,7 +1,6 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
 import fakeIMG from '@/assets/room_demo.jpeg';
 import align from '@/styles/Position/align.module.scss';
-import {ClockFast} from 'mdi-material-ui';
 import mapMarker from '@/assets/SvgIcon/map-marker.svg';
 import createStyles from '@material-ui/core/styles/createStyles';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -127,6 +126,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   striker: {
     color: 'grey',
     position: 'relative',
+    fontSize: 16,
     '&::before': {
       content: '" "',
       position: 'absolute',
@@ -318,30 +318,59 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                       <Grid container item lg = {12} sm = {12} alignItems = 'flex-end'>
                         <Grid container spacing = {24} className = {classes.price}>
                           <Grid item>
-                            <Typography variant = {typoVariant}>
-                              {(room.price_day > 0) ? (
-                                <Fragment>
-                                  {`${formatMoney(room.price_day, 0)}`}
+                            {room.is_discount === 1 ? (
+                              <Fragment>
+                                <span className = {classNames({
+                                  [classes.striker]: true,
+                                })}>
+                                {`${formatMoney(room.price_day, 0)}`}
                                   <sub className = {classes.subEl}>đ/ngày</sub>
-                                </Fragment>
-                              ) : ''}
-                            </Typography>
-                            {/*TODO: Discount Section*/}
-                            {/*<Typography variant = {typoVariant} className = {classNames({*/}
-                            {/*[classes.striker]: true,*/}
-                            {/*})}>*/}
-                            {/*{`${formatMoney(1200000, 0)}`}*/}
-                            {/*<sub className = {classes.subEl}>đ/day</sub>*/}
-                            {/*</Typography>*/}
+                                </span>
+                                <Typography variant = {typoVariant}>
+                                  {`${formatMoney(room.price_day_discount, 0)}`}
+                                  <sub className = {classes.subEl}>đ/ngày</sub>
+                                </Typography>
+                              </Fragment>
+                            ) : (
+                              <Fragment>
+                                <Typography variant = {typoVariant}>
+                                  {(room.price_day > 0) ? (
+                                    <Fragment>
+                                      {`${formatMoney(room.price_day, 0)}`}
+                                      <sub className = {classes.subEl}>đ/ngày</sub>
+                                    </Fragment>
+                                  ) : ''}
+                                </Typography>
+                              </Fragment>
+                            )}
                           </Grid>
                           <Grid item xs>
                             <Typography variant = {typoVariant}>
-                              {room.price_hour > 0 ? (
+                              {room.is_discount === 1 ? (
                                 <Fragment>
+                                  <span className = {classNames({
+                                    [classes.striker]: true,
+                                  })}>
                                   {`${formatMoney(room.price_hour, 0)}`}
-                                  <sub className = {classes.subEl}>/4h</sub>
+                                    <sub className = {classes.subEl}>đ/4h</sub>
+                                  </span>
+                                  <Typography variant = {typoVariant}>
+                                    {`${formatMoney(room.price_hour_discount, 0)}`}
+                                    <sub className = {classes.subEl}>đ/4h</sub>
+                                  </Typography>
                                 </Fragment>
-                              ) : ''}
+                              ) : (
+                                <Fragment>
+                                  <Typography variant = {typoVariant}>
+                                    {(room.price_hour > 0) ? (
+                                      <Fragment>
+                                        {`${formatMoney(room.price_hour, 0)}`}
+                                        <sub className = {classes.subEl}>đ/4h</sub>
+                                      </Fragment>
+                                    ) : ''}
+                                  </Typography>
+                                </Fragment>
+                              )}
                             </Typography>
                           </Grid>
                         </Grid>

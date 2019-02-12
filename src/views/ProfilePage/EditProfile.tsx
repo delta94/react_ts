@@ -493,19 +493,23 @@ const EditProfile: ComponentType<IEditProfile> = (props: IEditProfile) => {
                   <Grid container spacing = {16} direction = 'row' justify = 'center'
                         className = {classes.rowInputs}>
                     <Grid item xs = {12} sm = {3} md = {3} lg = {3}>
-                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Miêu tả bản
-                                                                                                    thân </Typography>
+                      <Typography variant = 'button' align = 'left' className = {classes.typoTitle}>Tự sự </Typography>
                     </Grid>
                     <Grid item xs = {12} sm = {8} md = {8} lg = {7}>
                       <TextField
                         id = 'desYourSelf'
-                        label = 'Giúp mọi người hiểu thêm về bạn'
+                        label = 'Miêu tả về bản thân'
+                        placeholder = 'Giúp mọi người hiểu thêm về bạn'
                         fullWidth
                         multiline
+                        rows = {4}
                         rowsMax = '4'
                         onChange = {handleChange}
                         margin = 'normal'
                         helperText = 'Cho mọi người biết về những gì bạn muốn, phong cách, hoặc sở thích du lịch với tư cách là khách hoặc chủ nhà'
+                        InputLabelProps = {{
+                          shrink: true,
+                        }}
                       />
                     </Grid>
                   </Grid>
