@@ -24,7 +24,7 @@ interface IProps {
 
 const styles: any = (theme: ThemeCustom) => createStyles({
 	card: {
-		width:'96%',
+		padding:'0 5px',
 		backgroundColor: 'transparent !important',
 	},
 	media: {

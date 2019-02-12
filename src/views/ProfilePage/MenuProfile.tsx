@@ -1,6 +1,6 @@
 import BG from '@/assets/avatar_demo.jpg';
 import verifiedMail from '@/assets/verified.png';
-// import InformationOfHomestay from '@/components/IntroHomestay/InformationOfHomestay';
+import InformationOfHomestay from '@/components/IntroHomestay/InformationOfHomestay';
 import GridContainer from '@/layouts/Grid/Container';
 import BookingProfile from '@/views/ProfilePage/BookingProfile';
 import EditProfile from '@/views/ProfilePage/EditProfile';
@@ -27,6 +27,7 @@ import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import {Hidden} from "@material-ui/core";
+import ReviewRoom from '@/views/ProfilePage/ReviewRoom';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   bg_menu: {
@@ -174,6 +175,7 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
                   <Tab icon = {<Favorite />} label = 'Danh sách yêu thích' />
                   <Tab icon = {<CardGift />} label = 'Điểm thưởng' />
                   <Tab icon = {<Weekend />} label = 'Thiết lập' />
+                  <Tab icon = {<Weekend />} label = 'Độc nhĩ' />
                 </Tabs>
               </AppBar>
             </Hidden>
@@ -198,7 +200,7 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
         </TabContainer>}
       </div>
       <div>
-        {value === 2 && <TabContainer> a
+        {value === 2 && <TabContainer> <InformationOfHomestay />
         </TabContainer>}
       </div>
       <div>
@@ -207,6 +209,10 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
       </div>
       <div>
         {value === 4 && <TabContainer> <HomeSweetHome />
+        </TabContainer>}
+      </div>
+      <div>
+        {value === 5 && <TabContainer> <ReviewRoom/>
         </TabContainer>}
       </div>
     </Fragment>
