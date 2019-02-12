@@ -16,7 +16,15 @@ interface IProps {
   classes?: any
 }
 
-const styles: any = (theme: ThemeCustom) => createStyles({});
+const styles: any = (theme: ThemeCustom) => createStyles({
+  textTab:{
+    fontWeight:550,
+    color:'#515b62',
+    '&:hover': {
+      color:'#5392f9',
+    },
+  },
+});
 
 // @ts-ignore
 const TabFilter: ComponentType<IProps> = (props: IProps) => {
@@ -62,8 +70,8 @@ const TabFilter: ComponentType<IProps> = (props: IProps) => {
           textColor = 'primary'
           onChange = {(e, value) => tabFocusChange(value)}
         >
-          <Tab label = 'Tất cả phòng' />
-          <Tab label = 'Đặt phòng nhanh' />
+          <Tab label = 'Tất cả phòng' className={classes.textTab} />
+          <Tab label = 'Đặt phòng nhanh' className={classes.textTab} />
         </Tabs>
       </Paper>
     </Fragment>

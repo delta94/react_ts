@@ -37,12 +37,12 @@ const StarsRatingRoomIndex: ComponentType<IProps> = (props: IProps) => {
   }, []);
 
   const rateList = [
-    {id: '5-star', value: 5},
-    {id: '4-star', value: 4},
-    {id: '3-star', value: 3},
-    {id: '2-star', value: 2},
-    {id: '1-star', value: 1},
-    {id: '0-star', value: 0},
+    {id: '5 Sao', value: 5},
+    {id: '4 Sao', value: 4},
+    {id: '3 Sao', value: 3},
+    {id: '2 Sao', value: 2},
+    {id: '1 Sao', value: 1},
+    {id: '0 Sao', value: 0},
   ];
 
   return (

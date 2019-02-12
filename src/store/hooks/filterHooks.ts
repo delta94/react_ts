@@ -12,7 +12,7 @@ export const useExpandableList = <T>(data: T[]): [T[], boolean, Dispatch<SetStat
 
   useEffect(() => {
     if (data.length > 0) {
-      const newList = isExpand ? data : _.slice(data, 0, 3);
+      const newList = isExpand ? data : _.slice(data, 0, 5);
       setList(newList);
     }
   }, [isExpand, data]);
