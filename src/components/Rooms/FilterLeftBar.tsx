@@ -34,6 +34,8 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   checkboxRoot: {
     padding: 5,
+    color: '#7373739e',
+    fontSize: '0.9em',
   },
   expandText: {
     fontSize: '0.8rem',
@@ -49,6 +51,13 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   },
   divider: {
     margin: '10px 0 10px 0',
+  },
+  textCheckbox:{
+    color:'#5a5b5b',
+    fontSize: '0.9em',
+    '&:hover': {
+      color:'#5392f9',
+    },
   },
 });
 
@@ -126,18 +135,18 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
                       root: classes.checkboxRoot,
                     }}
                   />}
-                  label = {o.value}
+                  label = {<p className={classes.textCheckbox}>{o.value}</p>}
                 />
               </li>
             ))}
           </ul>
-          <p className = {classes.showMore}>
+          {/* <p className = {classes.showMore}>
             <span
               className = {classes.expandText}
               onClick = {() => setRoomTypeExpand(!isRoomTypeExpand)}
             >{isRoomTypeExpand ? 'Thu gọn' : `Xem thêm`}
             </span>
-          </p>
+          </p>*/}
         </Fragment>
       ) : <SimpleLoader />}
       <Divider className = {classes.divider} />
@@ -159,7 +168,7 @@ const FilterLeftBar: ComponentType<IProps> = (props: IProps) => {
                       root: classes.checkboxRoot,
                     }}
                   />}
-                  label = {`${o.details.data[0].name}`}
+                  label = {<p className={classes.textCheckbox}>{o.details.data[0].name}</p>}
                 />
               </li>
             ))}

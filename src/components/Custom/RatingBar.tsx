@@ -110,7 +110,7 @@ const RatingBar: ComponentType<IProps> = (props: IProps) => {
                 starSpacing = {`${props.spacing || 1}px`}
                 starRatedColor = {props.ratedColor || '#FFC412'}
               />
-            ) : <Typography variant = 'caption'>No rating</Typography>}
+            ) : <Typography variant = 'caption'>Không được xếp hạng</Typography>}
 
           </Grid>
           {/*<Grid item sm = {2} className = {classes.starMargin}>*/}

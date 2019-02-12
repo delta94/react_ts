@@ -147,6 +147,8 @@ export const getRooms = async (
     check_out: params.check_out,
     number_guest: params.number_of_guests,
     most_popular: params.most_popular,
+    sort_total_review: (params.sort_total_review === null) ? 1 : undefined,
+    discount: (params.discount === null) ? 1 : undefined,
     price_day_from: params.price_day_from,
     price_day_to: params.price_day_to,
     manager: (typeof params.instant !== 'undefined') ? 1 : undefined,

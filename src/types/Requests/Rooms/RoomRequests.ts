@@ -12,6 +12,8 @@ export interface RoomIndexGetParams extends BaseGetRequestParams, Partial<MapCoo
   rooms?: number | string
   most_popular?: any
   sort_price_day?: number | string
+  sort_total_review?: string | number | null
+  discount?: string | number | null
   number_bed?: string
   number_guest?: string | number
   check_in?: string
@@ -62,5 +64,7 @@ export interface RoomUrlParams {
   view?: 'map' | 'list'
   amenities?: string | null
   room_type?: string | null
+  sort_total_review?: string | number | null
+  discount?: string | number | null
 }
 

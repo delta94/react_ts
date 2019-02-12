@@ -16,9 +16,16 @@ interface IProps {
   classes?: any
 }
 
-const styles: any = (theme: ThemeCustom) => createStyles({});
+const styles: any = (theme: ThemeCustom) => createStyles({
+    textTab:{
+    fontWeight:550,
+    '&:hover': {
+      color:'#5392f9',
+    },
+  },
+});
 
-const [MOST_POPULAR, LOWEST_PRICE, MOST_REVIEW, DEAL_HOT] = [0, 1, 2, 3];
+const [MOST_POPULAR, LOWEST_PRICE, MOST_REVIEW, DISCOUNT] = [0, 1, 2, 3];
 
 // @ts-ignore
 const ListFilterTop: ComponentType<IProps> = (props: IProps) => {
@@ -33,9 +40,11 @@ const ListFilterTop: ComponentType<IProps> = (props: IProps) => {
       const instant: RoomUrlParams = {
         most_popular: (value === MOST_POPULAR) ? null : undefined,
         lowest_price: (value === LOWEST_PRICE) ? null : undefined,
-        most_review: (value === MOST_REVIEW) ? null : undefined,
-        deal_hot: (value === DEAL_HOT) ? null : undefined,
+        sort_total_review: (value === MOST_REVIEW) ? null : undefined,
+        discount: (value === DISCOUNT) ? null : undefined,
       };
+
+      console.log(instant)
 
       const newParams  = updateObject(params, instant);
       const locationTo = newRoomLocation(newParams);
@@ -49,7 +58,6 @@ const ListFilterTop: ComponentType<IProps> = (props: IProps) => {
       history.push(locationTo);
     }
   };
-
   return (
     <Fragment>
       <Paper square elevation = {1}>
@@ -60,10 +68,10 @@ const ListFilterTop: ComponentType<IProps> = (props: IProps) => {
           textColor = 'primary'
           onChange = {(e, value) => tabFocusChange(value)}
         >
-          <Tab label = 'Phù hợp nhất' />
-          <Tab label = 'Giá thấp nhất' />
-          <Tab label = 'Nhiều đánh giá' />
-          <Tab label = 'Khuyến mãi' />
+          <Tab label = 'Phù hợp nhất'  className={classes.textTab} />
+          <Tab label = 'Giá thấp nhất'  className={classes.textTab} />
+          <Tab label = 'Nhiều đánh giá'  className={classes.textTab} />
+          <Tab label = 'Khuyến mãi'  className={classes.textTab} />
         </Tabs>
       </Paper>
     </Fragment>
