@@ -42,6 +42,7 @@ import {IBookingFormParams, priceCalculate} from '@/store/context/Booking/Bookin
 import {formatMoney} from '@/utils/mixins';
 import DateRangeSingle from '@/components/Utils/DateRangeSingle';
 import ContentPlaceHolder from '@/components/PlaceHolder/ContentPlaceHolder';
+import classNames from 'classnames';
 
 interface IProps {
   classes?: any,
@@ -50,16 +51,21 @@ interface IProps {
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   boxPadding: {
-    padding: 16,
+    padding: '8px 16px',
   },
   rowMargin: {
-    marginBottom: 16,
+    margin: '8px 0 8px 0',
   },
   PaperDatePick: {
     border: '1px solid #e4e4e4',
   },
   price: {
     fontSize: 20,
+    fontWeight: 600,
+    color: '#484848',
+  },
+  priceNotByHour: {
+    fontSize: 17,
     fontWeight: 600,
     color: '#484848',
   },
@@ -115,6 +121,23 @@ const styles: any = (theme: ThemeCustom) => createStyles({
   message: {
     display: 'flex',
     alignItems: 'center',
+  },
+  striker: {
+    color: 'grey',
+    position: 'relative',
+    fontSize: 11,
+    display: 'table',
+    marginLeft: 5,
+    '&::before': {
+      content: '" "',
+      position: 'absolute',
+      right: 0,
+      top: '50%',
+      width: '100%',
+      borderTop: '1px solid grey',
+      transform: 'rotate(10deg)',
+      WebkitTransform: 'rotate(10deg)',
+    },
   },
 });
 
@@ -288,18 +311,49 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
       <div className = {classes.boxPadding}>
         <Grid container className = {classes.rowMargin}>
           <Grid item xs = {6}>
-            <div className = {classes.pricePerDay}>
-              <span className = {classes.price}>{formatMoney(room!.price_day)} <sup>&#8363;</sup></span>
-              <sub className = {classes.perTime}>/ngày</sub>
-            </div>
+            {room.is_discount === 1 ? (
+              <div className = {classes.pricePerDay}>
+                <span className = {classNames({
+                  [classes.striker]: true,
+                })}>
+                  {`${formatMoney(room.price_day, 0)}`}
+                  <sub className = {classes.perTime}>đ/ngày</sub>
+                </span>
+                <span className = {classes.price}>{formatMoney(room!.price_day_discount)} <sup>&#8363;</sup></span>
+                <sub className = {classes.perTime}>/ngày</sub>
+              </div>
+            ) : (
+              <div className = {classes.pricePerDay}>
+                <span className = {classes.price}>{formatMoney(room!.price_day)} <sup>&#8363;</sup></span>
+                <sub className = {classes.perTime}>/ngày</sub>
+              </div>
+            )}
           </Grid>
           <Grid item xs = {6}>
             {room!.price_hour > 0 ? (
+              room.is_discount === 1 ? (
+                <div className = {classes.pricePerHour}>
+                     <span className = {classNames({
+                       [classes.striker]: true,
+                     })}>
+                        {`${formatMoney(room.price_hour, 0)}`}
+                       <sub className = {classes.perTime}>đ/4h</sub>
+                      </span>
+                  <span className = {classes.price}>{formatMoney(room!.price_hour_discount)} <sup>&#8363;</sup></span>
+                  <sub className = {classes.perTime}>/4h</sub>
+                </div>
+              ) : (
+                <div className = {classes.pricePerHour}>
+                  <span className = {classes.price}>{formatMoney(room!.price_hour)} <sup>&#8363;</sup></span>
+                  <sub className = {classes.perTime}>/4h</sub>
+                </div>
+              )
+            ) : (
               <div className = {classes.pricePerHour}>
-                <span className = {classes.price}>{formatMoney(room!.price_hour)} <sup>&#8363;</sup></span>
-                <sub className = {classes.perTime}>/4h</sub>
+                <span className = {classes.priceNotByHour}>Không cho thuê theo giờ</span>
               </div>
-            ) : ''}
+            )
+            }
           </Grid>
         </Grid>
         <Divider />
@@ -359,7 +413,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
           </Grid>
           <Grid item xs = {12} className = {classes.rowMargin}>
             <Typography className = {classes.title}>
-              Khách
+              Số Khách
             </Typography>
             <Paper square elevation = {0} className = {classes.PaperDatePick}>
               <FormControl variant = 'outlined' className = {classes.formControl}>

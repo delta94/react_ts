@@ -34,6 +34,7 @@ import People from '@material-ui/icons/People';
 import PowerSettingsNewRounded from '@material-ui/icons/PowerSettingsNewRounded';
 import AccountCircleOutlined from "@material-ui/icons/AccountCircleOutlined";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {transparent} from 'material-ui/styles/colors';
 
 interface IProps {
    classes: any,
@@ -58,7 +59,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
    button: {
       height: theme!.palette!.button.nav,
       borderRadius: '0px',
-      '&:hover': {},
+     textTransform: 'capitalize',
+     '&:hover': {
+       color: '#2196F3',
+       backgroundColor: 'transparent',
+       borderTop: '2px solid #2196F3',
+     },
    },
    link: {
       textTransform: 'inherit',
@@ -147,7 +153,7 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
                      className = {classes.button}
                      name = 'merchant-site'
                   >
-                     Dành cho chủ nhà
+                    Kênh chủ nhà
                   </Button>
                   <Button
                      name = 'support'

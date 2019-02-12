@@ -86,7 +86,7 @@ const styles: any = (theme: ThemeCustom) => createStyles({
     outline: 'none',
   },
   paperSize: {
-    height: 80,
+    height: 60,
     display: 'flex',
     justifyContent: 'left',
     alignItems: 'center',

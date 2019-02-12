@@ -1,9 +1,10 @@
 $x: 12px;
-$border-color: #c8c8c8;
+$border-color: #155FA0;
 $bg-color: #f8f8f8;
 
 .speech-bubble {
   background-color: $bg-color;
+  color: blue;
   border: 1px solid $border-color;
   border-radius: 10px;
   max-width: 300px;

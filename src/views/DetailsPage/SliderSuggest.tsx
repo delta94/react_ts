@@ -10,7 +10,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import {IRoomDetailsContext, RoomDetailsContext} from '@/store/context/Room/RoomDetailsContext';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
-import RoomCardSlider from '@/components/Rooms/RoomCardSlider';
 import NextArrowSlider from '@/views/DetailsPage/NextArrowSlider';
 import PrevArrowSlider from '@/views/DetailsPage/PrevArrowSlider';
 import _ from 'lodash';

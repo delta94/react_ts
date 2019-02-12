@@ -18,10 +18,12 @@ interface IProps {
 
 const styles = (theme: Theme) => createStyles({
   panel: {
-    height: '60rem',
+    height: '100vh',
     backgroundImage: `url(${BG})`,
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
+    backgroundPosition: 'top',
+    backgroundAttachment: 'fixed',
   },
   panelBody: {
     marginTop: '25px',

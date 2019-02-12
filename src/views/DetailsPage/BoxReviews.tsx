@@ -224,7 +224,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
                 <div className = {classes.boxMark}>
                   <div className = {classes.Mark}>
                     <Typography variant = {"h5"} className = {classes.TypoMark}>
-                      {/*{room!.standard_point}*/}4.9
+                      {room!.avg_rating}
                     </Typography>
                   </div>
                 </div>
@@ -244,7 +244,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
                     </Grid>
                     <Grid item xs = {8} sm={5} className = {classes.valueRating}>
                       <StarRatings
-                        rating = {5} //index rating
+                        rating = {room!.avg_service} //index rating
                         starDimension = {width === 'xs' ? '22px' : '24px'}
                         starSpacing = '1px'
                         starRatedColor = '#46afcc'
@@ -259,7 +259,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
                     </Grid>
                     <Grid item xs = {8} sm={5} className = {classes.valueRating}>
                       <StarRatings
-                        rating = {5} //index rating
+                        rating = {room!.avg_quality} //index rating
                         starDimension = {width === 'xs' ? '22px' : '24px'}
                         starSpacing = '1px'
                         starRatedColor = '#46afcc'
@@ -274,7 +274,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
                     </Grid>
                     <Grid item xs = {8} sm={5} className = {classes.valueRating}>
                       <StarRatings
-                        rating = {4.5} //index rating
+                        rating = {room!.avg_valuable} //index rating
                         starDimension = {width === 'xs' ? '22px' : '24px'}
                         starSpacing = '1px'
                         starRatedColor = '#46afcc'
@@ -289,7 +289,7 @@ const BoxReviews: ComponentType<IProps> = (props: IProps) => {
                     </Grid>
                     <Grid item xs = {8} sm={5} className = {classes.valueRating}>
                       <StarRatings
-                        rating = {4.5} //index rating
+                        rating = {room!.avg_cleanliness} //index rating
                         starDimension = {width === 'xs' ? '22px' : '24px'}
                         starSpacing = '1px'
                         starRatedColor = '#46afcc'

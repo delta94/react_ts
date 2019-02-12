@@ -1,6 +1,6 @@
 import BG from '@/assets/avatar_demo.jpg';
 import verifiedMail from '@/assets/verified.png';
-// import InformationOfHomestay from '@/components/IntroHomestay/InformationOfHomestay';
+import InformationOfHomestay from '@/components/IntroHomestay/InformationOfHomestay';
 import GridContainer from '@/layouts/Grid/Container';
 import BookingProfile from '@/views/ProfilePage/BookingProfile';
 import EditProfile from '@/views/ProfilePage/EditProfile';
@@ -171,9 +171,9 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
                       indicatorColor = 'primary' textColor = 'primary' scrollButtons = 'off'>
                   <Tab icon = {<Person />} label = 'Thông tin cá nhân' />
                   <Tab icon = {<Bookmarks />} label = 'Danh sách đặt phòng' />
-                  <Tab icon = {<Favorite />} label = 'Danh sách yêu thích' />
-                  <Tab icon = {<CardGift />} label = 'Điểm thưởng' />
-                  <Tab icon = {<Weekend />} label = 'Thiết lập' />
+                  {/*<Tab icon = {<Favorite />} label = 'Danh sách yêu thích' />*/}
+                  {/*<Tab icon = {<CardGift />} label = 'Điểm thưởng' />*/}
+                  {/*<Tab icon = {<Weekend />} label = 'Thiết lập' />*/}
                 </Tabs>
               </AppBar>
             </Hidden>
@@ -181,9 +181,9 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
               <BottomNavigation value = {value} onChange = {handleChange} className = {classes.NaviBottom}>
                 <BottomNavigationAction label = 'Hồ sơ' value = {0} icon = {<Person />} />
                 <BottomNavigationAction label = 'Bookings' value = {1} icon = {<Bookmarks />} />
-                <BottomNavigationAction label = 'Yêu thích' value = {2} icon = {<Favorite />} />
-                <BottomNavigationAction label = 'Điểm thưởng' value = {3} icon = {<CardGift />} />
-                <BottomNavigationAction label = 'Thiết lập' value = {4} icon = {<Weekend />} />
+                {/*<BottomNavigationAction label = 'Yêu thích' value = {2} icon = {<Favorite />} />*/}
+                {/*<BottomNavigationAction label = 'Điểm thưởng' value = {3} icon = {<CardGift />} />*/}
+                {/*<BottomNavigationAction label = 'Thiết lập' value = {4} icon = {<Weekend />} />*/}
               </BottomNavigation>
             </Hidden>
           </Grid>
@@ -198,7 +198,7 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
         </TabContainer>}
       </div>
       <div>
-        {value === 2 && <TabContainer> a
+        {value === 2 && <TabContainer> <InformationOfHomestay />
         </TabContainer>}
       </div>
       <div>

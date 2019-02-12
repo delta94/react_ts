@@ -40,9 +40,17 @@ export interface RoomIndexRes<T = any> {
   service: number | null,
   valuable: number | null,
   avg_rating: number,
+  avg_cleanliness: number,
+  avg_quality: number,
+  avg_service: number,
+  avg_valuable: number,
   total_review: number,
   total_recommend: number | null,
   avg_rating_txt:string,
+  is_discount: number | null,
+  is_discount_txt: string,
+  price_day_discount: number | null,
+  price_hour_discount: number | null,
   details: TransformerInclude<RoomDetails[]>;
   user: TransformerInclude<User>;
   comforts: TransformerInclude<ComfortIndexRes[]>;

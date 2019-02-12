@@ -20,6 +20,7 @@ import {
 import _ from 'lodash';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import moment from 'moment';
+import 'moment/locale/vi';
 import {formatMoney} from "@/utils/mixins";
 import DialogBookingDetails from '@/views/ProfilePage/DialogBookingDetails';
 import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
@@ -310,9 +311,9 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
                     Đặt lại
                   </Button>
                 </Hidden>
-                <Button color = 'primary' className = {classes.button}>
-                  Gửi biên lai
-                </Button>
+                {/*<Button color = 'primary' className = {classes.button}>*/}
+                {/*Gửi biên lai*/}
+                {/*</Button>*/}
               </div>
             </Grid>
             <Grid item container justify = 'flex-end' xs = {4} sm = {4} md = {4} lg = {3}>
