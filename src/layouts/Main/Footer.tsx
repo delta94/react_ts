@@ -7,6 +7,7 @@ import {createStyles, withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 import GridContainer from '@/layouts/Grid/Container';
 import PhoneIcon from '@material-ui/icons/Phone';
+import {Link} from 'react-router-dom';
 interface IProps {
    classes?: any
 }
@@ -87,6 +88,15 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       fontSize: '1.1em',
       paddingRight: '1em',
    },
+   textTerms:{
+      display: 'list-item',
+      color: 'rgba(255,255,255,.8)!important',
+      fontSize: '15px',
+      listStyle: 'none',
+      marginTop: '0',
+      lineHeight: '1.7em',
+      textDecoration: 'none',
+   },
 });
 
 // @ts-ignore
@@ -111,9 +121,9 @@ const Footer: ComponentType<IProps> = (props: IProps) => {
                         Quy định dành cho Sàn GDTMĐT - Dịch vụ cho thuê phòng
                      </h5>
                      <ul className={classes.linksListGroupList}>
-                        <li>Quy trình giải quyết tranh chấp, khiếu nại</li>
-                        <li>Chính sách bảo mật</li>
-                        <li>Quy chế hoạt động</li>
+                        <Link to = '/terms-and-conditions' className={classes.textTerms}>
+                          <li>Điều khoản sử dụng</li>
+                        </Link>
                      </ul>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} className={classes.linksList}>

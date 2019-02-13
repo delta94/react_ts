@@ -57,6 +57,11 @@ const BookingPaymentFailed = Loadable({
   loading: () => null,
 });
 
+const TermsOfConditions = Loadable({
+  loader: (): Promise<any> => import('@/views/Terms/TermsOfConditions'),
+  loading: () => null,
+});
+
 const RouteList: FunctionComponent<{}> = props => {
   return (
     <Switch>
@@ -70,6 +75,8 @@ const RouteList: FunctionComponent<{}> = props => {
       {/*Room Router*/}
       <Route path = '/rooms' component = {RoomsIndex} />
       <Route path = '/room/:id' component = {pageDetails} />
+      {/*Terms Router*/}
+      <Route path = '/terms-and-conditions' component = {TermsOfConditions} />
       <Route component = {Error500} />
     </Switch>
   );
