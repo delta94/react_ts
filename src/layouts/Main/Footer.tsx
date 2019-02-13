@@ -7,6 +7,8 @@ import {createStyles, withStyles} from '@material-ui/core/styles';
 import classNames from 'classnames';
 import GridContainer from '@/layouts/Grid/Container';
 import PhoneIcon from '@material-ui/icons/Phone';
+import EmailIcon from '@material-ui/icons/Email';
+import PlaceIcon from '@material-ui/icons/Place';
 import {Link} from 'react-router-dom';
 interface IProps {
    classes?: any
@@ -125,19 +127,33 @@ const Footer: ComponentType<IProps> = (props: IProps) => {
                           <li>Điều khoản sử dụng</li>
                         </Link>
                      </ul>
+
+                     <h5 className={classes.linksListGroupTitle}>
+                        Cẩm nang du lịch
+                     </h5>
+                     <ul className={classes.linksListGroupList}>
+                        <li>Đà Lạt</li>
+                        <li>Đà Nẵng</li>
+                        <li>Hà Nộit</li>
+                        <li>SaPa</li>
+                     </ul>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} className={classes.linksList}>
                      <h5 className={classes.linksListGroupTitle}>
                         Liên hệ với chúng tôi
                      </h5>
                      <ul className={classes.linksListGroupList}>
-                        <p>
+                        <li>
                            <PhoneIcon fontSize='small' className={classes.iconPhone}/>
                            0967 528 419
-                        </p>
+                        </li>
                         <li>
-                           <PhoneIcon fontSize='small' className={classes.iconPhone} />
-                           0967 528 419
+                           <EmailIcon fontSize='small' className={classes.iconPhone} />
+                           info@westay.com
+                        </li>
+                        <li>
+                           <PlaceIcon fontSize='small' className={classes.iconPhone} />
+                           102 Thái Thịnh, Đống Đa, Hà Nội
                         </li>
                      </ul>
                   </Grid>
