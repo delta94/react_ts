@@ -1,5 +1,5 @@
 import {ThemeCustom} from '@/components/Theme/Theme';
-import React, {ComponentType, Fragment} from 'react';
+import React, {ComponentType, Fragment, useContext} from 'react';
 import {compose} from 'recompose';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -10,6 +10,11 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import PlaceIcon from '@material-ui/icons/Place';
 import {Link} from 'react-router-dom';
+import facebook from '@/assets/facebook-social.svg';
+import instagram from '@/assets/instagram.svg';
+import {RoomUrlParams} from '@/types/Requests/Rooms/RoomRequests';
+import {newRoomLocation} from '@/store/context/Room/RoomIndexContext';
+import {IGlobalContext, GlobalContext} from '@/store/context/GlobalContext';
 interface IProps {
    classes?: any
 }
@@ -99,12 +104,42 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       lineHeight: '1.7em',
       textDecoration: 'none',
    },
+   socialNetwork:{
+      [theme!.breakpoints!.only!('sm')]: {
+         fontSize: '13px',
+      },
+      display: '-webkit-inline-box',
+      listStyle: 'none',
+      marginTop: '7px',
+      paddingLeft: 0,
+      fontSize: '15px',
+      color: 'rgba(255,255,255,.8)!important',
+      lineHeight: '1.7em',
+   },
+   imgSocial:{
+      backgroundColor:'#444953',
+      borderRadius:'20px',
+   },
+   li:{
+      cursor: 'pointer',
+   },
 });
 
 // @ts-ignore
 const Footer: ComponentType<IProps> = (props: IProps) => {
    const {classes} = props;
+   const {history}              = useContext<IGlobalContext>(GlobalContext);
 
+   const locationRoom = (values: number) =>{
+      const pushQuery: RoomUrlParams = {
+         city: values,
+      };
+
+      const location = newRoomLocation(pushQuery);
+      history.push(location);
+   };
+
+   const facebookUrl = 'https://www.facebook.com/westay.org';
    return (
       <Fragment>
          <div className={classes.firstItem}>
@@ -132,10 +167,10 @@ const Footer: ComponentType<IProps> = (props: IProps) => {
                         Cẩm nang du lịch
                      </h5>
                      <ul className={classes.linksListGroupList}>
-                        <li>Đà Lạt</li>
-                        <li>Đà Nẵng</li>
-                        <li>Hà Nộit</li>
-                        <li>SaPa</li>
+                        <li onClick={() => locationRoom(38)}>Đà Lạt</li>
+                        <li onClick={() => locationRoom(65)}>Đà Nẵng</li>
+                        <li onClick={() => locationRoom(2)}>Hà Nội</li>
+                        <li onClick={() => locationRoom(20)}>Sa Pa</li>
                      </ul>
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} className={classes.linksList}>
@@ -155,6 +190,22 @@ const Footer: ComponentType<IProps> = (props: IProps) => {
                            <PlaceIcon fontSize='small' className={classes.iconPhone} />
                            102 Thái Thịnh, Đống Đa, Hà Nội
                         </li>
+                     </ul>
+
+                     <h5 className={classes.linksListGroupTitle}>
+                        Mạng xã hội
+                     </h5>
+                     <ul className={classes.socialNetwork}>
+                        <li>
+                           <a href={facebookUrl} target="blank">
+                              <img src={facebook} className={classes.imgSocial}/>
+                           </a>
+                        </li>
+                        {/*<li style={{marginLeft:'1em'}}>
+                           <a href={facebookUrl} target="blank">
+                              <img src={instagram} className={classes.imgSocial}/>
+                           </a>
+                        </li>*/}
                      </ul>
                   </Grid>
                </Grid>
