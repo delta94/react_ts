@@ -16,7 +16,6 @@ import GridContainer from '@/layouts/Grid/Container';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Paper from '@material-ui/core/Paper/Paper';
-import Divider from '@material-ui/core/Divider';
 import {
   RoomDetailsAction,
   RoomDetailsContext,

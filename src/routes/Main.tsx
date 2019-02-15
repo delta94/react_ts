@@ -1,6 +1,7 @@
 import React, {FunctionComponent} from 'react';
 import Loadable from 'react-loadable';
 import {Route, Switch} from 'react-router-dom';
+import ReviewRoom from '@/views/ProfilePage/ReviewRoom';
 
 const HomePage    = Loadable({
   loader: (): Promise<any> => import('@/views/Homepage/Home'),
@@ -25,6 +26,13 @@ const pageProfile = Loadable({
 
 const pageDetails = Loadable({
   loader: (): Promise<any> => import('@/views/DetailsPage/DetailsPage'),
+  loading: () => {
+    return null;
+  },
+});
+
+const pageReview = Loadable({
+  loader: (): Promise<any> => import('@/views/ProfilePage/ReviewRoom'),
   loading: () => {
     return null;
   },
@@ -58,6 +66,7 @@ const RouteList: FunctionComponent<{}> = props => {
       {/*Room Router*/}
       <Route path = '/rooms' component = {RoomsIndex} />
       <Route path = '/room/:id' component = {pageDetails} />
+      <Route path = '/reviews/:id' component = {pageReview} />
       <Route component = {Error500} />
     </Switch>
   );

@@ -192,6 +192,10 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
     setCurrentPage(current);
   };
 
+  const toReview=()=>{
+    history.push(`/reviews/${}`);
+  };
+
   const mapBookings = _.map(bookings, i => {
     const room = i.room.data;
     return (
@@ -233,7 +237,7 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
                 <Hidden lgDown = {status == 2 || status == 5 || status == 1}
                         lgUp = {status == 2 || status == 5 || status == 1}>
                   <Grid item className = {classes.rowMargin}>
-                    <Button variant = 'outlined' color = 'primary' size = 'small'>
+                    <Button variant = 'outlined' color = 'primary' size = 'small' onClick={toReview}>
                       Đánh giá
                     </Button>
                   </Grid>

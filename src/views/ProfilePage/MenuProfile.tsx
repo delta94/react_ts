@@ -137,7 +137,7 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
   const handleChange = (event: ChangeEvent<{}>, value: number) => {
     setValue(value);
   };
-  console.log(profile);
+
   return (
     <Fragment>
       <div style = {{position: 'relative'}}>
@@ -175,7 +175,6 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
                   <Tab icon = {<Favorite />} label = 'Danh sách yêu thích' />
                   <Tab icon = {<CardGift />} label = 'Điểm thưởng' />
                   <Tab icon = {<Weekend />} label = 'Thiết lập' />
-                  <Tab icon = {<Weekend />} label = 'Độc nhĩ' />
                 </Tabs>
               </AppBar>
             </Hidden>
@@ -209,10 +208,6 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
       </div>
       <div>
         {value === 4 && <TabContainer> <HomeSweetHome />
-        </TabContainer>}
-      </div>
-      <div>
-        {value === 5 && <TabContainer> <ReviewRoom/>
         </TabContainer>}
       </div>
     </Fragment>
