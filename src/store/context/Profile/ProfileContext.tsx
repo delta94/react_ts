@@ -8,7 +8,7 @@ import {BookingIndexParams} from "@/types/Requests/Booking/BookingRequests";
 import qs from "query-string";
 import {AxiosError} from "axios";
 
-export const ProfileContext = createContext<| any>(null);
+export const ProfileContext = createContext<IProfileContext | any>(null);
 
 export interface IProfileContext {
   state: ProfileState
@@ -17,7 +17,7 @@ export interface IProfileContext {
 
 export type ProfileAction =
   { type: 'setData', profile?: ProfileInfoRes, bookings?: BookingIndexRes[], meta?: Pagination }
-  | { type: 'setDataBooking', bookings?: BookingIndexRes[], meta?: Pagination }
+| { type: 'setDataBooking', bookings?: BookingIndexRes[], meta?: Pagination }
 
 export type ProfileState = {
   readonly profile?: ProfileInfoRes | null

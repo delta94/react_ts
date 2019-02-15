@@ -27,6 +27,7 @@ import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import {Hidden} from "@material-ui/core";
+import ReviewRoom from '@/views/ProfilePage/ReviewRoom';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   bg_menu: {
@@ -136,7 +137,7 @@ const MenuProfile: ComponentType<IMenuProfile> = (props: IMenuProfile) => {
   const handleChange = (event: ChangeEvent<{}>, value: number) => {
     setValue(value);
   };
-  console.log(profile);
+
   return (
     <Fragment>
       <div style = {{position: 'relative'}}>
