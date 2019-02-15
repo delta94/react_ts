@@ -15,14 +15,14 @@ import Location from '@material-ui/icons/LocationOnOutlined';
 import StarRatings from 'react-star-ratings';
 import {ThemeCustom} from '@/components/Theme/Theme';
 import {
-  getUserBookingList, IProfileContext, ProfileContext
-} from "@/store/context/Profile/ProfileContext";
+  getUserBookingList, IProfileContext, ProfileContext,
+} from '@/store/context/Profile/ProfileContext';
 import _ from 'lodash';
 import SimpleLoader from '@/components/Loading/SimpleLoader';
 import moment from 'moment';
-import {formatMoney} from "@/utils/mixins";
+import {formatMoney} from '@/utils/mixins';
 import DialogBookingDetails from '@/views/ProfilePage/DialogBookingDetails';
-import {GlobalContext, IGlobalContext} from "@/store/context/GlobalContext";
+import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import InsertDriveFileOutlined from '@material-ui/icons/InsertDriveFileOutlined';
 import Pagination from 'rc-pagination';
 import localeInfo from 'rc-pagination/lib/locale/vi_VN';
@@ -141,19 +141,18 @@ interface IBookingList {
   status: number
 }
 
-
 const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
-  const {classes, status} = props;
-  const [openDialog, setOpenDialog] = useState<number>(0);
+  const {classes, status}             = props;
+  const [openDialog, setOpenDialog]   = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [isEmpty, setEmpty] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState<boolean>(true);
-  const {history} = useContext<IGlobalContext>(GlobalContext);
-  const {state, dispatch} = useContext<IProfileContext>(ProfileContext);
+  const [isEmpty, setEmpty]           = useState<boolean>(false);
+  const [isLoading, setLoading]       = useState<boolean>(true);
+  const {history}                     = useContext<IGlobalContext>(GlobalContext);
+  const {state, dispatch}             = useContext<IProfileContext>(ProfileContext);
 
   const {bookings, metaBookings} = state;
   if (bookings == null) {
-    return <SimpleLoader />
+    return <SimpleLoader />;
   }
   useEffect(() => {
     setLoading(true);
@@ -162,18 +161,18 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
         dispatch({
           type: 'setDataBooking',
           bookings: res.data,
-          meta: res.meta
+          meta: res.meta,
         });
-        setLoading(false)
+        setLoading(false);
       })
       .catch(err => {
-        setLoading(false)
+        setLoading(false);
       });
   }, [currentPage]);
 
   useEffect(() => {
     if (!isLoading && bookings.length === 0) {
-      setEmpty(true)
+      setEmpty(true);
     }
   }, [isLoading]);
 
@@ -192,8 +191,8 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
     setCurrentPage(current);
   };
 
-  const toReview=()=>{
-    history.push(`/reviews/${}`);
+  const toReview = (id: number) => {
+    history.push(`/reviews/${id}`);
   };
 
   const mapBookings = _.map(bookings, i => {
@@ -237,7 +236,7 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
                 <Hidden lgDown = {status == 2 || status == 5 || status == 1}
                         lgUp = {status == 2 || status == 5 || status == 1}>
                   <Grid item className = {classes.rowMargin}>
-                    <Button variant = 'outlined' color = 'primary' size = 'small' onClick={toReview}>
+                    <Button variant = 'outlined' color = 'primary' size = 'small' onClick = {() => toReview(i.id)}>
                       Đánh giá
                     </Button>
                   </Grid>
@@ -332,7 +331,7 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
 
         <DialogBookingDetails stateOpen = {openDialog} setStateOpen = {setOpenDialog} dataBooking = {i} />
       </GridContainer>
-    )
+    );
   });
 
   return (
@@ -367,5 +366,5 @@ const BookingList: ComponentType<IBookingList> = (props: IBookingList) => {
 };
 
 export default compose<IBookingList, any>(
-  withStyles(styles)
+  withStyles(styles),
 )(BookingList);
