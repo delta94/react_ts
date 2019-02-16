@@ -38,7 +38,7 @@ const ListRoom: ComponentType<IProps> = (props: IProps) => {
    return (
       <Fragment>
          <div className = {classes.boxListRoom}>
-            <GridContainer xs = {11}>
+            <GridContainer xs = {10}>
                <RoomHomepageContext.Provider value = {{state, dispatch}}>
                   <ListRoomHot />
                   <ListRoomNew />

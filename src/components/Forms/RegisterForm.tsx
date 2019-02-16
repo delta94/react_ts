@@ -44,7 +44,7 @@ import Snackbar from '@material-ui/core/Snackbar/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent/SnackbarContent';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Green from '@material-ui/core/colors/green';
-
+import {Link} from 'react-router-dom';
 interface IProps {
   classes?: any
 }
@@ -313,7 +313,14 @@ const RegisterForm: ComponentType<IProps> = (props: RegisterLocalProps) => {
                           onChange = {handleChange}
                         />
                       }
-                      label = 'Chấp nhận điều khoản' />
+                      label={
+                        <div style={{display:'inline-flex'}}>
+                          <p style={{margin: '0'}}>Tôi đồng ý với &ensp;</p>
+                          <Link style={{textDecoration:'none',color:'#1e88e5'}} to="/terms-and-conditions">Điều khoản sử dụng</Link>
+                          <p style={{margin: '0'}}>&ensp; của Westay</p>
+                        </div>
+                      }
+                      />
                     <FormHelperText>{touched.agreeTerms ? errors.agreeTerms : ''}</FormHelperText>
                   </FormControl>
                   <Button
@@ -328,7 +335,8 @@ const RegisterForm: ComponentType<IProps> = (props: RegisterLocalProps) => {
               );
             }}
           </Formik>
-          <h5 className = {borderC['text-line-center']}>đăng nhập với</h5>
+          {/*<h5 className = {borderC['text-line-center']}>đăng nhập với</h5>*/}
+          <h5 className = {borderC['text-line-center']}></h5>
           <Typography className = {AlignS.textCenter}>
             Đã có tài khoản?
             <b className = {classes.color}

@@ -26,7 +26,7 @@ const styles = (theme: Theme) => createStyles({
     backgroundAttachment: 'fixed',
   },
   panelBody: {
-    marginTop: '25px',
+    marginTop: '70px',
   },
 });
 
@@ -39,7 +39,7 @@ const Home: FunctionComponent<IProps | any> = props => {
     <Fragment>
       <NavTop />
       <div className = {classes.panel}>
-        <GridContainer xs = {11}>
+        <GridContainer xs = {10}>
           <Grid container spacing = {24} className = {classes.panelBody}>
             <SearchHome />
             {/*<Promotion/>*/}

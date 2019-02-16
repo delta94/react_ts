@@ -10,6 +10,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import blue from '@material-ui/core/colors/blue';
 import Divider from '@material-ui/core/Divider';
 import Grow from '@material-ui/core/Grow';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
@@ -26,7 +27,7 @@ import {Dispatch} from 'redux';
 import Cookies from 'universal-cookie';
 import Hidden from '@material-ui/core/Hidden/Hidden';
 import IconButton from '@material-ui/core/IconButton/IconButton';
-import {Menu} from '@material-ui/icons';
+import IconMenu from '@material-ui/icons/Menu';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import {ISideDrawerProps} from '@/components/ToolBar/SideDrawer';
 import Logo from '@/components/ToolBar/Logo';
@@ -85,6 +86,12 @@ const styles: any = (theme: ThemeCustom) => createStyles({
    },
    Popper: {
       zIndex: 9999
+   },
+   support:{
+      top:'3em',
+   },
+   listSupport:{
+      listStyle:'none',
    }
 });
 
@@ -138,6 +145,16 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
       props.handleSignUpAnimation(true);
    };
 
+   const [anchorEl, setAnchorEl] = React.useState(null);
+
+   const handleClick = (event:any) => {
+      setAnchorEl(event.currentTarget);
+   }
+
+   const handleClose = () => {
+      setAnchorEl(null);
+   }
+
    return (
       <Fragment>
          <AppBar position = 'static' color = 'secondary'>
@@ -158,9 +175,31 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
                   <Button
                      name = 'support'
                      color = 'inherit'
-                     className = {classes.button}>
+                     className = {classes.button}
+                     >
                      Trợ giúp
                   </Button>
+
+                  {/*<Menu 
+                     anchorEl={anchorEl} 
+                     open={Boolean(anchorEl)} 
+                     onClose={handleClose}
+                     className={classes.support}>
+                     <MenuItem onClick={handleClose}>
+                       <h4 style={{width:'100%'}}>Hotline</h4>
+                       <ul className={classes.listSupport}>
+                          <li>0916 374 057</li>
+                          <li>0946 746 417</li>
+                       </ul>
+                     </MenuItem>
+                     <MenuItem onClick={handleClose}>
+                       <h4 style={{width:'100%'}}>Email</h4>
+                       <ul className={classes.listSupport}>
+                          <li>info@westay.org</li>
+                       </ul>
+                    </MenuItem>
+                  </Menu>*/}
+
                   {cookies.get('_token')
                      ? <Fragment>
                         <Button
@@ -229,9 +268,9 @@ const NavTop: FunctionComponent<IProps> = (props: ILocalProps) => {
                <Hidden mdUp>
                   <div className = {classes.grow}>
                      <IconButton className = {classes.menuButton} onClick = {() => setOpenDrawer(!openDrawer)}>
-                        <Menu />
+                        <IconMenu />
                         <SwipeableDrawer
-                           disableSwipeToOpen
+                           disableSwipeToOpen   
                            open = {openDrawer}
                            onOpen = {() => setOpenDrawer(true)}
                            onClose = {() => setOpenDrawer(false)}

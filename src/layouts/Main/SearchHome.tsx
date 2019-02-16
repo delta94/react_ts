@@ -174,12 +174,12 @@ const SearchHome: FunctionComponent<IProps | any> = (props: IProps) => {
 
   return (
     <Grid item lg = {6} md = {7} xs = {12}>
-      <Typography variant = 'h4' className = {classes.heading} color = 'secondary' gutterBottom>
+      {/*<Typography variant = 'h4' className = {classes.heading} color = 'secondary' gutterBottom>
         Homestay tốt nhất
       </Typography>
       <Typography variant = 'subtitle1' color = 'secondary' className = {classes.fontSize}>
         Giá luôn luôn tốt
-      </Typography>
+      </Typography>*/}
       <Formik
         initialValues = {FormikInit}
         validationSchema = {() => FormValidationSchema}
