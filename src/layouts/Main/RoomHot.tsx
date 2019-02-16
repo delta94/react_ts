@@ -17,6 +17,9 @@ import imgRoomDemo2 from '@/assets/room_demo2.jpeg';
 import {RoomIndexRes} from '@/types/Requests/Rooms/RoomResponses';
 import {formatMoney} from '@/utils/mixins';
 
+import mapMarker from '@/assets/SvgIcon/map-marker.svg';
+import classNames from 'classnames';
+
 interface IProps {
    classes?: any,
    room: RoomIndexRes,
@@ -48,8 +51,8 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 		overflow: 'hidden !important',
 	},
 	nameRoom: {
-		fontWeight: 500 ,
-		fontSize: '1.25em !important',
+		fontWeight: 600 ,
+		fontSize: '1em !important',
 		lineHeight: '21px !important',
 		maxHeight: '42px !important',
 		textOverflow: 'ellipsis !important',
@@ -63,8 +66,8 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 		textTransform: 'uppercase',
 	},
 	priceRoom: {
-		fontWeight: 'normal',
-		fontSize: '1em !important',
+		fontWeight: 500,
+		fontSize: '1.075em !important',
 		lineHeight: '18px !important',
 		letterSpacing: 'normal !important',
 		color: 'rgb(72, 72, 72) !important',
@@ -82,6 +85,20 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 	},
 	starRatings:{
 		float: 'left',
+	},
+
+	verticalMid: {
+		verticalAlign: 'middle',
+	},
+
+	mapMarker: {
+		width: '0.8rem',
+		marginLeft: 3,
+	},
+	address: {
+		fontSize: '0.8125rem',
+		fontWeight: 500,
+		color: '#909090'
 	},
 });
 
@@ -109,22 +126,31 @@ const RoomHot: ComponentType<IProps> = (props: IProps) => {
 				   	<Typography variant="h5" component="h2" className={classes.nameRoom}>
 				   		{room.details.data[0].name}
 				   	</Typography>
-				   	<Typography component="p" className={classes.priceRoom}>
-					   	{`${formatMoney(room.price_day, 0)}`}đ <sub>/ngày</sub> - {`${formatMoney(room.price_hour, 0)}`}đ <sub>/4 giờ</sub>
-				   	</Typography>
-				   	<div>
+				   	<div style={{display: 'inline-block', width: '100%'}}>
+					   	<span className = {classes.verticalMid}>
+	                      <a className = {classes.address}>{`
+	                      ${room.district.data.name},
+	                      ${room.city.data.name}
+	                      `}</a>
+	                    </span>
+                    </div>
+				   	<div style={{display: 'inline-block', width: '100%', paddingTop: '10px'}}>
 				   		<span className={classes.starRatings}>
 						   	<StarRatings
-							   	rating = {room.avg_rating}
+								numberOfStars={room.standard_point}
 							   	starDimension = '14px'
 							   	starSpacing = '1px'
-							   	starRatedColor = '#46AFCC'
+							   	starEmptyColor = '#46AFCC'
 						   	/>
 					   	</span>
-					   	<p className={classes.totalReview}>
+					   	{/*<p className={classes.totalReview}>
 					   		{room.total_review}
-					   	</p>
+					   	</p>*/}
 				   	</div>
+				   	<Typography component="p" className={classes.priceRoom}>
+					   	{`${formatMoney(room.price_day, 0)}`}đ <sub>/ngày</sub> &ensp;-&ensp; {`${formatMoney(room.price_hour, 0)}`}đ <sub>/4 giờ</sub>
+				   	</Typography>
+
 			   	</CardContent>
 		   	</CardActionArea>
 	   	</Card>

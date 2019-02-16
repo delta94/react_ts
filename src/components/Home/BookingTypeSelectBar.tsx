@@ -39,9 +39,8 @@ const styles: any = (theme: ThemeCustom) => createStyles({
 });
 
 const bookingTypeList: BookingType[] = [
-  {id: 0, label: 'Theo ngày và giờ'},
-  {id: 1, label: 'Theo giờ'},
   {id: 2, label: 'Theo ngày'},
+  {id: 1, label: 'Theo giờ'},
 ];
 
 // @ts-ignore
@@ -55,13 +54,13 @@ const BookingTypeSelectBar: ComponentType<IProps> = (props: LocalProps) => {
     setDirection(num);
     let next: number;
     switch ([bookingType, num].join(' ')) {
-      case '0 -1':
+      case '1 -1':
         next = 2;
         break;
       case '2 1':
-        next = 0;
+        next = 1;
         break;
-      case '0 1':
+      
       case '1 1':
       case '2 -1':
       case '1 -1':

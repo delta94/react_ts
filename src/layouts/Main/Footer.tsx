@@ -155,7 +155,7 @@ const Footer: ComponentType<IProps> = (props: IProps) => {
                   </Grid>
                   <Grid item xs={12} sm={4} md={4} className={classes.linksList}>
                      <h5 className={classes.linksListGroupTitle}>
-                        Quy định dành cho Sàn GDTMĐT - Dịch vụ cho thuê phòng
+                        Quy định dành cho sàn GDTMĐT
                      </h5>
                      <ul className={classes.linksListGroupList}>
                         <Link to = '/terms-and-conditions' className={classes.textTerms}>
