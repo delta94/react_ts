@@ -138,9 +138,9 @@ const RoomHot: ComponentType<IProps> = (props: IProps) => {
 				   		<span className={classes.starRatings}>
 						   	<StarRatings
 								numberOfStars={room.standard_point}
-							   	starDimension = '14px'
-							   	starSpacing = '1px'
-							   	starEmptyColor = '#46AFCC'
+							   	starDimension = {'14px'}
+							   	starSpacing = {'1px'}
+							   	starEmptyColor = {'#46AFCC'}
 						   	/>
 					   	</span>
 					   	{/*<p className={classes.totalReview}>

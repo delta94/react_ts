@@ -434,7 +434,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                     />
                   }
                 >
-                  {arrMenuItem(room!.max_guest)}
+                  {arrMenuItem(room!.max_guest + room!.max_additional_guest)}
                 </Select>
               </FormControl>
             </Paper>

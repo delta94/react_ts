@@ -56,11 +56,11 @@ export const RoomDetailsReducer = (state: RoomDetailsState, action: RoomDetailsA
 };
 
 const getRoom          = async (idRoom: number) => {
-  const res: AxiosRes<RoomIndexRes> = await axios.get(`rooms/${idRoom}?include=details,user,comforts.details,media,district,city`);
+  const res: AxiosRes<RoomIndexRes> = await axios.get(`rooms/${idRoom}?include=details,merchant,comforts.details,media,district,city`);
   return res.data.data;
 };
 const getRoomRecommend = async (idRoom: number) => {
-  const res: AxiosRes<RoomIndexRes[]> = await axios.get(`rooms/room_recommend/${idRoom}?include=media,details`);
+  const res: AxiosRes<RoomIndexRes[]> = await axios.get(`rooms/room_recommend/${idRoom}?include=media,details,district,city`);
   return res.data.data;
 };
 
