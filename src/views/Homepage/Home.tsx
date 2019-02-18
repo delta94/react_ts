@@ -39,7 +39,7 @@ const Home: FunctionComponent<IProps | any> = props => {
     <Fragment>
       <NavTop />
       <div className = {classes.panel}>
-        <GridContainer xs = {10}>
+        <GridContainer xs = {11}>
           <Grid container spacing = {24} className = {classes.panelBody}>
             <SearchHome />
             {/*<Promotion/>*/}

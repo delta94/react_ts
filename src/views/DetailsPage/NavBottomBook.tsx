@@ -19,7 +19,7 @@ import IconButton from '@material-ui/core/IconButton';
 import {GlobalContext, IGlobalContext} from '@/store/context/GlobalContext';
 import Hidden from '@material-ui/core/Hidden';
 
-interface IProps extends RouteChildrenProps {
+interface IProps {
   classes?: any,
 }
 

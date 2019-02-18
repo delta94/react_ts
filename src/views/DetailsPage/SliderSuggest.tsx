@@ -15,7 +15,7 @@ import PrevArrowSlider from '@/views/DetailsPage/PrevArrowSlider';
 import _ from 'lodash';
 import RoomHot from '@/layouts/Main/RoomHot';
 
-interface IProps extends RouteChildrenProps {
+interface IProps {
   classes?: any,
 }
 

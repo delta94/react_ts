@@ -230,7 +230,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
     return {
       queryString, isPass, overLap, error,
     };
-  }, [filter, time, bookingType, room]);
+  }, [filter, time, bookingType, room, guest]);
 
   const handleBooking = () => {
     const {isPass, overLap, queryString, error} = bookingProcessor;
