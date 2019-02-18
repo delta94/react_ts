@@ -190,7 +190,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
 
     if (isBookHour) {
       if (st.get('hours') >= 20 || et.diff(st, 'hours') < 4) {
-        error  = 'Vui lòng đặt tối thiểu 4h';
+        error  = 'Vui lòng đặt tối thiểu 4 giờ';
         isPass = false;
       }
     }
@@ -267,10 +267,11 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
     setGuest(parseInt(event.target.value));
   };
 
-  const arrMenuItem = (x: number) => {
+  const arrMenuItem = (x: number, y: number) => {
     let i   = 1;
     let arr = [];
-    while (i <= x) {
+    let z = x + y;
+    while (i <= z) {
       arr.push(<MenuItem key = {i} value = {i}>{i} khách</MenuItem>);
       i++;
     }
@@ -279,9 +280,9 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
 
   const onPickTimeStart = (date: Date) => {
     const st = moment(date);
-
+    
     if (st.get('hours') >= 20) {
-      setTimeError('Vui lòng đặt tối thiểu 4h');
+      setTimeError('Vui lòng đặt tối thiểu 4 giờ');
       // return
     }
 
@@ -296,7 +297,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
     const st = moment(time.start);
 
     if (et.diff(st, 'hours') < 4) {
-      setTimeError('Giờ checkout phải lớn hơn giờ checkin tối thiểu 4h');
+      setTimeError('Giờ checkout phải lớn hơn giờ checkin tối thiểu 4 giờ');
       // return;
     }
 
@@ -337,15 +338,15 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                        [classes.striker]: true,
                      })}>
                         {`${formatMoney(room.price_hour, 0)}`}
-                       <sub className = {classes.perTime}>đ/4h</sub>
+                       <sub className = {classes.perTime}>đ/4 giờ</sub>
                       </span>
                   <span className = {classes.price}>{formatMoney(room!.price_hour_discount)} <sup>&#8363;</sup></span>
-                  <sub className = {classes.perTime}>/4h</sub>
+                  <sub className = {classes.perTime}>/4 giờ</sub>
                 </div>
               ) : (
                 <div className = {classes.pricePerHour}>
                   <span className = {classes.price}>{formatMoney(room!.price_hour)} <sup>&#8363;</sup></span>
-                  <sub className = {classes.perTime}>/4h</sub>
+                  <sub className = {classes.perTime}>/4 giờ</sub>
                 </div>
               )
             ) : (
@@ -434,7 +435,7 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                     />
                   }
                 >
-                  {arrMenuItem(room!.max_guest)}
+                  {arrMenuItem(room!.max_guest, room!.max_additional_guest)}
                 </Select>
               </FormControl>
             </Paper>
@@ -462,6 +463,30 @@ const BoxBooking: ComponentType<IProps> = (props: IProps) => {
                         <Grid item xs = {6} className = {classes.fontLow}>Phí dịch vụ</Grid>
                         <Grid container item xs = {6} className = {classes.fontLow}
                               justify = 'flex-end'>{`${formatMoney(price.service_fee + price.additional_fee)}đ`}</Grid>
+                      </Grid>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>
+                          Phụ thu thêm khách
+                          <span className={classes.title}>
+                            <Tooltip title={`Phụ thu ${formatMoney(room!.price_charge_guest)} mỗi người kể từ người thứ ${(room!.max_guest + 1)}`} placement='top'>
+                              <HelpOutline className={classes.iconHelp} />
+                            </Tooltip>
+                          </span>
+                        </Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow}
+                          justify='flex-end'>{`${formatMoney(price.charge_additional_guest)}đ`}</Grid>
+                      </Grid>
+                      <Grid container item xs = {12}>
+                        <Grid item xs = {6} className = {classes.fontLow}>
+                          Phụ thu thêm giờ
+                          <span className={classes.title}>
+                            <Tooltip title={`Phụ thu ${formatMoney(room!.price_after_hour)} mỗi giờ sau 4 giờ đầu`} placement='top'>
+                              <HelpOutline className={classes.iconHelp} />
+                            </Tooltip>
+                          </span>
+                        </Grid>
+                        <Grid container item xs = {6} className = {classes.fontLow}
+                          justify='flex-end'>{`${formatMoney(price.charge_additional_hour)}đ`}</Grid>
                       </Grid>
                       <Grid container item xs = {12}>
                         <Grid item xs = {6} className = {classes.fontLow}>Giảm giá</Grid>

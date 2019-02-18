@@ -60,4 +60,6 @@ export interface BookingPriceCalculatorRes {
   price_original: number
   service_fee: number
   total_fee: number
+  charge_additional_guest: number
+  charge_additional_hour: number
 }

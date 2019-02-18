@@ -29,6 +29,9 @@ import Chip from '@material-ui/core/Chip/Chip';
 import Green from '@material-ui/core/colors/green';
 import Flash from '@material-ui/icons/FlashOnRounded';
 import {windowExist} from '@/index';
+import LocalHotel from '@material-ui/icons/LocalHotelRounded';
+import People from '@material-ui/icons/PeopleRounded';
+import MeetingRoom from '@material-ui/icons/MeetingRoomRounded';
 
 const styles: any = (theme: ThemeCustom) => createStyles({
   imgSize: {
@@ -194,8 +197,39 @@ const styles: any = (theme: ThemeCustom) => createStyles({
       width: '100%',
     },
   },
+  btInstantBook: {
+    [theme!.breakpoints!.only!('md')]: {
+      fontSize: 12,
+      padding: 5,
+      width: '100%',
+    },
+    color: '#FFFFFF',
+    backgroundColor: '#f5a623',
+  },
   typoPadding: {
     paddingTop: 20,
+  },
+  roomAmenitiesIcon: {
+    verticalAlign: 'right',
+    color: '#353535',
+    width: 20,
+    height: 20,
+  },
+  roomAmenitiesTitle: {
+    color: '#000000',
+    margin: '0 5px',
+    fontSize: 13,
+    [theme!.breakpoints!.down!('xs')]: {
+      fontSize: 11,
+    },
+  },
+  collectionAmenities: {
+    paddingLeft: 0,
+    textAlign: 'center',
+    paddingInlineStart: '0px',
+    display: 'inline-flex',
+    marginTop: 5,
+    marginBottom: 5
   },
 });
 
@@ -282,6 +316,26 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                               `}</a>
                           </span>
                           </Grid>
+                          <Grid item lg = {12} sm = {12} xs = {12}>
+                            <Grid style = {{display: 'inline-flex'}} item lg = {4} sm = {4} xs = {4}>
+                              <div className = {classes.collectionAmenities}>
+                                <People className={classes.roomAmenitiesIcon} />
+                                <div className={classes.roomAmenitiesTitle}><span>{room!.max_guest} khách</span></div>
+                              </div>
+                            </Grid>
+                            <Grid style = {{display: 'inline-flex'}} item lg = {4} sm = {4} xs = {4}>
+                              <div className = {classes.collectionAmenities}>
+                                <LocalHotel className={classes.roomAmenitiesIcon} />
+                                <div className={classes.roomAmenitiesTitle}><span>{room!.number_bed} giường</span></div>
+                              </div>
+                            </Grid>
+                            <Grid style = {{display: 'inline-flex'}} item lg = {4} sm = {4} xs = {4}>
+                              <div className={classes.collectionAmenities}>
+                                <MeetingRoom className={classes.roomAmenitiesIcon} />
+                                <div className={classes.roomAmenitiesTitle}><span>{room!.number_room} phòng</span></div>
+                              </div>
+                            </Grid>
+                          </Grid>
                           <Hidden xsDown>
                             <Grid item lg = {12} sm = {12}>
                               <ul className = {classes.ul}>
@@ -344,6 +398,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                               </Fragment>
                             )}
                           </Grid>
+                          
                           <Grid item xs>
                             <Typography variant = {typoVariant}>
                               {room.is_discount === 1 ? (
@@ -352,11 +407,11 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                                     [classes.striker]: true,
                                   })}>
                                   {`${formatMoney(room.price_hour, 0)}`}
-                                    <sub className = {classes.subEl}>đ/4h</sub>
+                                    <sub className = {classes.subEl}>đ/4 giờ</sub>
                                   </span>
                                   <Typography variant = {typoVariant}>
                                     {`${formatMoney(room.price_hour_discount, 0)}`}
-                                    <sub className = {classes.subEl}>đ/4h</sub>
+                                    <sub className = {classes.subEl}>đ/4 giờ</sub>
                                   </Typography>
                                 </Fragment>
                               ) : (
@@ -365,7 +420,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                                     {(room.price_hour > 0) ? (
                                       <Fragment>
                                         {`${formatMoney(room.price_hour, 0)}`}
-                                        <sub className = {classes.subEl}>đ/4h</sub>
+                                        <sub className = {classes.subEl}>đ/4 giờ</sub>
                                       </Fragment>
                                     ) : ''}
                                   </Typography>
@@ -433,10 +488,10 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                             name = 'booking-button'
                             variant = 'contained' color = 'primary'
                             size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
-                            className = {classes.btBook}
+                            className = {classes.btInstantBook}
                           >
-                            <Flash className = {classes.sizeFlash} />
-                            Đặt nhanh
+                            {/* <Flash className = {classes.sizeFlash} /> */}
+                            Đặt ngay
                           </Button>
                           : <Button
                             name = 'booking-button'
@@ -445,7 +500,7 @@ const RoomCard: ComponentType<IProps> = (props: IProps) => {
                             size = {(width === ('sm' || 'xs')) ? 'small' : 'medium'}
                             className = {classes.btBook}
                           >
-                            Đặt phòng
+                            Kiểm tra lịch
                           </Button>
                         }
                       </Grid>
