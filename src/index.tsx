@@ -58,7 +58,7 @@ const AppRoot = () => {
 
 if (windowExist) {
   ReactDOM.hydrate(<AppRoot />, document.getElementById('root'));
-  serviceWorker.unregister();
+  serviceWorker.register();
 } else {
 
 }
